@@ -1,6 +1,5 @@
 <template>
   <div class="classification">
-    <Top title="商品分类"></Top>
     <sear></sear>
     <div class="cf_info">
       <ul class="cf_left">
@@ -14,19 +13,19 @@
         <ul class="cf_right_list">
           <li>
             <router-link to="/shoplist">
-              <img src="#" />
+              <img src="/static/test/replace.jpg" />
               <p>新品上架</p>
             </router-link>
           </li>
           <li>
             <router-link to>
-              <img src="#" />
+              <img src="/static/test/replace.jpg" />
               <p>新品上架</p>
             </router-link>
           </li>
           <li>
             <router-link to>
-              <img src="#" />
+              <img src="/static/test/replace.jpg" />
               <p>新品上架</p>
             </router-link>
           </li>
@@ -38,7 +37,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import sear from "./../../components/public/search";
 export default {
   data() {
@@ -53,7 +51,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top,
     sear
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -135,11 +132,13 @@ export default {
           width: 33.3%;
           a {
             display: flex;
+            padding: .1rem;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
             p {
               font-size: 0.12rem;
+              line-height: .2rem;
               color: #666;
             }
           }

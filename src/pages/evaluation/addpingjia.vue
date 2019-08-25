@@ -1,6 +1,5 @@
 <template>
   <div class>
-    <Top title="评价"></Top>
     <ul class="add_inf">
       <li>
         <van-card
@@ -18,21 +17,25 @@
           <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）"></textarea>
         </div>
 
-        <div class="add_img">
+        <div class="add_img" @click="show=true">
           <span></span>
           <p>上传照片</p>
         </div>
       </li>
     </ul>
+    <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }">
+      <van-button type="primary" size="large" >拍照</van-button>
+      <van-button type="primary" size="large">相册</van-button>
+      </van-popup>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 export default {
   data() {
     return {
+      show:false,
       value: 5
     };
   },
@@ -42,7 +45,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -70,6 +72,13 @@ export default {
 /deep/ .van-rate__icon {
   font-size: 0.13rem;
 }
+/deep/.van-popup--bottom.van-popup--round{
+  padding:.15rem;
+  font-size: 0;
+}
+/deep/.van-button--large{
+  margin-top: .2rem;
+}
 
 .add_inf {
   margin-top: 0.5rem;
@@ -88,10 +97,10 @@ export default {
       }
     }
     .ev_int {
-      padding: 0 .15rem;
+      padding: 0 0.15rem;
       overflow: hidden;
       #ev_main {
-        padding: .09rem .15rem;
+        padding: 0.09rem 0.15rem;
         box-sizing: border-box;
         width: 3.45rem;
         height: 1.4rem;
@@ -104,7 +113,7 @@ export default {
 
     .add_img {
       position: absolute;
-      bottom: 0.1rem;
+      bottom: 0.15rem;
       left: 0.3rem;
       width: 0.56rem;
       height: 0.56rem;
@@ -114,14 +123,14 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
-      p{
+      p {
         color: #999999;
-        font-size: .11rem;
+        font-size: 0.11rem;
       }
-      span{
-        width: .25rem;
-        height: .22rem;
-        background: url('/static/icon/xiangji.png') center center no-repeat;
+      span {
+        width: 0.25rem;
+        height: 0.22rem;
+        background: url("/static/icon/xiangji.png") center center no-repeat;
         background-size: 100% 100%;
         display: block;
       }

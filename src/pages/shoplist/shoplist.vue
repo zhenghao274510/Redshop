@@ -1,6 +1,5 @@
 <template>
   <div class='box'>
-   <Top title="商品"></Top>
    <sear></sear>
    <only></only>
   </div>
@@ -8,7 +7,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from './../../components/public/heade'
 import sear from './../../components/public/search'
 import only from './../../components/public/shangpin'
 export default {
@@ -23,7 +21,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-Top,
 sear,
 only
   },

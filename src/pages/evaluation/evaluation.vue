@@ -1,7 +1,6 @@
 <template>
 <!-- 评价 -->
   <div class="box">
-    <Top title="评价"></Top>
     <ul class="ev_cont">
       <li>
         <div class="ev_info">
@@ -27,7 +26,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 export default {
   data() {
     return {
@@ -40,7 +38,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

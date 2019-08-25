@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <van-swipe-cell>
+  <div class="container">
       <!-- <van-cell :border="false"> -->
       <ul v-for="(item,index) in arr" :key="index" class="carlist">
+    <van-swipe-cell>
         <li class="carlist_info" :class="{'bg':ishow}">
           <div class="car_s" @click="changech" v-show="ishow">
             <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="checked" />
             <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
           </div>
           <div class="car_img" @click="changech">
-            <img src="#" />
+            <img src="/static/test/replace.jpg" />
           </div>
           <div class="car_info">
             <p class="car_con">凯宝利519红葡萄酒750ml*6 澳大利亚进口红酒</p>
@@ -19,21 +19,19 @@
                 <i>{{pri}}</i>
               </span>
               <div class="total" v-show="ishow">
-                <span @click.self="delnum">-</span>
-                <input v-model="num" type="text" />
-                <span @click.self="addnum">+</span>
+                <van-stepper v-model="value" integer />
               </div>
             </div>
           </div>
         
         </li>
          
-      </ul>
        <template slot="right">
             <van-button square type="danger" text="删除" />
           </template>
-      <!-- </van-cell> -->
     </van-swipe-cell>
+      </ul>
+      <!-- </van-cell> -->
     <!-- 底部显示 -->
     <div class="car_no"></div>
   </div>
@@ -49,7 +47,8 @@ export default {
       arr: [1],
       checked: true,
       num: 1,
-      pri: 239
+      pri: 239,
+      value:1
     };
   },
   //监听属性 类似于data概念
@@ -67,13 +66,21 @@ export default {
     changech() {
       this.checked = !this.checked;
     },
-    delnum() {
-      if (this.num > 1) {
-        this.num -= 1;
+     onClose(clickPosition, instance) {
+      switch (clickPosition) {
+        case 'left':
+        case 'cell':
+        case 'outside':
+          instance.close();
+          break;
+        case 'right':
+          Dialog.confirm({
+            message: '确定删除吗？'
+          }).then(() => {
+            instance.close();
+          });
+          break;
       }
-    },
-    addnum() {
-      this.num += 1;
     }
   },
   //生命周期 - 创建之前
@@ -105,15 +112,19 @@ export default {
   border: none;
 }
 /deep/.van-swipe-cell__right {
-  right: 0.1rem;
+  right: 0.2rem;
   font-size: 0;
 }
-// /deep/.van-swipe-cell {
-//   // height: 1.23rem;
-// }
+/deep/.van-swipe-cell {
+  // height: 1.23rem;
+  // width: 3.75rem;
+  position: relative;
+}
+.container{
+width: 100%;
+ margin-top: 0.5rem;
 .carlist {
-  width: 3.45rem;
-  margin-top: 0.5rem;
+  margin:  0 auto;
   padding: 0 .15rem;
   .carlist_info {
     margin-top: 0.1rem;
@@ -181,5 +192,6 @@ export default {
   .car_no {
     height: 1.2rem;
   }
+}
 }
 </style>

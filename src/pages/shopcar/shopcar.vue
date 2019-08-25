@@ -1,6 +1,5 @@
 <template>
   <div class='box'>
- <Top title="购物车"></Top>
   <By ishow="true"></By>
   <Qx></Qx>
   </div>
@@ -8,7 +7,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from './../../components/public/heade'
+// import Top from './../../components/public/heade'
 import By from './../../components/public/carlist'
 import Qx from './../../components/public/allchose'
 export default {
@@ -23,7 +22,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-Top,
 By,
 Qx
   },

@@ -1,23 +1,28 @@
 <template>
   <div class="order_box">
-    <Top title="订单"></Top>
-    <ul class="order_nav">
+    <!-- <ul class="order_nav">
       <li v-for="(item,index) in navinfo" :key="index" @click="changeta(index)">
         <router-link :to="item.url">
           <span :class="{'active':num==index}">{{item.tit}}</span>
         </router-link>
       </li>
     </ul>
-    <router-view></router-view>
+    <router-view></router-view>-->
+    <div style="margin-top:.5rem">
+      <van-tabs v-model="active" swipeable  animated>
+        <van-tab v-for="(item,index) in navinfo" :key="index" :title="item.tit" class="'bor':active==index"><Mo :come="active"></Mo></van-tab>
+      </van-tabs>
+    </div>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
+import Mo from './child/model'
 export default {
   data() {
     return {
+      active: 0,
       navinfo: [
         { tit: "全部", url: "/order/all" },
         { tit: "待付款", url: "/order/waitepay" },
@@ -26,7 +31,6 @@ export default {
         { tit: "待评价", url: "/order/waiteping" },
         { tit: "退款售后", url: "/order/tui" }
       ],
-      num: 0
     };
   },
   //监听属性 类似于data概念
@@ -35,8 +39,7 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top
-
+    Mo
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -65,6 +68,20 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
+/deep/ .van-tabs__wrap--scrollable .van-tab{
+  flex: 1;
+}
+/deep/.van-ellipsis{
+text-overflow: inherit;
+}
+/deep/.van-tab{
+  text-align: center;
+  padding: 0;
+}
+ .bor {
+        border-bottom: 0.02rem solid #72bb29;
+        color: #72bb29;
+      }
 .order_box {
   width: 100%;
   height: 100%;
@@ -97,7 +114,7 @@ export default {
         font-size: 0.14rem;
         font-weight: 500;
       }
-      .active {
+      .bor {
         border-bottom: 0.02rem solid #72bb29;
         color: #72bb29;
       }

@@ -2,7 +2,7 @@
   <div class='sear'>
     <div>
       <span></span>
-      <input type="text" placeholder="输入关键词搜索">
+      <input type="text" placeholder="输入关键词搜索" name="search">
     </div>
     <span class="btn">
      搜索

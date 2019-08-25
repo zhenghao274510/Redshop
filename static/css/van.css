@@ -2,7 +2,16 @@
 .van-dialog__confirm:active {
   color: #72bb29;
 }
-
+.van-tabs__line{
+  background-color: #72bb29;
+}
+ .van-tab--active .van-ellipsis{
+  color: #72bb29;
+}
+.van-tab{
+  line-height: .44rem;
+  font-size: .13rem;
+}
 .pad {
   padding: 0 .15rem;
 }

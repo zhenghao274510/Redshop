@@ -1,6 +1,5 @@
 <template>
   <div class="order_de bg_c">
-    <Top :title="tit"></Top>
     <div class="order_de_info">
       <div class="tit bg_wh ft_mid pad mg_bot" v-if="direct==1">等待买家付款</div>
       <de-zhi></de-zhi>
@@ -140,7 +139,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import deZhi from "./adderss";
 import Info from "./../order/child/carIfo";
 import btn from "./../order/child/btn";
@@ -166,7 +164,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top,
     deZhi,
     Info,
     btn

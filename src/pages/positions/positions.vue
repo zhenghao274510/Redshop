@@ -1,6 +1,5 @@
 <template>
   <div class=''>
- <Top title="定位"></Top>
  <a-map></a-map>
 
   </div>
@@ -8,7 +7,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import aMap from './map'
 export default {
   data() {
@@ -22,7 +20,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-Top,
 aMap
   },
   //生命周期 - 创建完成（可以访问当前this实例）

@@ -1,13 +1,15 @@
 <template>
   <div id="app">
+        <Top :title="$route.name"></Top>
+  
     <tar v-if="$route.meta.showtabar"></tar>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
-
-import set from './../static/font/rem'
+import Top from '@/components/public/heade'
+import set from '../static/font/rem'
 import tar from './components/public/nav'
 export default {
   name: 'App',
@@ -15,7 +17,13 @@ export default {
   window.onload=window.onresize=set.setrem;
   },
   components:{
-    tar
+    tar,
+    Top
+  },
+  methods:{
+     back(){
+      this.$router.go(-1);
+    }
   }
 }
 </script>
@@ -31,5 +39,8 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background: #FFF;
+  
 }
+
 </style>

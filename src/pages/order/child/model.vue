@@ -9,13 +9,13 @@
         <em>待支付</em>
       </div>
       <Info></Info>
-      <div class="order_tot" v-if="come!='4'">共2件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥419.00</div>
-      <div class="order_zhuang" v-if="come!='4'">
-        <span class="one" v-if="come=='0'">取消订单</span>
-        <span class="two" v-if="come=='0'">去支付</span>
-        <span class="one" v-if="come=='1'">申请退换</span>
-        <span class="two" v-if="come=='2'" @click="shou_huo">确认收货</span>
-        <span class="two" v-if="come=='3'" @click="goto">去评价</span>
+      <div class="order_tot" v-if="change!=5">共2件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥419.00</div>
+      <div class="order_zhuang" v-if="change!=5">
+        <span class="one" v-if="change==0||change==1">取消订单</span>
+        <span class="two" v-if="change==0||change==1">去支付</span>
+        <span class="one" v-if="change==2">申请退换</span>
+        <span class="two" v-if="change==3" @click="shou_huo">确认收货</span>
+        <span class="two" v-if="change==4" @click="goto">去评价</span>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false" />
@@ -24,13 +24,14 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Info from './carIfo'
-import {Dialog} from 'vant'
+import Info from "./carIfo";
+import { Dialog } from "vant";
 export default {
   props: ["come"],
   data() {
     return {
-      show: false
+      show: false,
+      change: this.come
     };
   },
   //监听属性 类似于data概念
@@ -56,7 +57,7 @@ export default {
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push('/addpingjia');
+          this.$router.push("/addpingjia");
         })
         .catch(() => {
           // on cancel
@@ -82,12 +83,13 @@ export default {
 <style scoped lang='less' rel='stylesheet/stylus'>
 
 .order_mo {
-  background-color: #ffffff;
-  margin-top: 1.04rem;
+  padding: 0.15rem;
   width: 100%;
-  border-radius: 0.1rem;
+  
   .order_con {
     // font-size: 0;
+    background-color: #ffffff;
+    border-radius: 0.1rem;
     .order_tit {
       padding: 0 0.15rem;
       height: 0.44rem;

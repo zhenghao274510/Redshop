@@ -1,6 +1,5 @@
 <template>
   <div class="shop_de">
-    <Top title="商品详情"></Top>
     <De></De>
     <div class="shop_info">
       <div class="shop_info_tit">
@@ -100,7 +99,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import De from "./../../components/public/banner";
 import Addshop from "./addshop";
 import Youcard from "./youhuicard";
@@ -123,7 +121,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top,
     De,
     Addshop,
     Youcard,

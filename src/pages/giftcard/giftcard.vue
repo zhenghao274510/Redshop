@@ -1,6 +1,5 @@
 <template>
   <div class="li_pin_card">
-    <Top title="礼品卡"></Top>
     <div class="li_search"><span>查询</span></div>
     <Crd></Crd>
   </div>
@@ -8,7 +7,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import Crd from "./../../components/public/lipincard";
 export default {
   data() {
@@ -20,7 +18,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top,
     Crd
   },
   //生命周期 - 创建完成（可以访问当前this实例）

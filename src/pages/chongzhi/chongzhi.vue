@@ -1,6 +1,5 @@
 <template>
   <div class='ch_zh_card'>
-   <Top title="充值卡"></Top>
       <ul class="ch_zi_con">
         <li><router-link to=""><div class="one"></div><p>充值</p></router-link></li>
         <li><router-link to=""><div class="two"></div><p>充值记录</p></router-link></li>
@@ -11,7 +10,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 export default {
   data() {
     return {
@@ -24,7 +22,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-Top
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

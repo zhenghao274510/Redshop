@@ -1,12 +1,10 @@
 <template>
   <div class=''>
-<Top title="常见问题"></Top>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 export default {
   data() {
     return {
@@ -19,7 +17,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-Top
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

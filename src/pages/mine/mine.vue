@@ -1,6 +1,5 @@
 <template>
   <div class="box">
-    <Top title="我的"></Top>
     <!-- 用户信息 -->
     <div class="mi_info" @click="gotomine">
       <div class="us_info">
@@ -22,29 +21,29 @@
         <div class="mi_order">
           <div class="mi_order_tit">
             <span>我的订单</span>
-            <router-link to="/order/all">
+            <router-link to="/order">
               查询全部订单
               <i></i>
             </router-link>
           </div>
           <div class="mi_order_list">
-            <router-link to="/order/waitepay">
+            <router-link to="/order">
               <span class="one"></span>
               <p>待付款</p>
             </router-link>
-            <router-link to="/order/waitesong">
+            <router-link to="/order">
               <span class="two"></span>
               <p>待配送</p>
             </router-link>
-            <router-link to="/order/peing">
+            <router-link to="/order">
               <span class="three"></span>
               <p>配送中</p>
             </router-link>
-            <router-link to="/order/waiteping">
+            <router-link to="/order">
               <span class="four"></span>
               <p>待评价</p>
             </router-link>
-            <router-link to="/order/tui">
+            <router-link to="/order">
               <span class="five"></span>
               <p>退款售后</p>
             </router-link>
@@ -104,7 +103,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
+
 export default {
   data() {
     return {};
@@ -115,7 +114,7 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top
+
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

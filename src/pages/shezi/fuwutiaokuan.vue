@@ -1,6 +1,5 @@
 <template>
   <div class="leet">
-    <Top title="服务条款"></Top>
     <div class="cont">
       <p>欢迎您与各我方平台经营者（详见定义条款）共同签署本《用户服务协议》（下称“本协议”）并使用我方平台服务!</p>
       <p>各条款标题仅为帮助您理解该条款表达的主旨之用，不影响或限制本协议条款的含义或解释。为维护您自身权益，建议您仔细阅读各条款具体表述。</p>
@@ -23,7 +22,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 export default {
   data() {
     return {};
@@ -34,7 +32,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

@@ -1,6 +1,6 @@
 <template>
   <div class='box'>
-    <Top title="商城"></Top>
+    <!-- <Top title="商城"></Top> -->
     <sear></sear>
     <Zq></Zq>
 

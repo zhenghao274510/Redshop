@@ -1,6 +1,5 @@
 <template>
   <div class="my_link">
-    <Top title="我的收藏"></Top>
     <By></By>
 <By></By>
  
@@ -9,7 +8,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
 import By from './../../components/public/carlist'
 export default {
   data() {
@@ -21,7 +19,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Top,
     By
   },
   //生命周期 - 创建完成（可以访问当前this实例）
