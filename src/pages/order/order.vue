@@ -22,7 +22,7 @@ import Mo from './child/model'
 export default {
   data() {
     return {
-      active: 0,
+      active: 4,
       navinfo: [
         { tit: "全部", url: "/order/all" },
         { tit: "待付款", url: "/order/waitepay" },
@@ -44,7 +44,9 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.active=Number(this.$route.params.ShopId);
+  },
   //方法集合
   methods: {
     changeta(ind) {

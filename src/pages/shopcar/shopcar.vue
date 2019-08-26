@@ -1,6 +1,6 @@
 <template>
   <div class='box'>
-  <By ishow="true"></By>
+  <By ishow="true" ></By>
   <Qx></Qx>
   </div>
 </template>

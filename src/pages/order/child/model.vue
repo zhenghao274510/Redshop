@@ -31,7 +31,8 @@ export default {
   data() {
     return {
       show: false,
-      change: this.come
+      change: this.come,
+      navinfo: ["待支付", "买家已付款", "配送中", "待评价", "退款中"]
     };
   },
   //监听属性 类似于data概念
@@ -81,11 +82,10 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-
 .order_mo {
   padding: 0.15rem;
   width: 100%;
-  
+
   .order_con {
     // font-size: 0;
     background-color: #ffffff;

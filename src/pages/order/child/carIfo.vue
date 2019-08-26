@@ -1,6 +1,7 @@
 <template>
   <ul class="order_info bg_wh">
-    <li>
+    <!-- 订单详情购物车信息 -->
+    <li v-for="item in arr">
       <router-link to="/orderdetails">
         <img src="/static/test/bg.png" alt />
         <div class="info_name">
@@ -22,6 +23,7 @@
               <span>申请退换</span>
       </div>
     </li>
+   
   </ul>
 </template>
 
@@ -29,9 +31,10 @@
 //import 《组件名称》 from '《组件路径》';
 import btn from './btn'
 export default {
-  props:["num"],
+  props:["num","item"],
   data() {
     return {
+      arr:[1,2]
     };
   },
   //监听属性 类似于data概念

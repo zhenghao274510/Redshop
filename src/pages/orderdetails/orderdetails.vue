@@ -9,6 +9,7 @@
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
+        <span class="col_mid ft_mix fr">配送费￥10元</span>
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
@@ -216,6 +217,7 @@ export default {
   height: 100%;
   .tit {
     line-height: 0.49rem;
+    overflow: hidden;
     .more_j {
       display: block;
       width: 0.09rem;

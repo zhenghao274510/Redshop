@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       LftW: 0,
-      arr: [1],
+      arr: [1,2],
       checked: true,
       num: 1,
       pri: 239,

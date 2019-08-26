@@ -47,7 +47,7 @@ export default new Router({
     },
     // 我的订单
     {
-      path: '/order',
+      path: '/order/:ShopId',
       name:"我的订单",
       component: resolve => require(['./../pages/order/order.vue'], resolve),
       meta:{

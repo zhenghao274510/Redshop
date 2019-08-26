@@ -1,25 +1,205 @@
 <template>
-  <div class="top">
-    <!-- <div id="searchBar">
-      <input id="searchInput" placeholder="输入关键字搜素POI" v-model="shu" @blur="listenKeyword" />
-      <button id="btn" @click="btn">搜索</button>
-    </div>-->
-    <van-search v-model=" search_key " placeholder="请输入搜索关键词" />
-    <div id="container" style="width:100%;height:3rem" tabindex="0">
-      
-   
+  <div class="mymapM">
+    <!--捜索-->
+    <div v-if="loading" class="loading">
+      <van-loading type="spinner" />
     </div>
-    <div id="searchResults"></div>
+
+    <div class="search-box">
+      <div class="search-postion">
+        <span class="buts">返回</span>
+        <input type="text" placeholder="输入关键字搜索" v-model="search_key" />
+        <span class="clear" v-if="search_key" @click="search_key ='' ">
+          <van-icon color="#8f8f8f" name="clear" />
+        </span>
+        <span class="buts border_but" @click="keySearch()">捜索</span>
+      </div>
+    </div>
+    <div class="con-box con-map" v-if="!search_key">
+      <!--地图-->
+      <div class="mapbox">
+        <div class="map" id="container"></div>
+        <div class="sign"></div>
+      </div>
+    </div>
+    <div class="con-box" v-if="!search_key">
+      <!--地址列表-->
+      <div class="Hlist-box">
+        <ul>
+          <li v-for="(item, index) in lists" :key="index" @click="onAddressLi(item)">
+            <b>
+              <van-icon color="#a6a6a6" name="clock" />
+            </b>
+            <div>
+              <span>{{item.name}}</span>
+              <p>{{item.address}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--捜索列表-->
+    <div class="search-list" v-if="search_key">
+      <ul>
+        <li v-for="(item, index) in search_list" :key="index" @click="onSearchLi(item.location)">
+          <span>{{item.name}}</span>
+          <p>{{item.address}}</p>
+        </li>
+        <li v-if="noSearchShow">
+          <p>暂无搜索结果</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
+<style lang="less" scoped>
+.con-map {
+  height: 190px;
+  width: 100%;
+}
+.con-box {
+  .mapbox {
+    margin-bottom: 10px;
+    position: fixed;
+    z-index: 111;
+    width: 100%;
+    height: 180px;
+    padding: 10px 0;
+    background: #eceeee;
 
+    .map {
+      width: 100%;
+      height: 180px;
+    }
+  }
+
+  .Hlist-box {
+    width: 96%;
+    margin: 0 auto;
+
+    background: #fff;
+    border-radius: 5px;
+    li {
+      height: 40px;
+      padding: 14px 22px;
+      border-bottom: 1px solid #d9d9d9;
+      display: flex;
+      b {
+        display: inline-block;
+
+        i {
+          margin: 18px 18px 0 0;
+        }
+      }
+      div {
+        width: 100%;
+      }
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 15px;
+        display: inline-block;
+        width: 90%;
+      }
+      p {
+        margin-top: 10px;
+        color: #a6a6a6;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 13px;
+        width: 90%;
+      }
+    }
+  }
+}
+.mymapM {
+  .search-box {
+    height: 48px;
+
+    line-height: 48px;
+    background: #fff;
+
+    border-bottom: 1px solid #bfbec4;
+
+    .search-postion {
+      height: 48px;
+      line-height: 48px;
+      background: #fff;
+      border-bottom: 1px solid #bfbec4;
+      width: 100%;
+      position: fixed;
+      z-index: 99999;
+      display: flex;
+      input {
+        flex: 4;
+        height: 14px;
+        padding: 16px 0;
+        border: none;
+
+        text-indent: 10px;
+      }
+      .clear {
+        margin: 2px 6px;
+      }
+      .buts {
+        width: 15%;
+        text-align: center;
+        display: inline-block;
+        flex: 1;
+      }
+      .border_but {
+        border-left: 1px solid #8f8f8f;
+        height: 14px;
+        line-height: 14px;
+        margin: 17px 0;
+      }
+    }
+  }
+  .search-list {
+    width: 96%;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    background: #fff;
+    li {
+      height: 40px;
+      padding: 14px 22px;
+      border-bottom: 1px solid #d9d9d9;
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 15px;
+        display: inline-block;
+        width: 90%;
+      }
+      p {
+        margin-top: 10px;
+        color: #a6a6a6;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 13px;
+        width: 90%;
+      }
+    }
+  }
+}
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99999999;
+}
+</style>
 <script>
-//import 《组件名称》 from '《组件路径》';
-import GetPos from "./../../../static/js/location";
 export default {
   data() {
     return {
-      center: [], //经度+纬度
+      center: [116.42792, 39.902896], //经度+纬度
       search_key: "", //搜索值
       lists: [], //地点列表
       search_list: [], //搜索结果列表
@@ -29,11 +209,9 @@ export default {
     };
   },
   mounted() {
-    GetPos.GetCurrentPosition();
-     this.center=JSON.parse(localStorage.getItem("point")).position;
-    // setTimeout(() => {
+    setTimeout(() => {
       this.adMap();
-    // }, 1000);
+    }, 1000);
   },
   methods: {
     adMap() {
@@ -159,16 +337,3 @@ export default {
   }
 };
 </script>
-<style scoped lang='less' rel='stylesheet/stylus'>
-/deep/.amap-copyright {
-  display: none;
-}
-#searchResults {
-  height: 3.2rem;
-  margin-top: -.4rem;
-  overflow-y: auto;
-}
-.top{
-  margin-top: .5rem;
-}
-</style>

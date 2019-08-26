@@ -21,29 +21,29 @@
         <div class="mi_order">
           <div class="mi_order_tit">
             <span>我的订单</span>
-            <router-link to="/order">
+            <router-link to="/order/0">
               查询全部订单
               <i></i>
             </router-link>
           </div>
           <div class="mi_order_list">
-            <router-link to="/order">
+            <router-link to="/order/1">
               <span class="one"></span>
               <p>待付款</p>
             </router-link>
-            <router-link to="/order">
+            <router-link to="/order/2">
               <span class="two"></span>
               <p>待配送</p>
             </router-link>
-            <router-link to="/order">
+            <router-link to="/order/3">
               <span class="three"></span>
               <p>配送中</p>
             </router-link>
-            <router-link to="/order">
+            <router-link to="/order/4">
               <span class="four"></span>
               <p>待评价</p>
             </router-link>
-            <router-link to="/order">
+            <router-link to="/order/5">
               <span class="five"></span>
               <p>退款售后</p>
             </router-link>
