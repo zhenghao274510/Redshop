@@ -3,6 +3,7 @@
     <!-- <Top title="商城"></Top> -->
     <sear></sear>
     <Zq></Zq>
+    <Tui-Jan></Tui-Jan>
 
   </div>
 </template>
@@ -11,6 +12,7 @@
 //import 《组件名称》 from '《组件路径》';
 import Top from './../../components/public/heade'
 import Zq from './../../components/homec/hodong'
+import TuiJan from './../../components/homec/tuijian'
 import sear from './../../components/public/search'
 export default {
   data() {
@@ -26,7 +28,8 @@ export default {
   components: {
     Top,
     sear,
-    Zq
+    Zq,
+    TuiJan
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

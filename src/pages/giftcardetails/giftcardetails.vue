@@ -1,10 +1,15 @@
 <template>
   <div class='gif_card_de'>
+    <div class="cont">
+       <Info></Info>
+    </div>
+    
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import Info from "./../order/child/carIfo";
 export default {
   data() {
     return {
@@ -17,6 +22,7 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
+    Info
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -47,5 +53,7 @@ export default {
 }
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-
+.cont{
+  margin-top: .5rem;
+}
 </style>

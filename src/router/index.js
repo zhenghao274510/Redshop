@@ -145,9 +145,15 @@ export default new Router({
     },
     // 礼品卡详情
     {
-      path: '/giftcardetails:shopsId',
+      path: '/giftcardetails',
       name:"礼品卡详情",
       component: resolve => require(['./../pages/giftcardetails/giftcardetails.vue'], resolve)
+    },
+    // 分享
+    {
+      path: '/share',
+      name:"分享图片",
+      component: resolve => require(['./../pages/giftcardetails/share.vue'], resolve)
     },
     // 設置
     {
@@ -193,7 +199,7 @@ export default new Router({
     },
     // 支付成功
     {
-      path: '/success:shopsId',
+      path: '/success',
       name:"支付成功",
       component: resolve => require(['./../components/public/success.vue'], resolve)
     },

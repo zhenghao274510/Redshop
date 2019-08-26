@@ -1,7 +1,10 @@
 <template>
   <div class="my_link">
-    <By></By>
-<By></By>
+    <div class="bo_bot">
+      <By></By>
+    </div>
+    
+
  
   </div>
 </template>

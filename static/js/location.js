@@ -10,11 +10,10 @@ let getCurrentCityName = function() {
 		})
 	})
 }
-const position=function(){
+const GetCurrentPosition=function(){
 	Toast("正在定位中，请稍等。。。");
 		console.log("定位");
 		//我就是来定一下位
-		let self = this;
 		var map = new AMap.Map("container", {
 		  resizeEnable: true
 		});
@@ -37,15 +36,9 @@ const position=function(){
 		});
 		//解析定位结果
 		function onComplete(data) {
-		  console.log(data);
-		  Toast("定位成功");
-		  self.city = data.addressComponent.city;
-		  console.log(self.city);
-		  let result = {};
-		  result.city = self.city;
-		  result.lng = data.position.lng;
-		  result.lat = data.position.lat;
-		  localStorage.setItem("point", JSON.stringify(result));
+		  // console.log(data);
+			Toast("定位成功");
+		  localStorage.setItem("point", JSON.stringify(data.position));
 		}
 		//解析定位错误信息
 		function onError(data) {
@@ -55,4 +48,4 @@ const position=function(){
 	 
 }
 
-export default {getCurrentCityName,position}
+export default {getCurrentCityName,GetCurrentPosition}

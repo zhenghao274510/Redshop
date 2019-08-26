@@ -1,19 +1,21 @@
 <template>
-  <div class='box'>
-   <sear></sear>
-   <only></only>
+  <div class="box">
+    <sear></sear>
+
+    <div class="list_two">
+      <Shop-L></Shop-L>
+      <Shop-L></Shop-L>
+    </div>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import sear from './../../components/public/search'
-import only from './../../components/public/shangpin'
+import sear from "./../../components/public/search";
+import ShopL from "./../../components/public/shangpin";
 export default {
   data() {
-    return {
-
-    };
+    return {};
   },
   //监听属性 类似于data概念
   computed: {},
@@ -21,21 +23,15 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-sear,
-only
+    sear,
+    ShopL
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-
-  },
+  mounted() {},
   //方法集合
-  methods: {
-
-  },
+  methods: {},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -49,9 +45,14 @@ only
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
-  activated() {},
-}
+  activated() {}
+};
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-
+.list_two {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 0.15rem;
+}
 </style>

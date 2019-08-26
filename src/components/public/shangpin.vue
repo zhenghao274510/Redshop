@@ -1,8 +1,8 @@
 <template>
   <div class="shop_o">
-    <div class="shop_de" >
+    <div class="shop_de">
       <div class="shop_img" @click.prevent="goto">
-        <img src="#" alt />
+        <img src="/static/test/replace.jpg" alt />
       </div>
       <div class="shop_info">
         <p class="shop_name">西班牙DO级红酒</p>
@@ -15,7 +15,6 @@
         </div>
       </div>
     </div>
-  
   </div>
 </template>
 
@@ -38,12 +37,10 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    goto(){
-      this.$router.push('/shopdetails');
+    goto() {
+      this.$router.push("/shopdetails");
     },
-    addcar(){
-
-    }
+    addcar() {}
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -63,20 +60,16 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .shop_o {
-  display: flex;
-  flex-wrap: wrap;
-  overflow-y: auto;
+  box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
   .shop_de {
-    margin: 0 0 0.15rem 0.15rem;
     width: 1.65rem;
     height: 2.65rem;
     border-radius: 0.1rem;
-    box-shadow: 0 4px 4px rgb(238, 238, 238);
+    
     z-index: 2;
     .shop_img {
       width: 1.65rem;
       height: 1.79rem;
-      background: #eeeeee;
       border-radius: 0.1rem 0.1rem 0 0;
       padding: 0.23rem 0.29rem 0.06rem 0.18rem;
       img {

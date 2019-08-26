@@ -10,14 +10,14 @@
       </li>
        <li>
         <router-link to="/editaddress">
-          <span>头像</span>
+          <span>昵称</span>
             <p>昵称</p>
           <i></i>
         </router-link>
       </li>
        <li>
         <router-link to>
-          <span>头像</span>
+          <span>个性签名</span>
             <p>Lorem IpsumLorem Ipsum</p>
           <i></i>
         </router-link>
@@ -86,7 +86,7 @@ ul {
       i {
         position: absolute;
         top: 50%;
-        right: 0.15rem;
+        right: 0;
         transform: translateY(-50%);
         width: 0.09rem;
         height: 0.17rem;
@@ -99,11 +99,11 @@ ul {
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 50%;
-        margin-right: 0.35rem;
+        margin-right: 0.2rem;
       }
       p {
         color: #999999;
-        margin-right: 0.35rem;
+        margin-right: 0.2rem;
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
-  <div class=''>
+
     <div class="tit">
         <my-address ></my-address>       
     </div>
      
-  </div>
+
 </template>
 
 <script>
@@ -55,5 +55,7 @@ export default {
 <style scoped lang='less' rel='stylesheet/stylus'>
 .tit{
   margin-top: .5rem;
+  height: 100%;
+  background-color: #EEEEEE;
 }
 </style>

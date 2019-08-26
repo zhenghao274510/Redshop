@@ -8,43 +8,53 @@
     </div>
     <!-- 活动专区 -->
     <div class="hd_zuan">
-      <div class="hd_tit">
-        <span class="hd_tit_info">活动专区</span>
-        
-        <router-link to="">
-          <span >查看更多</span>
-          <i class="icon_more"></i>
+      <Tit :title="actions"></Tit>
+      <!-- 第一张大图 -->
+      <div class="hd_list">
+        <router-link to>
+          <div class="hd_img_con">
+            <img src="/static/test/replace.jpg" />
+          </div>
+          <div class="hd_info one-txt-cut">
+            <p class="ft_mid col_mix" style="font-weight:bold">凯宝利519红葡萄酒750ml*6澳大利亚进口红酒...</p>
+            <p class="ft_mid">
+              <span class="col_max">￥219</span>
+              <i class="col_mid">￥229</i>
+            </p>
+          </div>
         </router-link>
-       
       </div>
-      <ul class="hd_list">
-        <li>
-          <router-link to>
-            <div class="hd_img_con">
-              <img src />
-            </div>
-            <div class="hd_info"></div>
-          </router-link>
-        </li>
-      </ul>
+
+      <div class="list_two">
+        <Shop-L></Shop-L>
+        <Shop-L></Shop-L>
+      </div>
     </div>
-   <router-link to=""> <img src=""> </router-link>
+    <router-link to class="banner mg_top">
+      <img src="/static/test/replace.jpg" />
+    </router-link>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
+import ShopL from "./../../components/public/shangpin";
+import Tit from "./title";
 export default {
   data() {
-    return {};
+    return {
+      actions: { tit: "活动专区", type: 0 }
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    ShopL,
+    Tit
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -77,40 +87,36 @@ export default {
       flex: 1;
     }
   }
-  .hd_zuan{
-    padding: 0 .15rem;
-    .hd_tit{
-      height: .2rem;
-      border-left: .04rem solid #72BB29;
+  .hd_zuan {
+    .hd_list {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .hd_tit_info{
-        display: inline-block;
-        margin-left: .14rem;
-        font-size: .17rem;
-        color: #333333;
-      }
-      a{
-        display: flex;
-        height: 100%;
-        span{
-          font-size: .13rem;
-          margin-right: 0.1rem;
-          color: #999999;
-          display: block;
+      flex-wrap: wrap;
+      width: 100%;
+      padding: 0 0.15rem;
+      margin: 0.17rem 0;
+      a {
+        flex: 1;
+        padding: 0.15rem;
+        box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
+        .hd_img_con {
         }
-        i{
-          display: block;
-          width: .07rem;
-          height: .13rem;
-          background: url('/static/icon/shangpinxiangqing-jiantou.png')no-repeat;
-          background-size: 100% 100%;
-          
+        .hd_info {
+          p {
+            line-height: 0.2rem;
+            i {
+              text-decoration: line-through;
+              margin-left: 0.1rem;
+            }
+          }
         }
       }
     }
+    .list_two{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 0 .15rem;
+    }
   }
-
 }
 </style>

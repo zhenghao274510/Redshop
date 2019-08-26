@@ -15,7 +15,6 @@
     "vant-weapp": "^0.5.19",
     "vue": "^2.5.2",
     "vue-amap": "^0.5.10",
-    "vue-baidu-map": "^0.21.22",
     "vue-router": "^3.0.1",
     "vuex": "^3.1.1"
   },

@@ -1,21 +1,28 @@
 <template>
-  <div>
+  <div class="top">
     <!-- <div id="searchBar">
       <input id="searchInput" placeholder="输入关键字搜素POI" v-model="shu" @blur="listenKeyword" />
       <button id="btn" @click="btn">搜索</button>
-    </div> -->
-    <div id="container" style="width:100%;height:3rem;marginTop:40px" tabindex="0"></div>
+    </div>-->
+    <van-search v-model=" value " placeholder="请输入搜索关键词" />
+    <div id="container" style="width:100%;height:3rem" tabindex="0">
+      
+   
+    </div>
     <div id="searchResults"></div>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
+import GetPos from "./../../../static/js/location";
 export default {
   data() {
     return {
-      point: ""
+      value:'',
+      map: null,
+      point: null,
+      addresslist: []
     };
   },
   //监听属性 类似于data概念
@@ -25,11 +32,15 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // console.log(this.point)
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+    // this.map=new Amap.Map()
+    GetPos.GetCurrentPosition();
     this.point = JSON.parse(localStorage.getItem("point"));
-
+    // console.log(this.point);
     this.placeSearch2();
   },
   //方法集合
@@ -38,11 +49,13 @@ export default {
       let self = this;
       self.map = new AMap.Map("container", {
         resizeEnable: true,
-        zoom: 1, //地图显示的缩放级别
+        zoom: 15, //地图显示的缩放级别
         keyboardEnable: false
       });
 
-      var cpoint = new AMap.LngLat(this.point.lng, this.point.lat); //搜索查询的中心点设置
+      var cpoint = new AMap.LngLat(self.point.lng, self.point.lat); //搜索查询的中心点设置
+      console.log("位置"+cpoint)
+
       var MSearch;
       //加载服务插件，实例化地点查询类
       AMap.plugin(["AMap.PlaceSearch"], function() {
@@ -210,8 +223,7 @@ export default {
       add.prov = data.regeocode.addressComponent.province; //返回地址描述省份
       add.city = data.regeocode.addressComponent.city; //返回地址描述城市
       add.town = data.regeocode.addressComponent.district; //返回地址描述区县
-      if(data.regeocode.aois!=""){
-
+      if (data.regeocode.aois != "") {
         add.addname = data.regeocode.aois[0].name; //返回地址地名
       }
       self.addresslist = add;
@@ -277,11 +289,14 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-/deep/.amap-copyright{
+/deep/.amap-copyright {
   display: none;
 }
-#searchResults{
+#searchResults {
   height: 3.2rem;
   overflow-y: auto;
+}
+.top{
+  margin-top: .5rem;
 }
 </style>

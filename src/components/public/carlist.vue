@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-      <!-- <van-cell :border="false"> -->
-      <ul v-for="(item,index) in arr" :key="index" class="carlist">
-    <van-swipe-cell>
-        <li class="carlist_info" :class="{'bg':ishow}">
+  <ul class="container">
+    <!-- <van-cell :border="false"> -->
+    <li v-for="(item,index) in arr" :key="index" class="carlist">
+      <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
+        <div class="carlist_info" :class="{'bg':ishow}">
           <div class="car_s" @click="changech" v-show="ishow">
             <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="checked" />
             <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
@@ -23,32 +23,33 @@
               </div>
             </div>
           </div>
-        
-        </li>
-         
-       <template slot="right">
-            <van-button square type="danger" text="删除" />
-          </template>
-    </van-swipe-cell>
-      </ul>
-      <!-- </van-cell> -->
+        </div>
+
+        <template slot="right">
+          <van-button square type="danger" text="删除" />
+        </template>
+      </van-swipe-cell>
+    </li>
+    <!-- </van-cell> -->
     <!-- 底部显示 -->
     <div class="car_no"></div>
-  </div>
+  </ul>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
+import { Dialog } from "vant";
 export default {
   props: ["ishow"],
   data() {
     return {
+      LftW: 0,
       arr: [1],
       checked: true,
       num: 1,
       pri: 239,
-      value:1
+      value: 1,
+      RightW: 58
     };
   },
   //监听属性 类似于data概念
@@ -66,16 +67,16 @@ export default {
     changech() {
       this.checked = !this.checked;
     },
-     onClose(clickPosition, instance) {
+    onClose(clickPosition, instance) {
       switch (clickPosition) {
-        case 'left':
-        case 'cell':
-        case 'outside':
+        case "left":
+        case "cell":
+        case "outside":
           instance.close();
           break;
-        case 'right':
+        case "right":
           Dialog.confirm({
-            message: '确定删除吗？'
+            message: "确定删除吗？"
           }).then(() => {
             instance.close();
           });
@@ -104,7 +105,7 @@ export default {
   background-color: transparent;
 }
 /deep/.van-button {
-  right: -.2rem;
+  // right: -.2rem;
   height: 1.23rem;
 }
 /deep/.van-button--danger {
@@ -112,7 +113,7 @@ export default {
   border: none;
 }
 /deep/.van-swipe-cell__right {
-  right: 0.2rem;
+  // right: -.2rem;
   font-size: 0;
 }
 /deep/.van-swipe-cell {
@@ -120,78 +121,78 @@ export default {
   // width: 3.75rem;
   position: relative;
 }
-.container{
-width: 100%;
- margin-top: 0.5rem;
-.carlist {
-  margin:  0 auto;
-  padding: 0 .15rem;
-  .carlist_info {
-    margin-top: 0.1rem;
-    width: 3.45rem;
-    height: 1.23rem;
-    padding: 0.19rem 0.1rem;
-    background: #fff;
-     border-radius: 0.1rem;
-    display: flex;
-    justify-content: space-between;
-    
-    align-items: center;
-    .car_s {
-      width: 0.23rem;
-      height: 0.23rem;
-      border-radius: 50%;
-      position: relative;
-      img {
-        position: absolute;
-        top: 0;
-      }
-    }
-    .car_img {
-      width: 0.85rem;
-      height: 0.85rem;
-      border-radius: 0.05rem;
-      font-size: 0;
-    }
-    .car_info {
-      width: 1.91rem;
+.container {
+  width: 100%;
+  margin-top: 0.5rem;
+  .carlist {
+    margin: 0 auto;
+    padding: 0 0.15rem;
+    .carlist_info {
+      margin-top: 0.1rem;
+      width: 3.45rem;
+      height: 1.23rem;
+      padding: 0.19rem 0.1rem;
+      background: #fff;
+      border-radius: 0.1rem;
       display: flex;
-      flex-direction: column;
       justify-content: space-between;
-      .car_con {
-        white-space: wrap;
-        font-size: 0.15rem;
-        color: #333;
-      }
-      .sum_tot {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.29rem;
-        width: 100%;
-        .price {
-          font-size: 0.15rem;
-          color: #ed670d;
+
+      align-items: center;
+      .car_s {
+        width: 0.23rem;
+        height: 0.23rem;
+        border-radius: 50%;
+        position: relative;
+        img {
+          position: absolute;
+          top: 0;
         }
-        .total {
+      }
+      .car_img {
+        width: 0.85rem;
+        height: 0.85rem;
+        border-radius: 0.05rem;
+        font-size: 0;
+      }
+      .car_info {
+        width: 1.91rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .car_con {
+          white-space: wrap;
+          font-size: 0.15rem;
+          color: #333;
+        }
+        .sum_tot {
           display: flex;
-          span,
-          input {
-            display: inline-block;
-            margin-left: 0.05rem;
-            text-align: center;
-            line-height: 0.22rem;
-            background: #eeeeee;
-            width: 0.22rem;
-            height: 0.22rem;
-            font-size: 0.14rem;
+          justify-content: space-between;
+          margin-top: 0.29rem;
+          width: 100%;
+          .price {
+            font-size: 0.15rem;
+            color: #ed670d;
+          }
+          .total {
+            display: flex;
+            span,
+            input {
+              display: inline-block;
+              margin-left: 0.05rem;
+              text-align: center;
+              line-height: 0.22rem;
+              background: #eeeeee;
+              width: 0.22rem;
+              height: 0.22rem;
+              font-size: 0.14rem;
+            }
           }
         }
       }
     }
+    .car_no {
+      height: 1.2rem;
+    }
   }
-  .car_no {
-    height: 1.2rem;
-  }
-}
 }
 </style>
