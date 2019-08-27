@@ -2,7 +2,7 @@
   <div class='sear'>
     <div>
       <span></span>
-      <input type="text" placeholder="输入关键词搜索" name="search">
+      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord">
     </div>
     <span class="btn">
      搜索
@@ -16,7 +16,7 @@
 export default {
   data() {
     return {
-
+       KeyWord:''
     };
   },
   //监听属性 类似于data概念

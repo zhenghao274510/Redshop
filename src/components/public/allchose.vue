@@ -39,6 +39,7 @@ export default {
   methods: {
     choseall(){
       this.checked=!this.checked;
+      
     },
     gotopay(){
       this.$router.push('/success');

@@ -88,6 +88,25 @@ export default new Router({
       name:"商品",
       component: resolve => require(['./../pages/shoplist/shoplist.vue'], resolve)
     },
+     // 修改昵称
+     {
+      path: '/edmitname',
+      name:"修改昵称",
+      component: resolve => require(['./../pages/mineself/edmitname.vue'], resolve)
+    },
+     // 修改签名
+     {
+      path: '/edmitself',
+      name:"修改签名",
+      component: resolve => require(['./../pages/mineself/edmitself.vue'], resolve)
+    },
+    ,
+     // 绑定手机号
+     {
+      path: '/bindTel',
+      name:"绑定手机号",
+      component: resolve => require(['./../pages/bindTel.vue'], resolve)
+    },
     // 礼品卡
     {
       path: '/giftcard',

@@ -2,9 +2,9 @@
   <div class="box">
     <ul >
       <li v-for="(item,index) in icon" :key="index" @click="changeta(index)">
-        <router-link  :to="item.url" :class="{'active':num==index}">
+        <router-link  :to="item.url" :class="{'active':get.TB==index}">
           <div>
-            <img :src="item.normal" v-if='num!=index' />
+            <img :src="item.normal" v-if='get.TB!=index' />
             <img :src="item.actived" v-else/>
           </div>
           <p>{{item.tit}}</p>
@@ -20,7 +20,6 @@
 export default {
   data() {
     return {
-      num:0,
       icon:[{
         url:'/home',
         normal:'/static/icon/tab-shouye-weixuanzhong.png',
@@ -49,7 +48,11 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    get(){
+      return this.$store.state.home;
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
@@ -57,11 +60,13 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    console.log(this.$store.state.home.TB)
+  },
   //方法集合
   methods: {
     changeta(ind) {
-      this.num=ind;
+    this.$store.commit("ChangeTabar",ind);
     }
   },
   //生命周期 - 创建之前

@@ -1,40 +1,33 @@
 <template>
-  <div class="head">
-    <div>
-      <span class="back" @click="back"></span>
-      <p>{{title}}</p>
+  <div class="page_tel">
+    <div class="tel_bg"></div>
+    <div class="tel_cont">
+      <div class="tel_info">
+        
+      </div>
     </div>
   </div>
 </template>
+
 <script>
 //import 《组件名称》 from '《组件路径》';
 
 export default {
-  props: ["title"],
   data() {
-    return {
-    };
+    return {};
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {
-  
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-  },
+  mounted() {},
   //方法集合
-  methods: {
-    back() {
-      this.$router.go(-1);
-     
-    }
-  },
+  methods: {},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -51,33 +44,25 @@ export default {
   activated() {}
 };
 </script>
-<style scoped lang='less'>
-.head {
+<style scoped lang='less' rel='stylesheet/stylus'>
+.page_tel {
   width: 100%;
-  height: 0.5rem;
-  // border-bottom: .01rem solid #878787;
-  background: #e5e5e5;
-  position: fixed;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 0.15rem;
-  z-index: 999;
-  div {
-    display: flex;
-    align-items: center;
-    .back {
-      width: 0.09rem;
-      height: 0.17rem;
-      background: url("/static/icon/daohanglan-fanhuijian.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.15rem;
-    }
-    p {
-      font-size: 0.17rem;
-      line-height: 0.5rem;
+  margin-top: 0.5rem;
+  position: relative;
+  .tel_bg {
+    width: 100%;
+    height: 1.8rem;
+    background-color: #72bb29;
+  }
+  .tel_cont {
+    margin-top: -0.5rem;
+     padding: 0 0.15rem;
+    .tel_info{
+    
+    height: 5rem;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 .01rem .06rem 0 rgba(51, 51, 51, 0.2);
+    border-radius: 0.2rem;
     }
   }
 }

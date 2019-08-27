@@ -15,6 +15,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import VueAMap from 'vue-amap'
 import GetPos from "./../../../static/js/location";
 export default {
   data() {

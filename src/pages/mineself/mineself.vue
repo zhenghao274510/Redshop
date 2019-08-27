@@ -2,21 +2,21 @@
   <div class>
     <ul>
       <li>
-        <router-link to>
+        <router-link to="/bindTel">
           <span>头像</span>
           <img src="/static/test/qiandao.png" alt />
           <i></i>
         </router-link>
       </li>
        <li>
-        <router-link to="/editaddress">
+        <router-link to="/edmitname">
           <span>昵称</span>
             <p>昵称</p>
           <i></i>
         </router-link>
       </li>
        <li>
-        <router-link to>
+        <router-link to="/edmitself">
           <span>个性签名</span>
             <p>Lorem IpsumLorem Ipsum</p>
           <i></i>

@@ -1,39 +1,41 @@
 <template>
-  <div class="head">
-    <div>
-      <span class="back" @click="back"></span>
-      <p>{{title}}</p>
+  <div class='edmit'>
+    <div class="edmit_cont">
+       <textarea name="useSelf" id="Self" placeholder="输入你的签名"></textarea>
+      <van-button type="primary" size="large" color="#72BB29" style="margin-top:1rem">确定</van-button>
     </div>
+    
   </div>
 </template>
+
 <script>
 //import 《组件名称》 from '《组件路径》';
 
 export default {
-  props: ["title"],
   data() {
     return {
+
     };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {
-  
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+
   },
   //方法集合
   methods: {
-    back() {
-      this.$router.go(-1);
-     
-    }
+
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -48,36 +50,20 @@ export default {
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
-  activated() {}
-};
+  activated() {},
+}
 </script>
-<style scoped lang='less'>
-.head {
-  width: 100%;
-  height: 0.5rem;
-  // border-bottom: .01rem solid #878787;
-  background: #e5e5e5;
-  position: fixed;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 0.15rem;
-  z-index: 999;
-  div {
-    display: flex;
-    align-items: center;
-    .back {
-      width: 0.09rem;
-      height: 0.17rem;
-      background: url("/static/icon/daohanglan-fanhuijian.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.15rem;
-    }
-    p {
-      font-size: 0.17rem;
-      line-height: 0.5rem;
+<style scoped lang='less' rel='stylesheet/stylus'>
+.edmit{
+  padding: 0 .15rem;
+  .edmit_cont{
+    margin-top:.6rem;
+    #Self{
+      border: .01rem solid #72BB29;
+      font-size: .15rem;
+      height: 1.82rem;
+      width: 100%;
+      padding: .1rem;
     }
   }
 }

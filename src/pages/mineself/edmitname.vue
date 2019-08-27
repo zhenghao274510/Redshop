@@ -1,40 +1,35 @@
 <template>
-  <div class="head">
-    <div>
-      <span class="back" @click="back"></span>
-      <p>{{title}}</p>
-    </div>
+  <div class='edmit'>
+    <van-cell-group class="list">
+      <label for="昵称" class="ft_mid">昵称：<input type="text" v-model="nameV" style="flex:1;padding-left:.2rem">  </label>
+      <van-icon name="clear" size=".14rem" color="#999999"></van-icon> 
+    </van-cell-group>
+    
+    <van-button type="primary" size="large" color="#72BB29" style="margin-top:1rem">确定</van-button>
   </div>
 </template>
+
 <script>
 //import 《组件名称》 from '《组件路径》';
 
 export default {
-  props: ["title"],
   data() {
     return {
+      nameV:''
     };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {
-  
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-  },
+  mounted() {},
   //方法集合
-  methods: {
-    back() {
-      this.$router.go(-1);
-     
-    }
-  },
+  methods: {},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -51,34 +46,17 @@ export default {
   activated() {}
 };
 </script>
-<style scoped lang='less'>
-.head {
+<style scoped lang='less' rel='stylesheet/stylus'>
+.edmit{
+  padding: 0 .15rem;
+.list{
   width: 100%;
-  height: 0.5rem;
-  // border-bottom: .01rem solid #878787;
-  background: #e5e5e5;
-  position: fixed;
-  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.15rem;
-  z-index: 999;
-  div {
-    display: flex;
-    align-items: center;
-    .back {
-      width: 0.09rem;
-      height: 0.17rem;
-      background: url("/static/icon/daohanglan-fanhuijian.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.15rem;
-    }
-    p {
-      font-size: 0.17rem;
-      line-height: 0.5rem;
-    }
-  }
+  margin-top: .5rem;
+  height:.45rem;
 }
+}
+
 </style>
