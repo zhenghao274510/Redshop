@@ -1,56 +1,35 @@
 <template>
   <div id="app">
     <Top :title="$route.name"></Top>
-
+    
     <tar v-if="$route.meta.showtabar"></tar>
-    <router-view />
+    
+      <router-view />
+ 
   </div>
 </template>
 
 <script>
 import Top from "@/components/public/heade";
+import Hid from "@/components/public/hidden";
 import set from "../static/font/rem";
 import tar from "./components/public/nav";
 export default {
   name: "App",
   data() {
     return {
-      docmHeight: "0", //默认屏幕高度
-      showHeight: "0", //实时屏幕高度
-      isResize: false //默认屏幕高度是否已获取
+
     };
-  },
-  watch:{
-  showHeight: function() {
-      if (this.docmHeight > this.showHeight) {
-        if(this.$route.meta.showtabar){
-          this.$route.meta.showtabar=false
-        }
-      } else {
-        this.$route.meta.showtabar= true;
-      }
-    }
   },
   mounted() {
     window.onload = window.onresize = set.setrem;
-    window.onresize = () => {
-      return (() => {
-        if (!this.isResize) {
-          this.docmHeight = document.documentElement.clientHeight;
-          this.isResize = true;
-        }
-        this.showHeight = document.body.clientHeight;
-      })();
-    };
   },
   components: {
     tar,
-    Top
+    Top,
+    Hid
   },
   methods: {
-    back() {
-      this.$router.go(-1);
-    }
   }
 };
 </script>

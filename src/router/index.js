@@ -3,7 +3,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
-  mode: "history",
+  mode: "hash",
   routes: [{
       path: '/',
      redirect:'/home'
@@ -53,34 +53,6 @@ export default new Router({
       meta:{
         requireAuth: true
       }
-      // ,
-      // children: [{
-      //     path: 'waitepay',
-      //     component: resolve => require(['./../pages/order/child/waitepay.vue'], resolve)
-      //   },
-      //   {
-      //     path: 'waitesong',
-      //     component: resolve => require(['./../pages/order/child/waitesong.vue'], resolve)
-      //   },
-      //   {
-      //     path: 'waiteping',
-      //     component: resolve => require(['./../pages/order/child/waiteping.vue'], resolve)
-      //   },
-      //   {
-      //     path: 'tui',
-      //     component: resolve => require(['./../pages/order/child/tui.vue'], resolve)
-      //   },
-      //   {
-      //     path: 'peing',
-      //     component: resolve => require(['./../pages/order/child/peing.vue'], resolve)
-      //   },
-      //   {
-      //     path: 'all',
-      //     component: resolve => require(['./../pages/order/child/all.vue'], resolve)
-      //   }
-
-
-      // ]
     },
     // 商品
     {
@@ -105,7 +77,7 @@ export default new Router({
      {
       path: '/bindTel',
       name:"绑定手机号",
-      component: resolve => require(['./../pages/bindTel.vue'], resolve)
+      component: resolve => require(['./../pages/bind.vue'], resolve)
     },
     // 礼品卡
     {
@@ -124,6 +96,24 @@ export default new Router({
         requireAuth: true
       }
     },
+    // 充值
+    {
+      path: '/paymoney',
+      name:"充值",
+      component: resolve => require(['./../pages/chongzhi/paymoney.vue'], resolve)
+    }, 
+     // 充值
+     {
+      path: '/chaxun',
+      name:"查询",
+      component: resolve => require(['./../pages/chongzhi/chaxun.vue'], resolve)
+    }, 
+       // 充值
+       {
+        path: '/peisongsuccess',
+        name:"配送成功",
+        component: resolve => require(['./../pages/peisongsuccess.vue'], resolve)
+      }, 
     // 商品详情
     {
       path: '/shopdetails',

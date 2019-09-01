@@ -1,17 +1,12 @@
 <template>
   <div class="my_link">
-    <div class="bo_bot">
       <By></By>
-    </div>
-    
-
- 
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import By from './../../components/public/carlist'
+import By from './shuolist'
 export default {
   data() {
     return {};

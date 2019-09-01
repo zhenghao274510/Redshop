@@ -1,5 +1,5 @@
 <template>
-  <div class=''>
+  <div class='position'>
  <a-map></a-map>
 
   </div>
@@ -7,7 +7,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import aMap from './map'
+import aMap from './amap'
 export default {
   data() {
     return {
@@ -23,9 +23,9 @@ export default {
 aMap
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
+  created() {},
 
-  },
+ 
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
 
@@ -51,8 +51,8 @@ aMap
 }
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-#container{
-  width: 3.75rem;
-  height: 3rem;
+.position{
+margin-top:.5rem;
+overflow: hidden;
 }
 </style>

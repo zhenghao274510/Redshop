@@ -1,11 +1,12 @@
 <template>
   <div class="box">
-    <sear></sear>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <sear></sear>
 
-    <div class="list_two">
-      <Shop-L></Shop-L>
-      <Shop-L></Shop-L>
-    </div>
+     
+        <Shop-L></Shop-L>
+     
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -15,7 +16,9 @@ import sear from "./../../components/public/search";
 import ShopL from "./../../components/public/shangpin";
 export default {
   data() {
-    return {};
+    return {
+      isLoading: false
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -31,7 +34,14 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    onRefresh() {
+      setTimeout(() => {
+        this.$toast("刷新成功");
+        this.isLoading = false;
+      }, 500);
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

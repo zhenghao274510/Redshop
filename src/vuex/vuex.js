@@ -21,6 +21,12 @@ const store=new Vuex.Store({
       ChangeBack(state,val){
         state.home.TB-=val;
       }
+    },
+    getters(){
+
+    },
+    actions(){
+
     }
 })
 export default store

@@ -54,7 +54,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: .5rem;
+  margin-top: .7rem;
   height:.45rem;
 }
 }

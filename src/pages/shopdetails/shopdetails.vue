@@ -1,5 +1,8 @@
 <template>
   <div class="shop_de">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+
+
     <De></De>
     <div class="shop_info">
       <div class="shop_info_tit">
@@ -66,6 +69,7 @@
         </div>
       </div>
     </div>
+    </van-pull-refresh>
     <van-popup v-model="show" round position="bottom" :style="{ height: '70%' }" :close-on-click-overlay="jin">
       <Addshop @closec="FUC" v-if="add_car"></Addshop>
       <Youcard  @closec="FUC"  v-if="see_card"></Youcard>
@@ -112,7 +116,8 @@ export default {
       addshou: true,
       add_car: false,
       see_gu: false,
-      see_card: false
+      see_card: false,
+       isLoading: false
     };
   },
   //监听属性 类似于data概念
@@ -161,6 +166,12 @@ export default {
           this.add_car = false;
           break;
       }
+    },
+     onRefresh() {
+      setTimeout(() => {
+        this.$toast('刷新成功');
+        this.isLoading = false;
+      }, 500);
     }
   },
   //生命周期 - 创建之前
@@ -337,7 +348,7 @@ em {
   }
   .buy {
     position: fixed;
-    bottom: 0;
+    bottom: -.01rem;;
     width: 100%;
     height: 0.5rem;
     border-top: 0.01rem solid rgba(135, 135, 135, 0.2);

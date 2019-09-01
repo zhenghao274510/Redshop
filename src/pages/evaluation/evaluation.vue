@@ -40,7 +40,12 @@ export default {
   components: {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+     let parmas2={cmd:"toRecommend",nowPage:'',pageCount:'10'};
+       this.postRequest(params2).then(res=>{
+         console.log(res)
+      })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

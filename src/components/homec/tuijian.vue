@@ -1,6 +1,12 @@
 <template>
+<div>
+
+
   <!-- 首页推荐模块 -->
-  <div class="tuijian">
+  <van-list class="tuijian"
+   v-model="loading"
+  @load="onLoad"
+  >
     <Tit :title="activ"></Tit>
     <ul class="tui_list">
       <li>
@@ -40,6 +46,7 @@
         </router-link>
       </li>
     </ul>
+  </van-list>
     <div class="no_more"></div>
   </div>
 </template>
@@ -50,7 +57,9 @@ import Tit from "./title";
 export default {
   data() {
     return {
-      activ: { tit: "为你推荐", type: 1 }
+      activ: { tit: "为你推荐", type: 1 },
+        loading: false,
+        finished: false
     };
   },
   //监听属性 类似于data概念
@@ -62,11 +71,22 @@ export default {
     Tit
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+     onLoad() {
+      // 异步更新数据
+     setTimeout(()=>{
+        this.$toast('加载成功')
+        this.loading=false;
+           this.finished = true;
+     },3000)
+  }
+},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

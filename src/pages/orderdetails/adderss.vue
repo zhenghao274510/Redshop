@@ -21,7 +21,7 @@
         </div>
         <div class="change_ac" @click="GoToEmid">
           <van-icon name="records" size=".18rem" color="#999999" />
-          <span>编辑</span>
+          <router-link to="/editaddress">编辑</router-link>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
       }
     },
     GoToEmid(){
-
+    //  this.$router.push('/editaddress');
     }
   },
   //生命周期 - 创建之前
@@ -130,6 +130,9 @@ export default {
       .change_ac{
         display: flex;
         margin-right: 0.15rem;
+        a{
+          font-size: .13rem;color:#999999;
+        }
       }
     }
   }

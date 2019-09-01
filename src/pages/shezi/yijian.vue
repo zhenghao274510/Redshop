@@ -70,6 +70,7 @@ export default {
       background-color: #f6f6f6;
       font-size: 0.16rem;
       border: none;
+      padding: .1rem;
     }
     input {
       width: 100%;
@@ -95,6 +96,7 @@ export default {
     color: #FFF;
     font-size: .18rem;
     background-color: #72BB29;
+    border-radius: .05rem;
   }
 
 }

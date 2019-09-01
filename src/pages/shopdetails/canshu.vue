@@ -74,6 +74,7 @@ export default {
     font-size: 0.18rem;
     text-align: center;
     line-height: 0.5rem;
+    border-bottom: .01rem solid #e5e5e5;
   }
   .content {
     padding: 0 0.15rem;
@@ -81,7 +82,7 @@ export default {
      overflow-y: auto;
     li {
       height: 0.5rem;
-      border-top: 0.01rem solid #e5e5e5;
+      border-bottom: 0.01rem solid #e5e5e5;
       display: flex;
       align-items: center;
       span {
@@ -101,7 +102,10 @@ export default {
   .buy_or{
         padding: 0 .15rem;
     .btn {
-      margin-top: .1rem;
+      position: absolute;
+      // bottom: .12rem;
+      width: 3.45rem;
+      margin:0 auto;
     display: block;
     height: 0.44rem;
     line-height: .44rem;

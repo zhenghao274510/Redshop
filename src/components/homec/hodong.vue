@@ -24,13 +24,10 @@
           </div>
         </router-link>
       </div>
-
-      <div class="list_two">
         <Shop-L></Shop-L>
-        <Shop-L></Shop-L>
-      </div>
+    
     </div>
-    <router-link to class="banner mg_top">
+    <router-link to class="banner">
       <img src="/static/test/replace.jpg" />
     </router-link>
   </div>
@@ -93,12 +90,14 @@ export default {
       flex-wrap: wrap;
       width: 100%;
       padding: 0 0.15rem;
-      margin: 0.17rem 0;
+      margin: 0.1rem 0;
       a {
         flex: 1;
         padding: 0.15rem;
+        height: 4rem;
         box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
         .hd_img_con {
+           height: 3.2rem;
         }
         .hd_info {
           p {
@@ -111,12 +110,7 @@ export default {
         }
       }
     }
-    .list_two{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      padding: 0 .15rem;
-    }
+    
   }
 }
 </style>

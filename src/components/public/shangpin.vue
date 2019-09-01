@@ -1,6 +1,6 @@
 <template>
-  <div class="shop_o">
-    <div class="shop_de">
+  <ul class="shop_o">
+    <li class="shop_de" >
       <div class="shop_img" @click.prevent="goto">
         <img src="/static/test/replace.jpg" alt />
       </div>
@@ -11,17 +11,51 @@
             ￥
             <i>219</i>
           </span>
-          <i class="shop_car" @click.prevent="addcar"></i>
+          <i class="shop_car" @click.prevent="addcar()"></i>
         </div>
       </div>
-    </div>
-  </div>
+    </li>
+    <li class="shop_de" >
+      <div class="shop_img" @click.prevent="goto">
+        <img src="/static/test/replace.jpg" alt />
+      </div>
+      <div class="shop_info">
+        <p class="shop_name">西班牙DO级红酒</p>
+        <div class="shop_pir">
+          <span>
+            ￥
+            <i>219</i>
+          </span>
+          <i class="shop_car" @click.prevent="addcar()"></i>
+        </div>
+      </div>
+    </li>
+    <li class="shop_de" >
+      <div class="shop_img" @click.prevent="goto">
+        <img src="/static/test/replace.jpg" alt />
+      </div>
+      <div class="shop_info">
+        <p class="shop_name">西班牙DO级红酒</p>
+        <div class="shop_pir">
+          <span>
+            ￥
+            <i>219</i>
+          </span>
+          <i class="shop_car" @click.prevent="addcar()"></i>
+        </div>
+      </div>
+    </li>
+  </ul>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
 
 export default {
+  props:{
+     list:[],
+     type:Array
+  },
   data() {
     return {};
   },
@@ -40,7 +74,12 @@ export default {
     goto() {
       this.$router.push("/shopdetails");
     },
-    addcar() {}
+    addcar() {
+      let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:''};
+       this.postRequest(params).then(res=>{
+         console.log(res)
+      })
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -60,16 +99,22 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .shop_o {
-  box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
-  .shop_de {
+  padding: 0 .075rem;
+  overflow: hidden;
+  li{
     width: 1.65rem;
-    height: 2.65rem;
+    height: 2.18rem;
     border-radius: 0.1rem;
-    
-    z-index: 2;
+     z-index: 2;
+     margin: .075rem;
+     float: left;
+     box-shadow: 0 0  .02rem .02rem rgba(34, 34, 34, 0.2);
+     &:nth-child(2n){
+       margin-right: 0;
+     }
     .shop_img {
       width: 1.65rem;
-      height: 1.79rem;
+      height: 1.5rem;
       border-radius: 0.1rem 0.1rem 0 0;
       padding: 0.23rem 0.29rem 0.06rem 0.18rem;
       img {
@@ -77,7 +122,7 @@ export default {
     }
     .shop_info {
       width: 100%;
-      padding: 0.14rem 0.1rem 0.19rem 0.11rem;
+      padding: 0.1rem 0.08rem 0.1rem 0.1rem;
       display: flex;
       flex-direction: column;
       .shop_name {
@@ -90,14 +135,14 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 0.26rem;
+        margin-top: 0.15rem;
         .shop_car {
           display: block;
           width: 0.19rem;
           height: 0.18rem;
           background: url("/static/icon/shangpin-gouwuche.png") no-repeat;
           background-size: 100% 100%;
-          z-index: 999;
+          z-index: 99;
         }
       }
     }

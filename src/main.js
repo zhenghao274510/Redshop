@@ -4,7 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './vuex/vuex'
-//  vant
+import mixins from './mixins'
+Vue.mixin(mixins)
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
@@ -20,7 +21,7 @@ Vue.use(Lazyload, {
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
-  key: 'b7bcfbed3a21318b8920fb9cca39be52',
+  key: 'a8e3f1d526511281bac2edf977a6ca03',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','AMap.Geolocation', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType',
     'AMap.PolyEditor', 'AMap.CircleEditor'
   ],

@@ -42,7 +42,14 @@ export default {
     Mo
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+     // this.id =this.$route.query.id;
+     this.id =this.$route.query.id;
+    let params={cmd:'myOrder',uid:"",nowPage:"1",pageCount:"10"}
+    this.postRequest(params).then(res=>{
+         console.log(res)
+    })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.active=Number(this.$route.params.ShopId);
@@ -80,10 +87,10 @@ text-overflow: inherit;
   text-align: center;
   padding: 0;
 }
- .bor {
-        border-bottom: 0.02rem solid #72bb29;
-        color: #72bb29;
-      }
+//  .bor {
+//         border-bottom: 0.02rem solid #72bb29;
+//         color: #72bb29;
+//       }
 .order_box {
   width: 100%;
   height: 100%;

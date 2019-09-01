@@ -1,9 +1,13 @@
 <template>
-  <div class="box">
+  <div class="box" 
+  >
+  <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+
     <!-- <Top title="商城"></Top> -->
     <sear></sear>
     <Zq></Zq>
     <Tui-Jan></Tui-Jan>
+    </van-pull-refresh>
     <!-- 弹出层 -->
 
     <van-popup v-model="First" round>
@@ -29,6 +33,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import vuescroll from 'vuescroll/dist/vuescroll-slide';
 import Top from "./../../components/public/heade";
 import Zq from "./../../components/homec/hodong";
 import TuiJan from "./../../components/homec/tuijian";
@@ -37,7 +42,9 @@ export default {
   data() {
     return {
       First: true,
-      isGet:true 
+      isGet:true ,
+      id:'',
+      isLoading: false
     };
   },
   //监听属性 类似于data概念
@@ -49,17 +56,35 @@ export default {
     Top,
     sear,
     Zq,
-    TuiJan
+    TuiJan,
+    vuescroll
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // this.id =this.$route.query.id;
+    let params1={cmd:'firstPage'}
+    this.postRequest(params1).then(res=>{
+         console.log(res)
+    })
+     let parmas2={cmd:"toRecommend",nowPage:'',pageCount:'10'};
+       this.postRequest(params2).then(res=>{
+         console.log(res)
+      })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     // this.$store.commit("ChangeTabar",Number(this.$route.params.ShopId))
     // console.log(this.$route.params.ShopId)
   },
   //方法集合
-  methods: {},
+  methods: {
+    onRefresh() {
+      setTimeout(() => {
+        this.$toast('刷新成功');
+        this.isLoading = false;
+      }, 500);
+    }
+        },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -111,4 +136,5 @@ export default {
     }
   }
 }
+.box{background-color: #FFF;}
 </style>

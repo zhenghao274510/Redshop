@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="youhuibox">
     <p>优惠</p>
     <ul class="cardlist">
       <li>
@@ -64,7 +64,7 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.box {
+.youhuibox {
   padding: 0.1rem 0.15rem;
   p {
     font-size: 0.17rem;
@@ -112,8 +112,12 @@ export default {
     }
   }
   .buy_or {
+  
     .btn {
-      margin-top: 0.1rem;
+      position: absolute;
+      bottom: .12rem;
+      width: 3.45rem;
+      margin:0 auto;
       display: block;
       height: 0.44rem;
       line-height: 0.44rem;

@@ -2,41 +2,43 @@
   <div class>
     <ul class="add_inf">
       <li>
-        <van-card
-          num="2"
-          price="2.00"
-          desc="描述信息"
-          title="商品标题"
-          thumb="https://img.yzcdn.cn/vant/t-thirt.jpg"
-        />
+        <car-info></car-info>
         <div class="ev_star">
           <span>商品评星</span>
           <van-rate v-model="value" readonly />
         </div>
         <div class="ev_int">
           <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）"></textarea>
-        </div>
-
-        <div class="add_img" @click="show=true">
-          <span></span>
-          <p>上传照片</p>
+          <div class="add_con">
+            <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
+              <img src="/static/icon/lipinka.png" alt />
+            </div>
+            <div class="add_img" @click="show=true" v-if="imgs.length!=3">
+              <input type="file" class="upfile" @change="Upfiles" ref="inp" multiple />
+              <span></span>
+              <p>上传照片</p>
+            </div>
+          </div>
         </div>
       </li>
     </ul>
-    <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }">
-      <van-button type="primary" size="large" >拍照</van-button>
-      <van-button type="primary" size="large">相册</van-button>
-      </van-popup>
+    <!-- <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }">
+      <van-button type="primary" size="large">拍照</van-button>
+      <van-button type="file" size="large">相册</van-button>
+    </van-popup>-->
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import carInfo from "./../shoucang/shuolist";
 export default {
   data() {
     return {
-      show:false,
-      value: 5
+      show: false,
+      value: 5,
+      imgs: [],
+      num: 0
     };
   },
   //监听属性 类似于data概念
@@ -45,13 +47,57 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
+    carInfo
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    console.log(this.imgs);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    Upfiles() {
+      let self = this;
+
+      let inp = self.$refs.inp;
+      let files = inp.files[0];
+      // let index = 0;
+      let reads = new FileReader();
+      reads.readAsDataURL(files);
+      reads.onload = e => {
+        files.src = e.target.result;
+        self.imgs.push(0),
+        self.imgs.pop();
+        self.imgs.push({
+          files
+        });
+      };
+      // if (files.length > 0) {
+      //   let reads = new FileReader();
+      //   reads.onload = e => {
+      //     self.imgs.push({
+      //       fileName: files[index].name,
+      //       data: e.target.result
+      //     });
+      //     index++;
+      //     if(index<files.length){
+      //       reads.readAsDataURL(files[index]);
+      //     }else{
+      //       self.$emit('onReadComplete',self.imgs)
+      //     }
+      //   };
+      //    reads.readAsDataURL(files[index]);
+      // }
+
+      // var img = new FormData();
+      // img.append("file", file);
+    },
+    delimg(e) {
+      let len = this.imgs.length - e;
+      this.imgs.slice(len, 1);
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -72,20 +118,27 @@ export default {
 /deep/ .van-rate__icon {
   font-size: 0.13rem;
 }
-/deep/.van-popup--bottom.van-popup--round{
-  padding:.15rem;
+/deep/.van-popup--bottom.van-popup--round {
+  padding: 0.15rem;
   font-size: 0;
 }
-/deep/.van-button--large{
-  margin-top: .2rem;
+/deep/.van-button--large {
+  margin-top: 0.2rem;
 }
-
+.upfile {
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  width: 0.56rem;
+  height: 0.56rem;
+  opacity: 0;
+}
 .add_inf {
   margin-top: 0.5rem;
   font-size: 0;
   li {
     position: relative;
-    height: 3rem;
+    // height: 3rem;
     background-color: #fff;
     .ev_star {
       font-size: 0.14rem;
@@ -97,42 +150,49 @@ export default {
       }
     }
     .ev_int {
-      padding: 0 0.15rem;
+      // padding: 0 0.15rem;
+      width: 3.45rem;
+      margin: 0 auto;
+      height: 1.4rem;
       overflow: hidden;
+      background-color: #eeeeee;
+      border-radius: 0.1rem;
       #ev_main {
         padding: 0.09rem 0.15rem;
-        box-sizing: border-box;
-        width: 3.45rem;
-        height: 1.4rem;
+        height: 0.74rem;
+        width: 100%;
         background-color: #eeeeee;
         font-size: 0.14rem;
         border: none;
-        border-radius: 0.1rem;
       }
-    }
+      .add_con {
+        width: 100%;
 
-    .add_img {
-      position: absolute;
-      bottom: 0.15rem;
-      left: 0.3rem;
-      width: 0.56rem;
-      height: 0.56rem;
-      border: 0.01rem solid #d5d5d5;
-      border-radius: 0.03rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
-      p {
-        color: #999999;
-        font-size: 0.11rem;
-      }
-      span {
-        width: 0.25rem;
-        height: 0.22rem;
-        background: url("/static/icon/xiangji.png") center center no-repeat;
-        background-size: 100% 100%;
-        display: block;
+        display: flex;
+        padding-left: 0.15rem;
+        .add_img {
+          margin-right: 0.15rem;
+          width: 0.56rem;
+          height: 0.56rem;
+          border: 0.01rem solid #d5d5d5;
+          border-radius: 0.03rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-around;
+          position: relative;
+          p {
+            color: #999999;
+            font-size: 0.11rem;
+          }
+          span {
+            width: 0.25rem;
+            height: 0.22rem;
+            background: url("/static/icon/xiangji.png") center center no-repeat;
+            background-size: 100% 100%;
+            display: block;
+          }
+        }
       }
     }
   }

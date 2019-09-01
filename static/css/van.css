@@ -3,7 +3,7 @@
   color: #72bb29;
 }
 .van-tabs__line{
-  background-color: #72bb29;
+  background-color: #72bb29 !important;
 }
  .van-tab--active .van-ellipsis{
   color: #72bb29;

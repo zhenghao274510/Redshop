@@ -1,26 +1,8 @@
 <template>
   <div class="box">
-    <By ishow="true"></By>
-    <div class="all_chose">
-      <div class="all_left">
-        <div class="all_s" @click="choseall">
-          <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="checked" />
-          <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
-        </div>
-        <span>全选</span>
-      </div>
-      <div class="all_right">
-        <span>总价:</span>
-        <div class="all_price">
-          ￥0
-          <i></i>
-        </div>
-        <div class="all_jie" @click="gotopay">
-          去结算
-          <i>(0)</i>
-        </div>
-      </div>
-    </div>
+    <By ishow="true"></By>    
+    <div style="height:1.2rem;"></div>
+    
   </div>
 </template>
 
@@ -31,7 +13,6 @@ import By from "./../../components/public/carlist";
 export default {
   data() {
     return {
-      checked: true
     };
   },
   //监听属性 类似于data概念
@@ -43,17 +24,22 @@ export default {
     By
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+     let parmas = {
+        cmd: "getCartList",
+        nowPage: "1",
+        uid: "",
+        pageCount:"10"
+        
+      };
+      this.postRequest(params).then(res => {
+        console.log(res);
+      });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    choseall() {
-      this.checked = !this.checked;
-    },
-    gotopay() {
-      this.$router.push("/success");
-    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -77,63 +63,6 @@ export default {
   height: 100%;
   background: #eeeeee;
   overflow-y: scroll;
-  .all_chose {
-    position: fixed;
-    bottom: 0.5rem;
-    width: 100%;
-    height: 0.44rem;
-    background: #fff;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    .all_left {
-      width: 0.91rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .all_s {
-        width: 0.23rem;
-        height: 0.23rem;
-        border-radius: 50%;
-        position: relative;
-        img {
-          position: absolute;
-          top: 0;
-        }
-      }
-      span {
-        font-size: 0.15rem;
-        color: #333;
-        display: inline-block;
-        margin-left: 0.09rem;
-      }
-    }
-    .all_right {
-      width: 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      span {
-        font-size: 0.15rem;
-        color: #333;
-        display: inline-block;
-      }
-      .all_price {
-        font-size: 0.15rem;
-        color: #ed670d;
-        flex: 1;
-        text-align: left;
-        margin-left: 0.05rem;
-      }
-      .all_jie {
-        width: 1.05rem;
-        text-align: center;
-        line-height: 0.44rem;
-        background: #72bb29;
-        color: #fff;
-        font-size: 0.15rem;
-      }
-    }
-  }
+ 
 }
 </style>

@@ -1,13 +1,9 @@
 <template>
   <ul class="container">
     <!-- <van-cell :border="false"> -->
-    <li v-for="(item,index) in 3" :key="index" class="carlist">
+    <li v-for="(item,index) in 1" :key="index" class="carlist">
       <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
         <div class="carlist_info" :class="{'bg':ishow}">
-          <div class="car_s" @click="changech(index)" v-show="ishow">
-            <img src="/static/icon/gouwuche-weixuanzhong.png" v-show="check[index]" />
-            <img src="/static/icon/gouwuche-xuanzhong.png" v-show="!check[index]" />
-          </div>
           <div class="car_img">
             <img src="/static/test/replace.jpg" />
           </div>
@@ -18,9 +14,9 @@
                 ￥
                 <i>{{pri}}</i>
               </span>
-              <div class="total" v-show="ishow" @click="sub">
-                <van-stepper v-model="value[index]" integer />
-              </div>
+              <span class="price" style="color:#333333">
+                  x 1
+              </span>
             </div>
           </div>
         </div>
@@ -32,26 +28,7 @@
     </li>
     <!-- </van-cell> -->
     <!-- 底部显示 -->
-    <div class="all_chose">
-      <div class="all_left">
-        <div class="all_s" @click="choseall">
-          <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="allchecked" />
-          <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
-        </div>
-        <span>全选</span>
-      </div>
-      <div class="all_right">
-        <span>总价:</span>
-        <div class="all_price">
-          ￥{{totalPrice}}
-          <i></i>
-        </div>
-        <div class="all_jie" @click="gotopay">
-          去结算
-          <i>({{length}})</i>
-        </div>
-      </div>
-    </div>
+    
     <div class="car_no"></div>
   </ul>
 </template>
@@ -63,16 +40,15 @@ export default {
   props: ["ishow", "ischeck"],
   data() {
     return {
-      length: 0,
+     
       LftW: 0,
-      arr: [1, 2, 3],
-      check: [true, true, true],
+
+
       num: 1,
       pri: 239,
-      value: [1, 2, 3],
+
       RightW: 58,
-      totalPrice: 0,
-      allchecked: true
+    
     };
   },
   //监听属性 类似于data概念
@@ -88,21 +64,6 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    changech(ind) {
-      //   事件不触发   先添加 在删除触发
-      this.check.push(0), this.check.pop();
-      this.check[ind] = !this.check[ind];
-      this.sub();
-      if (!this.check[ind]) {
-        this.length += 1;
-          if(this.check.indexOf(true)==-1){
-            this.allchecked=false;
-          }
-      } else {
-        this.length -= 1;
-        this.allchecked=true;
-      }
-    },
 
     onClose(clickPosition, instance) {
       switch (clickPosition) {
@@ -120,29 +81,8 @@ export default {
           break;
       }
     },
-    sub() {
-      this.totalPrice = 0;
-      for (let i = 0; i < 3; i++) {
-        if (!this.check[i]) {
-          this.totalPrice += this.value[i] * this.pri;
-        }
-      }
-    },
-    choseall() {
-      this.check = [];
-      this.length = 0;
-      this.allchecked = !this.allchecked;
-      for (let i = 0; i < 3; i++) {
-        this.check.push(this.allchecked);
-        if (!this.allchecked) {
-          this.length += 1;
-        }
-      }
-      this.sub();
-    },
-    gotopay() {
-      this.$router.push("/success");
-    }
+   
+   
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -185,97 +125,33 @@ export default {
   width: 100%;
   margin-top: 0.5rem;
 
-  .all_chose {
-    position: fixed;
-    bottom: 0.5rem;
-    width: 100%;
-    height: 0.44rem;
-    background: #fff;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    .all_left {
-      width: 0.91rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .all_s {
-        width: 0.23rem;
-        height: 0.23rem;
-        border-radius: 50%;
-        position: relative;
-        img {
-          position: absolute;
-          top: 0;
-        }
-      }
-      span {
-        font-size: 0.15rem;
-        color: #333;
-        display: inline-block;
-        margin-left: 0.09rem;
-      }
-    }
-    .all_right {
-      width: 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      span {
-        font-size: 0.15rem;
-        color: #333;
-        display: inline-block;
-      }
-      .all_price {
-        font-size: 0.15rem;
-        color: #ed670d;
-        flex: 1;
-        text-align: left;
-        margin-left: 0.05rem;
-      }
-      .all_jie {
-        width: 1.05rem;
-        text-align: center;
-        line-height: 0.44rem;
-        background: #72bb29;
-        color: #fff;
-        font-size: 0.15rem;
-      }
-    }
-  }
+  
   .carlist {
     margin: 0 auto;
-    padding: 0 0.15rem;
+    border: .01rem solid #E5E5E5;
     .carlist_info {
       margin-top: 0.1rem;
-      // width: 3.45rem;
-      height: 1.23rem;
+      height: 1.16rem;
       padding: 0.19rem 0.1rem;
       background: #fff;
       border-radius: 0.1rem;
       display: flex;
       justify-content: space-between;
-
+      
       align-items: center;
-      .car_s {
-        width: 0.23rem;
-        height: 0.23rem;
-        border-radius: 50%;
-        position: relative;
-        img {
-          position: absolute;
-          top: 0;
-        }
-      }
+    
       .car_img {
         width: 0.85rem;
         height: 0.85rem;
         border-radius: 0.05rem;
         font-size: 0;
+        border-radius: .05rem;
       }
       .car_info {
-        width: 1.91rem;
+        // width: 1.91rem;
         display: flex;
+        flex:1;
+        padding-left: .15rem;
         flex-direction: column;
         justify-content: space-between;
         .car_con {
