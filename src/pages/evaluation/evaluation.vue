@@ -2,22 +2,20 @@
 <!-- 评价 -->
   <div class="box">
     <ul class="ev_cont">
-      <li>
+      <li v-for="(item,index) in dataList" :key="index">
         <div class="ev_info">
           <div class="ev_name">
             <img src="/static/test/bg.png" alt />
             <div class="ev_star">
-              <p>用户昵称</p>
-              <van-rate v-model="value" />
+              <p>{{item.userName}}</p>
+              <van-rate v-model="item.commentScore" />
             </div>
           </div>
-          <span class="ev_time">2019-07-01</span>
+          <span class="ev_time">{{item.commentDate}}</span>
         </div>
-        <p class="ev_main">已经收到，配送很快，价格也很实惠，味道纯正，价格合理, 非常喜欢。</p>
-        <ul class="show_img">
-           <li><img src="/static/test/bg.png" alt=""></li>
-           <li><img src="/static/test/bg.png" alt=""></li>
-           <li><img src="/static/test/bg.png" alt=""></li>
+        <p class="ev_main">{{item.commentContent}}</p>
+        <ul class="show_img" v-if="item.commentImages">
+           <li v-for="i in item.commentImages" :key="i"><img :src="i" alt=""></li>
         </ul>
       </li>
     </ul>
@@ -29,7 +27,8 @@
 export default {
   data() {
     return {
-      value: 5
+      value: 5,
+      dataList:[]
     };
   },
   //监听属性 类似于data概念
@@ -41,9 +40,10 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     let parmas2={cmd:"toRecommend",nowPage:'',pageCount:'10'};
-       this.postRequest(params2).then(res=>{
-         console.log(res)
+     let parmas={cmd:"productCommentList",nowPage:'1',pageCount:'10',productid:'db68be303f824bbab261b51b33e842c1'};
+       this.postRequest(parmas).then(res=>{
+         console.log(res);
+         this.dataList=res.data.dataList;
       })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

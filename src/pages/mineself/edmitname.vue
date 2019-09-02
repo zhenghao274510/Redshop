@@ -1,11 +1,20 @@
 <template>
-  <div class='edmit'>
+  <div class="edmit">
     <van-cell-group class="list">
-      <label for="昵称" class="ft_mid">昵称：<input type="text" v-model="nameV" style="flex:1;padding-left:.2rem">  </label>
-      <van-icon name="clear" size=".14rem" color="#999999"></van-icon> 
+      <label for="昵称" class="ft_mid">
+        昵称：
+        <input type="text" v-model="name" style="flex:1;padding-left:.2rem" />
+      </label>
+      <van-icon name="clear" size=".14rem" color="#999999"></van-icon>
     </van-cell-group>
-    
-    <van-button type="primary" size="large" color="#72BB29" style="margin-top:1rem">确定</van-button>
+
+    <van-button
+      type="primary"
+      size="large"
+      color="#72BB29"
+      style="margin-top:1rem"
+      @click="changename"
+    >确定</van-button>
   </div>
 </template>
 
@@ -15,7 +24,7 @@
 export default {
   data() {
     return {
-      nameV:''
+      name: ""
     };
   },
   //监听属性 类似于data概念
@@ -29,7 +38,14 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    changename() {
+      let params = { cmd: "updateUserName", uid: this.uid, name: this.name };
+      this.postRequest(params).then(res => {
+        console.log(res);
+      });
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -47,16 +63,15 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.edmit{
-  padding: 0 .15rem;
-.list{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: .7rem;
-  height:.45rem;
+.edmit {
+  padding: 0 0.15rem;
+  .list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.7rem;
+    height: 0.45rem;
+  }
 }
-}
-
 </style>

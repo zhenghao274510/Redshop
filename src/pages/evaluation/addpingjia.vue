@@ -1,8 +1,22 @@
 <template>
   <div class>
     <ul class="add_inf">
-      <li>
-        <car-info></car-info>
+      <li v-for="(item,index) in dataList" :key="index">
+        <div class="carlist_info" :class="{'bg':ishow}">
+          <div class="car_img">
+            <img :src="item.productImage" />
+          </div>
+          <div class="car_info">
+            <p class="car_con">{{item.productName}}</p>
+            <div class="sum_tot">
+              <span class="price">
+                ￥
+                <i>{{item.productPrice}}</i>
+              </span>
+              <span class="price" style="color:#333333">x 1</span>
+            </div>
+          </div>
+        </div>
         <div class="ev_star">
           <span>商品评星</span>
           <van-rate v-model="value" readonly />
@@ -33,12 +47,14 @@
 //import 《组件名称》 from '《组件路径》';
 import carInfo from "./../shoucang/shuolist";
 export default {
+  props: ["list"],
   data() {
     return {
       show: false,
       value: 5,
       imgs: [],
-      num: 0
+      num: 0,
+      dataList:[]
     };
   },
   //监听属性 类似于data概念
@@ -51,7 +67,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    console.log(this.imgs);
+     let parmas={cmd:'addOrderComment',uid:'1',orderid:'',comment:''}
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -67,8 +83,7 @@ export default {
       reads.readAsDataURL(files);
       reads.onload = e => {
         files.src = e.target.result;
-        self.imgs.push(0),
-        self.imgs.pop();
+        self.imgs.push(0), self.imgs.pop();
         self.imgs.push({
           files
         });
@@ -140,6 +155,62 @@ export default {
     position: relative;
     // height: 3rem;
     background-color: #fff;
+    .carlist_info {
+      margin-top: 0.1rem;
+      height: 1.16rem;
+      padding: 0.19rem 0.1rem;
+      background: #fff;
+      border-radius: 0.1rem;
+      display: flex;
+      justify-content: space-between;
+
+      align-items: center;
+
+      .car_img {
+        width: 0.85rem;
+        height: 0.85rem;
+        border-radius: 0.05rem;
+        font-size: 0;
+        border-radius: 0.05rem;
+      }
+      .car_info {
+        // width: 1.91rem;
+        display: flex;
+        flex: 1;
+        padding-left: 0.15rem;
+        flex-direction: column;
+        justify-content: space-between;
+        .car_con {
+          white-space: wrap;
+          font-size: 0.15rem;
+          color: #333;
+        }
+        .sum_tot {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 0.29rem;
+          width: 100%;
+          .price {
+            font-size: 0.15rem;
+            color: #ed670d;
+          }
+          .total {
+            display: flex;
+            span,
+            input {
+              display: inline-block;
+              margin-left: 0.05rem;
+              text-align: center;
+              line-height: 0.22rem;
+              background: #eeeeee;
+              width: 0.22rem;
+              height: 0.22rem;
+              font-size: 0.14rem;
+            }
+          }
+        }
+      }
+    }
     .ev_star {
       font-size: 0.14rem;
       padding: 0.15rem;

@@ -1,47 +1,17 @@
 <template>
   <ul class="shop_o">
-    <li class="shop_de" >
+    <li class="shop_de" v-for="(item,index) in list" :key="index">
       <div class="shop_img" @click.prevent="goto">
-        <img src="/static/test/replace.jpg" alt />
+        <img :src="item.logo" alt />
       </div>
       <div class="shop_info">
-        <p class="shop_name">西班牙DO级红酒</p>
+        <p class="shop_name">{{item.title}}</p>
         <div class="shop_pir">
           <span>
             ￥
-            <i>219</i>
+            <i>{{item.price}}</i>
           </span>
-          <i class="shop_car" @click.prevent="addcar()"></i>
-        </div>
-      </div>
-    </li>
-    <li class="shop_de" >
-      <div class="shop_img" @click.prevent="goto">
-        <img src="/static/test/replace.jpg" alt />
-      </div>
-      <div class="shop_info">
-        <p class="shop_name">西班牙DO级红酒</p>
-        <div class="shop_pir">
-          <span>
-            ￥
-            <i>219</i>
-          </span>
-          <i class="shop_car" @click.prevent="addcar()"></i>
-        </div>
-      </div>
-    </li>
-    <li class="shop_de" >
-      <div class="shop_img" @click.prevent="goto">
-        <img src="/static/test/replace.jpg" alt />
-      </div>
-      <div class="shop_info">
-        <p class="shop_name">西班牙DO级红酒</p>
-        <div class="shop_pir">
-          <span>
-            ￥
-            <i>219</i>
-          </span>
-          <i class="shop_car" @click.prevent="addcar()"></i>
+          <i class="shop_car" @click.prevent="addcar(index)"></i>
         </div>
       </div>
     </li>
@@ -52,10 +22,7 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
-  props:{
-     list:[],
-     type:Array
-  },
+  props:['list'],
   data() {
     return {};
   },
@@ -74,10 +41,11 @@ export default {
     goto() {
       this.$router.push("/shopdetails");
     },
-    addcar() {
-      let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:''};
-       this.postRequest(params).then(res=>{
-         console.log(res)
+    addcar(ind) {
+      
+      let parmas={cmd:"addCart",uid:"",productId:list[ind].productid,skuId:'',count:'1'};
+       this.postRequest(parmas).then(res=>{
+        //  console.log(res)
       })
     }
   },

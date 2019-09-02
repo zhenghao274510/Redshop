@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <By ishow="true"></By>    
+    <By ishow="true" :list="dataList"></By>    
     <div style="height:1.2rem;"></div>
     
   </div>
@@ -13,6 +13,8 @@ import By from "./../../components/public/carlist";
 export default {
   data() {
     return {
+      dataList:[],
+      dataObject:{}
     };
   },
   //监听属性 类似于data概念
@@ -28,11 +30,15 @@ export default {
      let parmas = {
         cmd: "getCartList",
         nowPage: "1",
-        uid: "",
+        uid: "1",
         pageCount:"10"
-        
       };
-      this.postRequest(params).then(res => {
+      this.postRequest(parmas).then(res => {
+        console.log(res);
+        if(res.data.result==0){
+            this.dataList=res.data.dataList;
+            this.dataObject=res.data;
+        }
         console.log(res);
       });
   },

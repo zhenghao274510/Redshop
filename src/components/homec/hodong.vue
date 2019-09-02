@@ -40,7 +40,11 @@ import Tit from "./title";
 export default {
   data() {
     return {
-      actions: { tit: "活动专区", type: 0 }
+      actions: { tit: "活动专区", type: 0 },
+      ProductObject:{},
+      MiddleProductList:[],
+      ProductFirst:[],
+      ProductLast:[],
     };
   },
   //监听属性 类似于data概念
@@ -53,7 +57,21 @@ export default {
     Tit
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    let parmas={cmd:'activityArea'};
+    this.postRequest(parmas).then(res=>{
+      if(res.data.result==0){
+    // console.log(res);
+      this.ProductList = res.data.dataList;
+        //  this.ProductList=res.data.dataList.slice(1,1);
+        //  this.ProductLast=res.data.dataList.slice(-1,1);
+        //  this.MiddleProductList=res.data.dataList.slice(1,1).pop;
+
+        this.ProductObject = res.data;
+      }
+   
+    })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

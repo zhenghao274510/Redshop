@@ -46,7 +46,7 @@ export default {
         })
       }
 
-    },
+		},
     // back() {
     //   this.$router.back(-1)
 	// },

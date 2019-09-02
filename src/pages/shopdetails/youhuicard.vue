@@ -2,21 +2,20 @@
   <div class="youhuibox">
     <p>优惠</p>
     <ul class="cardlist">
-      <li>
+      <li v-for="(item,index) in dataList" :key="index">
         <div class="info">
           <div>
             ￥
-            <span>10</span> 优惠券
+            <span>{{item.couponAmount}}</span> 优惠券
           </div>
-          <p>满100元可用</p>
+          <p>满{{item.couponPrice}}元可用</p>
           <p>
             有效期
-            <span>2019.07.02</span>
+            <span>{{item.endtime}}</span>
           </p>
         </div>
-        <div class="get_card">立即领取</div>
+        <div class="get_card" @click="GetCard(index)">立即领取</div>
       </li>
-       
     </ul>
     <div class="buy_or">
       <span class="btn" @click="close">完成</span>
@@ -29,7 +28,9 @@
 
 export default {
   data() {
-    return {};
+    return {
+      dataList: []
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -38,13 +39,38 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    //  商品优惠券
+    let parmas = {
+      cmd: "couponList"
+    };
+    this.postRequest(parmas).then(res => {
+      if (res.data.result == 0) {
+        console.log(res);
+        this.dataList = res.data.dataList;
+      }
+    });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
     close() {
-      this.$emit('closec',0);
+      this.$emit("closec", 0);
+    },
+    //  领取优惠券
+    GetCard(ind) {
+      let couponId = this.dataList[ind].couponId;
+      let parmas = {
+        cmd: "addUserCoupon",
+        couponId: couponId,
+        uid: "1"
+      };
+      this.postRequest(parmas).then(res => {
+        if (res.data.result == 0) {
+        this.$toast(res.data.resultNote);
+        }
+      });
     }
   },
   //生命周期 - 创建之前
@@ -77,7 +103,7 @@ export default {
     overflow-y: auto;
     li {
       height: 1rem;
-      margin-bottom: .1rem;
+      margin-bottom: 0.1rem;
       border-radius: 0.1rem;
       background: url("/static/icon/beijing.png") no-repeat;
       background-size: 100% 100%;
@@ -112,12 +138,11 @@ export default {
     }
   }
   .buy_or {
-  
     .btn {
       position: absolute;
-      bottom: .12rem;
+      bottom: 0.12rem;
       width: 3.45rem;
-      margin:0 auto;
+      margin: 0 auto;
       display: block;
       height: 0.44rem;
       line-height: 0.44rem;

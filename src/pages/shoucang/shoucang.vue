@@ -1,6 +1,6 @@
 <template>
   <div class="my_link">
-      <By></By>
+      <By :list="dataList"></By>
   </div>
 </template>
 
@@ -9,7 +9,9 @@
 import By from './shuolist'
 export default {
   data() {
-    return {};
+    return {
+      dataList:[]
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -20,7 +22,20 @@ export default {
     By
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+      let parmas = {
+        cmd: "myCollectList",
+        nowPage: "1",
+        uid: "1",
+        pageCount:"10"
+      };
+      this.postRequest(parmas).then(res => {
+        if(res.data.result==0){
+          this.dataList=res.data.dataList;
+        }
+        console.log(res);
+      });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

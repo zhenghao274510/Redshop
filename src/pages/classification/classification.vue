@@ -3,7 +3,12 @@
     <sear></sear>
     <div class="cf_info">
       <ul class="cf_left">
-        <li :class="{'active':num==index}" v-for="(item,index) in left" :key="index" @click="changleft(index)">{{item}}</li>
+        <li
+          :class="{'active':num==index}"
+          v-for="(item,index) in left"
+          :key="index"
+          @click="changleft(index)"
+        >{{item}}</li>
       </ul>
       <div class="cf_right">
         <div class="cf_right_tit">
@@ -11,22 +16,10 @@
           <i class="icon_back"></i>
         </div>
         <ul class="cf_right_list">
-          <li>
+          <li v-for="(item,index) in ProductList[num]" :key="index">
             <router-link to="/shoplist">
-              <img src="/static/test/replace.jpg" />
-              <p>新品上架</p>
-            </router-link>
-          </li>
-          <li>
-            <router-link to>
-              <img src="/static/test/replace.jpg" />
-              <p>新品上架</p>
-            </router-link>
-          </li>
-          <li>
-            <router-link to>
-              <img src="/static/test/replace.jpg" />
-              <p>新品上架</p>
+              <img :src="item.childCategoryImage" />
+              <p>{{item.childCategoryName}}</p>
             </router-link>
           </li>
         </ul>
@@ -42,7 +35,9 @@ export default {
   data() {
     return {
       num: 0,
-      left: ["一键选酒", "洋酒", "葡萄酒", "白酒", "啤酒", "清酒"]
+      left: [],
+      ProductList: [],
+      ProductObject: {}
     };
   },
   //监听属性 类似于data概念
@@ -55,10 +50,17 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     let parmas2={cmd:"toRecommend",nowPage:'',pageCount:'10'};
-       this.postRequest(params2).then(res=>{
-         console.log(res)
-      })
+    let parmas = { cmd: "productCategory", nowPage: "1", pageCount: "10" };
+    this.postRequest(parmas).then(res => {
+      if (res.data.result == 0) {
+        console.log(res);
+        this.ProductObject = res.data;
+        res.data.dataList.forEach(item => {
+          this.left.push(item.categoryName);
+          this.ProductList.push(item.childrenList);
+        });
+      }
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -137,13 +139,13 @@ export default {
           width: 33.3%;
           a {
             display: flex;
-            padding: .1rem;
+            padding: 0.1rem;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
             p {
               font-size: 0.12rem;
-              line-height: .2rem;
+              line-height: 0.2rem;
               color: #666;
             }
           }

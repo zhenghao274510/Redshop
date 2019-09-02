@@ -1,7 +1,7 @@
 <template>
   <div class="box">
-    <input type="text" placeholder="请输入卡号" />
-    <input type="text" placeholder="请输入密码" />
+    <input type="text" placeholder="请输入卡号" v-model="cardnum" />
+    <input type="password" placeholder="请输入密码" v-model="pwd" />
     <input type="button" value="查询" class="btn" @click="getmsg" />
   </div>
 </template>
@@ -11,16 +11,18 @@ import { Dialog } from "vant";
 export default {
   data() {
     return {
-      show: true
+       cardnum:'',
+       pwd:''
     };
   },
   methods: {
     getmsg() {
-      Dialog.alert({
-        message: "弹窗内容"
-      }).then(() => {
-        // on close
-      });
+    let parmas={cmd:"findRechargeCard",uid:'1',cardnum:this.cardnum,pwd:this.pwd};
+    this.postRequest(parmas).then(res=>{
+      if(res.data.result==0){
+        console.log(res);
+      }
+    })
     }
   },
   moutend() {}
@@ -39,6 +41,7 @@ export default {
     height: 0.45rem;
     font-size: 0.14rem;
     border: 0.01rem solid #999999;
+    border-radius: .05rem;
   }
   .btn {
     background-color: #72bb29;

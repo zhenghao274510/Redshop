@@ -10,7 +10,7 @@
     <router-view></router-view>-->
     <div style="margin-top:.5rem">
       <van-tabs v-model="active" swipeable  animated>
-        <van-tab v-for="(item,index) in navinfo" :key="index" :title="item.tit" class="'bor':active==index"><Mo :come="active"></Mo></van-tab>
+        <van-tab v-for="(item,index) in navinfo" :key="index" :title="item.tit" class="'bor':active==index"><Mo :come="active" ></Mo></van-tab>
       </van-tabs>
     </div>
   </div>
@@ -24,13 +24,15 @@ export default {
     return {
       active: 4,
       navinfo: [
-        { tit: "全部", url: "/order/all" },
-        { tit: "待付款", url: "/order/waitepay" },
-        { tit: "待配送", url: "/order/waitesong" },
-        { tit: "配送中", url: "/order/peing" },
-        { tit: "待评价", url: "/order/waiteping" },
-        { tit: "退款售后", url: "/order/tui" }
+        { tit: "全部", },
+        { tit: "待付款"},
+        { tit: "待配送" },
+        { tit: "配送中" },
+        { tit: "待评价" },
+        { tit: "退款售后"}
       ],
+      dataList:[],
+      dataObject:{}
     };
   },
   //监听属性 类似于data概念
@@ -45,9 +47,12 @@ export default {
   created() {
      // this.id =this.$route.query.id;
      this.id =this.$route.query.id;
-    let params={cmd:'myOrder',uid:"",nowPage:"1",pageCount:"10"}
+    let params={cmd:'myOrder',uid:"1",nowPage:"1",pageCount:"10"}
     this.postRequest(params).then(res=>{
          console.log(res)
+         if(res.data.result==0){
+           this.dataList=res.data.dataList;
+         }
     })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

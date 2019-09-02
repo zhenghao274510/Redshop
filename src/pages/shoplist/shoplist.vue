@@ -4,7 +4,7 @@
       <sear></sear>
 
      
-        <Shop-L></Shop-L>
+        <Shop-L :list="ProductList"></Shop-L>
      
     </van-pull-refresh>
   </div>
@@ -17,7 +17,10 @@ import ShopL from "./../../components/public/shangpin";
 export default {
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      ProductObject:{},
+      ProductList:[]
+
     };
   },
   //监听属性 类似于data概念
@@ -30,7 +33,17 @@ export default {
     ShopL
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    
+      let parmas = { cmd: "productList",childCategoryId:3, nowPage: "1", pageCount: "10" };
+    this.postRequest(parmas).then(res => {
+      if (res.data.result == 0) {
+        console.log(res);
+        this.ProductObject = res.data;
+        this.ProductList=res.data.dataList;
+      }
+    });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

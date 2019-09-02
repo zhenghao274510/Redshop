@@ -1,79 +1,84 @@
 <template>
   <div class="shop_de">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-
-
-    <De></De>
-    <div class="shop_info">
-      <div class="shop_info_tit">
-        <p>威士忌原装进口洋酒750ml</p>
-        <div class="shop_info_price">
-          <div class="pirce">
-            <span class="new">
-              ￥
-              <i>219</i>
-            </span>
-            <span class="old">
-              ￥
-              <i>229</i>
-            </span>
+      <De :list="dataObject.productImages"></De>
+      <div class="shop_info">
+        <div class="shop_info_tit">
+          <p>{{dataObject.productName}}</p>
+          <div class="shop_info_price">
+            <div class="pirce">
+              <span class="new">
+                ￥
+                <i>{{dataObject.productPrice}}</i>
+              </span>
+              <span class="old">
+                ￥
+                <i>{{dataObject.productOldPrice}}</i>
+              </span>
+            </div>
+            <div class="num">
+              销量:
+              <span>{{dataObject.sales}}</span>
+            </div>
           </div>
-          <div class="num">
-            销量:
-            <span>0</span>
-          </div>
         </div>
-      </div>
-      <div class="shop_info_juan" @click="see(0)">
-        <div>优惠活动</div>
-        <div>满200减10卷</div>
-        <div>
-          <span>更多优惠</span>
-          <em></em>
-        </div>
-      </div>
-      <div class="shop_info_juan" @click="see(1)">
-        <div>规格参数</div>
-        <div class="data">品牌 日期..</div>
-        <div>
-          <em></em>
-        </div>
-      </div>
-      <div class="shop_info_use">
-        <div class="use_tit">
-          <div>用户评价</div>
+        <div class="shop_info_juan" @click="see(0)">
+          <div>优惠活动</div>
+          <div>满200减10卷</div>
           <div>
-            <router-link to="/evaluation">更多评价</router-link>
+            <span>更多优惠</span>
             <em></em>
           </div>
         </div>
-        <div class="use_info">
-          <img src="/static/test/qiandao.png" />
-          <div class="use_info_cont">
-            <div class="use_name">
-              <span>用户昵称</span>
-              <span>2019-07-01</span>
-            </div>
-            <van-rate v-model="value" readonly />
+        <div class="shop_info_juan" @click="see(1)">
+          <div>规格参数</div>
+          <div class="data">品牌 日期..</div>
+          <div>
+            <em></em>
           </div>
         </div>
-        <div class="use_cont">已经收到，配送很快，价格也很实惠，味道纯正，价格合理, 非常喜欢。</div>
-      </div>
-      <div class="shop_info_details">
-        <div class="shop_details_tit">商品详情</div>
-        <div class="zi">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.</p>
+        <div class="shop_info_use">
+          <div class="use_tit">
+            <div>用户评价</div>
+            <div>
+              <router-link to="/evaluation">更多评价</router-link>
+              <em></em>
+            </div>
+          </div>
+          <div class="use_info">
+            <img src="/static/test/qiandao.png" />
+            <div class="use_info_cont">
+              <div class="use_name">
+                <span>用户昵称</span>
+                <span>2019-07-01</span>
+              </div>
+              <van-rate v-model="value" readonly />
+            </div>
+          </div>
+          <div class="use_cont">已经收到，配送很快，价格也很实惠，味道纯正，价格合理, 非常喜欢。</div>
         </div>
-        <div class="shop_img">
-          <img src alt />
+        <div class="shop_info_details">
+          <div class="shop_details_tit">商品详情</div>
+          <div class="zi">
+            <p>{{dataObject.content}}</p>
+          </div>
+          <div class="shop_img">
+            <iframe :src="dataObject.url" frameborder="0"></iframe>
+          </div>
         </div>
       </div>
-    </div>
     </van-pull-refresh>
-    <van-popup v-model="show" round position="bottom" :style="{ height: '70%' }" :close-on-click-overlay="jin">
-      <Addshop @closec="FUC" v-if="add_car"></Addshop>
-      <Youcard  @closec="FUC"  v-if="see_card"></Youcard>
-      <Canshu @closec="FUC" v-if="see_gu"></Canshu>
+    <van-popup
+      v-model="show"
+      round
+      position="bottom"
+      :style="{ height: '70%' }"
+      :close-on-click-overlay="jin"
+    >
+    
+      <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy"></Addshop>
+      <Youcard @closec="FUC" v-if="see_card"></Youcard>
+      <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
     </van-popup>
     <!-- 呈高度 -->
     <div class="no_con"></div>
@@ -84,7 +89,7 @@
           <span class="icon_car"></span>
           <p>购物车</p>
         </router-link>
-        <div class="shou_c" @click="add_shou">
+        <div class="shou_c" @click="GetInShou">
           <div>
             <img src="/static/icon/shangpinxiangqing-shoucang.png" v-if="addshou" />
             <img src="/static/icon/wodeshoucang.png" v-else />
@@ -94,8 +99,8 @@
       </div>
 
       <div class="buy_right">
-        <span class="add_car">加入购物车</span>
-        <span class="go_buy" @click="see(2)">立即购买</span>
+        <span class="add_car" @click="see(2)">加入购物车</span>
+        <span class="go_buy" @click="see(3)">立即购买</span>
       </div>
     </div>
   </div>
@@ -110,14 +115,21 @@ import Canshu from "./canshu";
 export default {
   data() {
     return {
-      jin:false,
+      jin: false,
       value: 5,
       show: false,
       addshou: true,
       add_car: false,
       see_gu: false,
       see_card: false,
-       isLoading: false
+      isLoading: false,
+      id: "",
+      buy: false,
+      //
+      dataObject: {},
+      productParam: {},
+      skuList: [],
+      productCommentList: []
     };
   },
   //监听属性 类似于data概念
@@ -132,7 +144,36 @@ export default {
     Canshu
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    let parmas1 = {
+      cmd: "productDetail",
+      productid: "db68be303f824bbab261b51b33e842c1",
+      uid: "1"
+    };
+    this.postRequest(parmas1).then(res => {
+      if (res.data.result == 0) {
+        console.log(res);
+        this.dataObject = res.data.dataObject;
+        // 规格
+        this.productParam = res.data.productParam;
+        //库存
+        this.skuList = res.data.skuList;
+      }
+    });
+    //   评价
+    let parmas2 = {
+      cmd: "productCommentList",
+      productid: "db68be303f824bbab261b51b33e842c1",
+      nowPage: "1",
+      pageCount: "10"
+    };
+    this.postRequest(parmas2).then(res => {
+      if (res.data.result == 0) {
+        // console.log(res);
+        // this.productCommentList=res.data.dataList[0];
+      }
+    });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
@@ -140,25 +181,46 @@ export default {
     see(ind) {
       this.show = true;
       switch (ind) {
+        //  查看优惠
         case 0:
           this.see_card = true;
           break;
+        //  查看 规则
         case 1:
           this.see_gu = true;
           break;
+        //   加入购物车
         case 2:
           this.add_car = true;
+          this.buy = false;
+          break;
+          // 立即购买
+        case 3:
+          this.add_car = true;
+          this.buy = true;
           break;
       }
     },
-    add_shou() {
-      this.addshou = false;
+    //  添加收藏
+    GetInShou() {
+      let parmas = {
+        cmd: "collectProduct",
+        productid: "db68be303f824bbab261b51b33e842c1",
+        uid: "1"
+      };
+      this.postRequest(parmas).then(res => {
+        console.log(res);
+        if (res.data.result == 0) {
+          this.$toast(res.data.resultNote);
+          this.addshou = !this.addshou;
+        }
+      });
     },
     FUC(e) {
       this.show = false;
       switch (e) {
         case 0:
-        this.see_card=false;
+          this.see_card = false;
         case 1:
           this.see_gu = false;
           break;
@@ -167,9 +229,9 @@ export default {
           break;
       }
     },
-     onRefresh() {
+    onRefresh() {
       setTimeout(() => {
-        this.$toast('刷新成功');
+        this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
     }
@@ -192,7 +254,7 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 /deep/ .van-rate__icon {
-  font-size: .1rem;
+  font-size: 0.1rem;
 }
 em {
   width: 0.07rem;
@@ -348,7 +410,7 @@ em {
   }
   .buy {
     position: fixed;
-    bottom: -.01rem;;
+    bottom: -0.01rem;
     width: 100%;
     height: 0.5rem;
     border-top: 0.01rem solid rgba(135, 135, 135, 0.2);

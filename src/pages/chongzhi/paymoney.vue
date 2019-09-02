@@ -43,4 +43,5 @@ p{font-size:.19rem;color: #333333;line-height: .75rem; }
 .btn{height: .44rem;display: block;font-size: .14rem;border:none;outline:none;width: 100%;text-align: center;line-height: .44rem;}
 .gbg{background-color: #72BB29;color: #FFF;}
 .wbg{color:#333333;margin-top: .15rem; }
+.active{}
 </style>

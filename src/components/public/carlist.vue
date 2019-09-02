@@ -83,7 +83,9 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
@@ -116,6 +118,7 @@ export default {
             message: "确定删除吗？"
           }).then(() => {
             instance.close();
+            let parmas={cmd:'delCart',uid:'1',cartid:''}
           });
           break;
       }
@@ -141,7 +144,20 @@ export default {
       this.sub();
     },
     gotopay() {
-      this.$router.push("/success");
+      // this.$router.push("/success");
+       let parmas = {
+        cmd: "addCartOrder",
+        nowPage: "1",
+        cartid:'',
+        couponId:'',
+        remark:'',
+        amount:'',
+        uid: "1",
+        pageCount:"10"
+      };
+      this.postRequest(parmas).then(res => {
+        console.log(res);
+      });
     }
   },
   //生命周期 - 创建之前

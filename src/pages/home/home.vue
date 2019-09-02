@@ -1,13 +1,34 @@
 <template>
-  <div class="box" 
-  >
-  <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-
-    <!-- <Top title="商城"></Top> -->
-    <sear></sear>
-    <Zq></Zq>
-    <Tui-Jan></Tui-Jan>
-    </van-pull-refresh>
+  <div class="box">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" @onload="onLoad">
+      <!-- <Top title="商城"></Top> -->
+      <sear></sear>
+      <Zq></Zq>
+    
+     <div>
+    <!-- 首页推荐模块 -->
+    <Tit :title="activ"></Tit>
+    <ul class="tui_list">
+      <!-- <van-list class="tuijian" v-model="loading" @load="onLoad"> -->
+        <li v-for="(item,index) in ProductList" :key="index">
+          <router-link to>
+            <div class="list_img">
+              <img :src="'http://192.168.3.254:8099'+item.logo" alt />
+            </div>
+            <div class="list_info">
+              <p class="list_name">{{item.title}}</p>
+              <div class="list_icon">
+                <p class="col_max ft_mid">￥{{item.price}}</p>
+                <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(index)" />
+              </div>
+            </div>
+          </router-link>
+        </li>
+      <!-- </van-list> -->
+    </ul>
+    <div class="no_more"></div>
+  </div>
+  </van-pull-refresh>
     <!-- 弹出层 -->
 
     <van-popup v-model="First" round>
@@ -15,10 +36,10 @@
         <img src="/static/icon/youye-youhuijuan.png" alt />
         <div class="first_info">
           <p class="ft_mid col_mid">-- 恭喜你获得 --</p>
-          <p class="col_mix ft_max_mid">10元优惠券</p>
+          <p class="col_mix ft_max_mid" style="text-align:center;">{{dataObject.amount}}元优惠券</p>
         </div>
-        <div class="getJ ft_mid" @click="isGet=false">点击领取</div>
-        <van-icon name="clear" color="#999999" size=".22rem" class="pos"  @click="First=false"/>
+        <div class="getJ ft_mid" @click="GetJuan">点击领取</div>
+        <van-icon name="clear" color="#999999" size=".22rem" class="pos" @click="First=false" />
       </div>
       <div class="first_con" v-else style="padding:0 .39rem;">
         <div class="first_info">
@@ -33,18 +54,25 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import vuescroll from 'vuescroll/dist/vuescroll-slide';
+// import vuescroll from "vuescroll/dist/vuescroll-slide";
 import Top from "./../../components/public/heade";
 import Zq from "./../../components/homec/hodong";
-import TuiJan from "./../../components/homec/tuijian";
+import Tit from "./../../components/homec/title";
+// import TuiJan from "./../../components/homec/tuijian";
 import sear from "./../../components/public/search";
 export default {
   data() {
     return {
+        activ: { tit: "为你推荐", type: 1 },
       First: true,
-      isGet:true ,
-      id:'',
-      isLoading: false
+      isGet: true,
+      id: "",
+      isLoading: false,
+      finished: false,
+      //优惠券
+      dataObject: {},
+      ProductList:[],
+      ProductObject:{}
     };
   },
   //监听属性 类似于data概念
@@ -56,35 +84,80 @@ export default {
     Top,
     sear,
     Zq,
-    TuiJan,
-    vuescroll
+    Tit
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // this.id =this.$route.query.id;
-    let params1={cmd:'firstPage'}
-    this.postRequest(params1).then(res=>{
-         console.log(res)
-    })
-     let parmas2={cmd:"toRecommend",nowPage:'',pageCount:'10'};
-       this.postRequest(params2).then(res=>{
-         console.log(res)
-      })
+    //  主页 部分
+    let params1 = { cmd: "firstPage" };
+    this.postRequest(params1).then(res => {
+      // console.log(res);
+    });
+    //  优惠卷
+    let params2 = { cmd: "newCoupon" };
+    this.postRequest(params2).then(res => {
+      if (res.data.result == 0) {
+        // console.log(res);
+        this.dataObject = res.data.dataObject;
+      } else {
+        this.First = false;
+      }
+    });
+      // 为你推荐
+    let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
+    this.postRequest(parmas3).then(res => {
+      if (res.data.result == 0) {
+        this.ProductList = res.data.dataList;
+        this.ProductObject = res.data;
+      }
+      console.log(res);
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    // this.$store.commit("ChangeTabar",Number(this.$route.params.ShopId))
-    // console.log(this.$route.params.ShopId)
   },
   //方法集合
   methods: {
     onRefresh() {
       setTimeout(() => {
-        this.$toast('刷新成功');
+        this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
+    },
+       onLoad() {
+      // 异步更新数据
+      console.log(1);
+      if (this.ProductObject.totalPage > this.num) {
+        this.num += 1;
+        let parmas2 = {
+          cmd: "toRecommend",
+          nowPage: this.num,
+          pageCount: "10"
+        };
+        this.postRequest(parmas2).then(res => {
+          console.log(res);
+          if (res.data.result == 0) {
+            this.$toast("加载成功");
+            this.ProductList.push(res.data.dataList);
+          }
+        });
+      } else {
+        this.loading = false;
+        this.$toast("没有更多了!");
+      }
+
+      // this.finished = true;
+    },
+    GetJuan() {
+      //  获取优惠券
+      let parmas = { cmd: "newCoupon", uid: "", couponid:this.dataObject.couponid};
+      this.postRequest(parmas).then(res => {
+        console.log(res);
+      });
+      isGet = false;
     }
-        },
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -127,7 +200,7 @@ export default {
       border-radius: 0.14rem;
       text-align: center;
       line-height: 0.28rem;
-      margin-top: .25rem;
+      margin-top: 0.25rem;
     }
     .pos {
       position: absolute;
@@ -136,5 +209,46 @@ export default {
     }
   }
 }
-.box{background-color: #FFF;}
+.box {
+  background-color: #fff;
+  .tui_list {
+  padding: 0.15rem;
+  li {
+    border-radius: 0.1rem;
+    box-shadow: 0 0 0.04rem 0 #33222222;
+    margin-bottom: 0.15rem;
+    a {
+      display: flex;
+      padding: 0.1rem;
+      justify-content: space-between;
+      .list_img {
+        width: 1.38rem;
+        height: 0.93rem;
+        overflow: hidden;
+      }
+      .list_info {
+        margin-left: 0.1rem;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        .list_name {
+          font-size: 0.13rem;
+          color: rgba(51, 51, 51, 1);
+          margin-bottom: 0.2rem;
+          text-align: left;
+        }
+        .list_icon {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+  
+}
+.no_more {
+    margin-bottom: 0.5rem;
+  }
+}
 </style>

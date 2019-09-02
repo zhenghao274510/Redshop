@@ -31,13 +31,14 @@ export default {
   methods: {
     // 搜索商品
     star() {
+      this.keywords="白酒";
       let parmas = {
         cmd: "searchProduct",
-        keywords: "",
+        keywords: this.keywords,
         nowPage: "1",
         pageCount: "10"
       };
-      this.postRequest(params).then(res => {
+      this.postRequest(parmas).then(res => {
         console.log(res);
       });
     }

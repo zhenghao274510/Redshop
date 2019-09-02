@@ -8,11 +8,11 @@
         <ul class="bind_tel">
           <li class="title">绑定手机号</li>
           <li class="bind_inp">
-            <input type="text" placeholder="请输入手机号" />
+            <input type="text" placeholder="请输入手机号" v-model="phone" />
           </li>
           <li class="bind_inp flexbox">
-            <input type="text" placeholder="请输入验证码" />
-            <span>获取验证码</span>
+            <input type="text" placeholder="请输入验证码" ref="YZM" />
+            <span @click="GetMa">获取验证码</span>
           </li>
           <li style="font-size:0;margin-top:.3rem;">
             <button class="btn">确认绑定</button>
@@ -29,7 +29,10 @@
 
 export default {
   data() {
-    return {};
+    return {
+      phone:'',
+      ma:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -42,7 +45,17 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    GetMa(){
+      var re = new RegExp(/^[1][3456789]\d{9}$/);
+      if(re.test(this.phone)){
+        let parmas={cmd:'getValidateCode',phone:this.phone};
+      this.postRequest(parmas).then(res=>{
+          console.log(res);
+      })
+      }
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

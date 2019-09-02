@@ -1,12 +1,12 @@
 <template>
   <div class="banner">
     <van-swipe :autoplay="0" indicator-color="white" @change="Onchange">
-      <van-swipe-item>
-        <img src="/static/test/bg.png" alt />
+      <van-swipe-item v-for="i in list" :key="i">
+        <img :src="i" alt />
       </van-swipe-item>
-      <van-swipe-item>
+      <!-- <van-swipe-item>
         <img src="/static/test/bg.png" alt />
-      </van-swipe-item>
+      </van-swipe-item> -->
       <div class="custom_indicator" slot="indicator">{{ current + 1 }}/2</div>
     </van-swipe>
   </div>
@@ -16,6 +16,7 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
+  props:['list'],
   data() {
     return {
       current:0

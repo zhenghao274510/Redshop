@@ -5,15 +5,36 @@
     <ul class="content">
       <li>
         <span>生产日期</span>
-        <i>2016-10-01 至 2017-07-01</i>
+        <i>{{list.sctime1 }} 至 {{list.sctime2}}</i>
       </li>
-     
+       <li>
+        <span>品牌</span>
+        <i>{{list.brand}}</i>
+      </li>
+       <li>
+        <span>产地</span>
+        <i>{{list.origin}}</i>
+      </li>
+       <li>
+        <span>酒精度</span>
+        <i>{{list.alcohol}}</i>
+      </li>
+       <li>
+        <span>净含量</span>
+        <i>{{list.netwt}}</i>
+      </li>
+       <li>
+        <span>储藏方法</span>
+        <i>{{list.storage}}</i>
+      </li>
+       <li>
+        <span>保质期</span>
+        <i>{{list.period}}</i>
+      </li>
     </ul>
-<div class="buy_or">
-
-  <span class="btn" @click="close">完成</span>
-</div>
-
+    <div class="buy_or">
+      <span class="btn" @click="close">完成</span>
+    </div>
   </div>
 </template>
 
@@ -21,6 +42,7 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
+  props: ["list"],
   data() {
     return {};
   },
@@ -34,11 +56,16 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
+  filters:{
+   time(val){
+      
+   }
+  },
   //方法集合
   methods: {
-  close(){
-    this.$emit('closec',1);
-  }
+    close() {
+      this.$emit("closec", 1);
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -74,12 +101,12 @@ export default {
     font-size: 0.18rem;
     text-align: center;
     line-height: 0.5rem;
-    border-bottom: .01rem solid #e5e5e5;
+    border-bottom: 0.01rem solid #e5e5e5;
   }
   .content {
     padding: 0 0.15rem;
     height: 3.5rem;
-     overflow-y: auto;
+    overflow-y: auto;
     li {
       height: 0.5rem;
       border-bottom: 0.01rem solid #e5e5e5;
@@ -99,23 +126,22 @@ export default {
       }
     }
   }
-  .buy_or{
-        padding: 0 .15rem;
+  .buy_or {
+    padding: 0 0.15rem;
     .btn {
       position: absolute;
       // bottom: .12rem;
       width: 3.45rem;
-      margin:0 auto;
-    display: block;
-    height: 0.44rem;
-    line-height: .44rem;
-    font-size: 0.17rem;
-    background-color: #72bb29;
-    border-radius: 0.05rem;
-    color: #fff;
-    text-align: center;
+      margin: 0 auto;
+      display: block;
+      height: 0.44rem;
+      line-height: 0.44rem;
+      font-size: 0.17rem;
+      background-color: #72bb29;
+      border-radius: 0.05rem;
+      color: #fff;
+      text-align: center;
+    }
   }
-  }
-
 }
 </style>

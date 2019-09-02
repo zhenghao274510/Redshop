@@ -11,6 +11,10 @@ const store=new Vuex.Store({
       // 购物车数据
       carinfo:{
          chose:true
+      },
+      //  用户信息
+      useinfo:{
+        uid:''
       }
     },
     mutations:{

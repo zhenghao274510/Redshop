@@ -1,18 +1,18 @@
 <template>
   <ul class="container">
     <!-- <van-cell :border="false"> -->
-    <li v-for="(item,index) in 1" :key="index" class="carlist">
+    <li v-for="(item,index) in list" :key="index" class="carlist">
       <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
         <div class="carlist_info" :class="{'bg':ishow}">
           <div class="car_img">
-            <img src="/static/test/replace.jpg" />
+            <img :src="item.productImage" />
           </div>
           <div class="car_info">
-            <p class="car_con">凯宝利519红葡萄酒750ml*6 澳大利亚进口红酒</p>
+            <p class="car_con">{{item.productName}}</p>
             <div class="sum_tot">
               <span class="price">
                 ￥
-                <i>{{pri}}</i>
+                <i>{{item.productPrice}}</i>
               </span>
               <span class="price" style="color:#333333">
                   x 1
@@ -25,6 +25,7 @@
           <van-button square type="danger" text="删除" />
         </template>
       </van-swipe-cell>
+      
     </li>
     <!-- </van-cell> -->
     <!-- 底部显示 -->
@@ -35,18 +36,14 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import { Dialog } from "vant";
+// import { Dialog } from "vant";
 export default {
-  props: ["ishow", "ischeck"],
+  props: ["ishow",'list'],
   data() {
     return {
-     
       LftW: 0,
-
-
       num: 1,
       pri: 239,
-
       RightW: 58,
     
     };
@@ -59,7 +56,9 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
@@ -76,6 +75,7 @@ export default {
           Dialog.confirm({
             message: "确定删除吗？"
           }).then(() => {
+             let parmas={};
             instance.close();
           });
           break;

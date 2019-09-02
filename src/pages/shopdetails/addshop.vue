@@ -5,22 +5,27 @@
       <div>
         <p>
           ￥
-          <span>219</span>
+          <span>{{list[num].skuPrice}}</span>
         </p>
-        <p>库存721件</p>
+        <p>库存{{list[num].skuStock}}件</p>
       </div>
       <i @click="close"></i>
     </div>
     <div class="shop_can">
-      <span>威士忌原装进口洋酒</span>
-      <span>威士忌原装进口洋酒礼盒</span>
+      <span
+        v-for="(item,index) in list"
+        :key="index"
+        @click="change(index)"
+        :class="{'active':num==index}"
+      >{{item.skuName}}</span>
+      <!-- <span>威士忌原装进口洋酒礼盒</span> -->
     </div>
     <div class="buy_num">
       <span>购买数量</span>
       <van-stepper v-model="value" integer />
     </div>
     <div class="buy_or">
-      <span class="btn" @click="gotobuy">确定</span>
+      <span class="btn" @click="GetInCar">确定</span>
     </div>
   </div>
 </template>
@@ -29,9 +34,11 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
+  props: ["list", "isbuy"],
   data() {
     return {
-      value: 1
+      value: 1,
+      num: 0
     };
   },
   //监听属性 类似于data概念
@@ -41,7 +48,8 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
@@ -49,8 +57,33 @@ export default {
     close() {
       this.$emit("closec", 2);
     },
-    gotobuy() {
-      this.$router.push("/orderdetails");
+    change(ind) {
+      this.num = ind;
+    },
+
+    //  添加购物车
+    GetInCar() {
+      let skuId = this.list[this.num].skuId;
+    
+      if (!this.isbuy) {
+        let parmas = {
+          cmd: "addCart",
+          productid: "db68be303f824bbab261b51b33e842c1",
+          uid: "1",
+          skuId: skuId,
+          count: this.value
+        };
+        this.postRequest(parmas).then(res => {
+          console.log(res);
+          if (res.data.result == 0) {
+            this.$toast(res.data.resultNote);
+          }
+        });
+      }else{
+        console.log(1);
+         this.$router.push('/orderdetails')
+
+      }
     }
   },
   //生命周期 - 创建之前
@@ -110,6 +143,9 @@ export default {
   font-size: 0;
   display: flex;
   flex-direction: column;
+  .active {
+    border: 0.01rem solid #72bb29;
+  }
   span {
     padding: 0.1rem;
     font-size: 0.13rem;

@@ -30,6 +30,11 @@ export default {
     Hid
   },
   methods: {
+  },
+  computed:{
+    store(){
+      return this.$store.state;
+    }
   }
 };
 </script>
