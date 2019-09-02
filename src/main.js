@@ -1,5 +1,10 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+// import wx from 'weixin-js-sdk';
+// import wechatAuth from './mixins/wechatAuth'//微信登录插件
+// const qs= require('qs');
+
+// Vue.use(wechatAuth, {appid: XXXXXXXXX});
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -28,6 +33,7 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4'
 })
 // router.beforeEach((to, from, next) => {
+//   document.title = to.meta.title;
 //   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
 //     if (JSON.parse(localStorage.getItem("user"))) {
 //       next();
@@ -43,7 +49,30 @@ VueAMap.initAMapApiLoader({
 //   } else {
 //     next();
 //   }
-// })
+// });
+// router.beforeEach((to, from, next) => {
+//   //   第一次进入项目
+//   let token = window.localStorage.getItem("user_token");
+  
+//   if (!token && to.path != "/author") {
+//     window.localStorage.setItem("beforeLoginUrl", to.fullPath); // 保存用户进入的url
+//     next("/author");
+//     return false;
+//   } else if (token && !store.getters.userInfo) {
+//   //获取用户信息接口
+//     store
+//       .dispatch("GetUserInfo", {
+//         user_token: token
+//       })
+//       .catch(err => {
+//         window.localStorage.removeItem("user_token");
+//         router.go(0);
+//         return false;
+//       });
+//   }
+//   next();
+// });
+
 
 Vue.config.productionTip = false
 

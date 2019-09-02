@@ -1,8 +1,8 @@
 <template>
-  <div class>
+  <div class="add_ping">
     <ul class="add_inf">
-      <li v-for="(item,index) in dataList" :key="index">
-        <div class="carlist_info" :class="{'bg':ishow}">
+      <li v-for="(item,index) in 1" :key="index">
+        <div class="carlist_info">
           <div class="car_img">
             <img :src="item.productImage" />
           </div>
@@ -25,7 +25,7 @@
           <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）"></textarea>
           <div class="add_con">
             <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
-              <img src="/static/icon/lipinka.png" alt />
+              <img :src="item" alt />
             </div>
             <div class="add_img" @click="show=true" v-if="imgs.length!=3">
               <input type="file" class="upfile" @change="Upfiles" ref="inp" multiple />
@@ -54,7 +54,8 @@ export default {
       value: 5,
       imgs: [],
       num: 0,
-      dataList:[]
+      dataList:[],
+      imgBase64:[]
     };
   },
   //监听属性 类似于data概念
@@ -74,43 +75,28 @@ export default {
   //方法集合
   methods: {
     Upfiles() {
-      let self = this;
+         var _this = this;
+                var event = event || window.event;
+                var file = event.target.files[0];
+                let reg=  /image\/(png|jpg|jpeg|gif)$/; // 上传图片类型
+                if(reg.test(file.name)){
+                     var reader = new FileReader(); 
+                //转base64
+                reader.onload = function(e) {
+                    _this.imgs.push(e.target.result);
+                }
+                reader.readAsDataURL(file);
+                }
+              
 
-      let inp = self.$refs.inp;
-      let files = inp.files[0];
-      // let index = 0;
-      let reads = new FileReader();
-      reads.readAsDataURL(files);
-      reads.onload = e => {
-        files.src = e.target.result;
-        self.imgs.push(0), self.imgs.pop();
-        self.imgs.push({
-          files
-        });
-      };
-      // if (files.length > 0) {
-      //   let reads = new FileReader();
-      //   reads.onload = e => {
-      //     self.imgs.push({
-      //       fileName: files[index].name,
-      //       data: e.target.result
-      //     });
-      //     index++;
-      //     if(index<files.length){
-      //       reads.readAsDataURL(files[index]);
-      //     }else{
-      //       self.$emit('onReadComplete',self.imgs)
-      //     }
-      //   };
-      //    reads.readAsDataURL(files[index]);
-      // }
-
-      // var img = new FormData();
-      // img.append("file", file);
+     
+      var img = new FormData();
+      img.append("file", file);
     },
-    delimg(e) {
-      let len = this.imgs.length - e;
-      this.imgs.slice(len, 1);
+    delimg(ind) {
+      console.log(1)
+    
+      this.imgs.splice(ind, 1);
     }
   },
   //生命周期 - 创建之前
@@ -211,6 +197,7 @@ export default {
         }
       }
     }
+
     .ev_star {
       font-size: 0.14rem;
       padding: 0.15rem;
@@ -220,50 +207,50 @@ export default {
         margin-right: 0.15rem;
       }
     }
-    .ev_int {
-      // padding: 0 0.15rem;
-      width: 3.45rem;
-      margin: 0 auto;
-      height: 1.4rem;
-      overflow: hidden;
-      background-color: #eeeeee;
-      border-radius: 0.1rem;
-      #ev_main {
-        padding: 0.09rem 0.15rem;
-        height: 0.74rem;
-        width: 100%;
-        background-color: #eeeeee;
-        font-size: 0.14rem;
-        border: none;
-      }
-      .add_con {
-        width: 100%;
+  }
+}
+.ev_int {
+  // padding: 0 0.15rem;
+  width: 3.45rem;
+  margin: 0 auto;
+  height: 1.4rem;
+  overflow: hidden;
+  background-color: #eeeeee;
+  border-radius: 0.1rem;
+  #ev_main {
+    padding: 0.09rem 0.15rem;
+    height: 0.74rem;
+    width: 100%;
+    background-color: #eeeeee;
+    font-size: 0.14rem;
+    border: none;
+  }
+  .add_con {
+    width: 100%;
 
-        display: flex;
-        padding-left: 0.15rem;
-        .add_img {
-          margin-right: 0.15rem;
-          width: 0.56rem;
-          height: 0.56rem;
-          border: 0.01rem solid #d5d5d5;
-          border-radius: 0.03rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: space-around;
-          position: relative;
-          p {
-            color: #999999;
-            font-size: 0.11rem;
-          }
-          span {
-            width: 0.25rem;
-            height: 0.22rem;
-            background: url("/static/icon/xiangji.png") center center no-repeat;
-            background-size: 100% 100%;
-            display: block;
-          }
-        }
+    display: flex;
+    padding-left: 0.15rem;
+    .add_img {
+      margin-right: 0.15rem;
+      width: 0.56rem;
+      height: 0.56rem;
+      border: 0.01rem solid #d5d5d5;
+      border-radius: 0.03rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+      p {
+        color: #999999;
+        font-size: 0.11rem;
+      }
+      span {
+        width: 0.25rem;
+        height: 0.22rem;
+        background: url("/static/icon/xiangji.png") center center no-repeat;
+        background-size: 100% 100%;
+        display: block;
       }
     }
   }
