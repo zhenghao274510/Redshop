@@ -1,20 +1,16 @@
 <template>
-
-    <div class="tit">
-        <my-address :list="dataList"></my-address>       
-    </div>
-     
-
+  <div class='box'>
+     修改
+  </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import myAddress from './adderss'
+
 export default {
   data() {
     return {
-      uid:'',
-      dataList:[]
+
     };
   },
   //监听属性 类似于data概念
@@ -23,16 +19,11 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-   myAddress
+
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     this.uid='1';
-     let parmas={cmd:'getAddressList',uid:this.uid,nowPage:'1',pageCount:'10'};
-     this.postRequest(parmas).then(res=>{
-       console.log(res)
-       this.dataList=res.data.dataList;
-     })
+
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
@@ -58,10 +49,6 @@ export default {
   activated() {},
 }
 </script>
-<style scoped lang='less' rel='stylesheet/stylus'>
-.tit{
-  margin-top: .5rem;
-  height: 100%;
-  background-color: #EEEEEE;
-}
+<style scoped>
+
 </style>

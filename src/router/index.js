@@ -120,6 +120,12 @@ export default new Router({
       name:"商品详情",
       component: resolve => require(['./../pages/shopdetails/shopdetails.vue'], resolve)
     }, 
+    // 活动专区
+    {
+      path: '/active',
+      name:"活动专区",
+      component: resolve => require(['./../pages/active/active.vue'], resolve)
+    }, 
      // 个人资料
     {
       path: '/mineself',
@@ -152,7 +158,12 @@ export default new Router({
       name:"订单详情",
       component: resolve => require(['./../pages/orderdetails/orderdetails.vue'], resolve)
     },
-    // 礼品卡详情
+    {
+      path: '/finishOrder',
+      name:"确认订单",
+      component: resolve => require(['./../pages/orderdetails/finishOrder.vue'], resolve)
+    },
+    // // 礼品卡详情
     {
       path: '/giftcardetails',
       name:"礼品卡详情",
@@ -163,6 +174,12 @@ export default new Router({
       path: '/share',
       name:"分享图片",
       component: resolve => require(['./../pages/giftcardetails/share.vue'], resolve)
+    },
+     // 分享
+     {
+      path: '/changepswgiftcard',
+      name:"修改密码",
+      component: resolve => require(['./../pages/giftcardetails/changepswgiftcard.vue'], resolve)
     },
     // 設置
     {

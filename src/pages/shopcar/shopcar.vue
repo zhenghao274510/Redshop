@@ -39,7 +39,7 @@ export default {
             this.dataList=res.data.dataList;
             this.dataObject=res.data;
         }
-        console.log(res);
+        // console.log(res);
       });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

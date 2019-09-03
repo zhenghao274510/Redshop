@@ -4,12 +4,8 @@
     <div v-if="loading" class="loading">
       <van-loading type="spinner" />
     </div>
-      <van-search
-    v-model="search_key"
-    placeholder="请输入搜索关键词"
-    @search="keySearch"
-  />
-    
+    <van-search v-model="search_key" placeholder="请输入搜索关键词" @search="keySearch" />
+
     <div class="con-box">
       <!--地图-->
       <div class="mapbox">
@@ -22,8 +18,8 @@
       <div class="Hlist-box">
         <ul>
           <li v-for="(item, index) in lists" :key="index" @click="onAddressLi(item,index)">
-               <span :class="{'active':num==index}"></span>
-              <p>{{item.name}}{{item.address}}</p>         
+            <span :class="{'active':num==index}"></span>
+            <p>{{item.name}}{{item.address}}</p>
           </li>
         </ul>
       </div>
@@ -31,83 +27,89 @@
   </div>
 </template>
 <style lang="less" scoped>
-/deep/.amap-copyright{opacity: 0;}
-/deep/.amap-markers{width: .22rem;height: .22rem;}
+/deep/.amap-copyright {
+  opacity: 0;
+}
+/deep/.amap-markers {
+  width: 0.22rem;
+  height: 0.22rem;
+}
 .con-map {
-  height: 1.90rem;
+  height: 1.9rem;
   width: 100%;
 }
 .con-box {
   .mapbox {
-    margin-bottom: .10rem;
+    margin-bottom: 0.1rem;
     z-index: 111;
     width: 100%;
     background: #eceeee;
     .map {
-      height: 3.30rem;
+      height: 3.3rem;
     }
   }
 
   .Hlist-box {
-   width: 100%;
-    padding:0 .15rem ;
+    width: 100%;
+    padding: 0 0.15rem;
     height: 2.25rem;
     background: #fff;
-    border-radius: .05rem;
+    border-radius: 0.05rem;
     z-index: 999;
     overflow-y: auto;
     li {
-      height: .45rem;
-      border-bottom: .01rem solid #d9d9d9;
+      height: 0.45rem;
+      border-bottom: 0.01rem solid #d9d9d9;
       display: flex;
-      font-size: .14rem;
-     align-items: center;
-    
+      font-size: 0.14rem;
+      align-items: center;
+
       span {
-        width: .1rem;
-        height:.1rem;
-        background-color: #E5E5E5;
+        width: 0.1rem;
+        height: 0.1rem;
+        background-color: #e5e5e5;
         border-radius: 50%;
         display: block;
-        margin-right: .1rem;
+        margin-right: 0.1rem;
       }
-      .active{ background-color: #72BB29;}
+      .active {
+        background-color: #72bb29;
+      }
       p {
         color: #a6a6a6;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        font-size: .13rem;
-
+        font-size: 0.13rem;
       }
     }
   }
 }
 .mymapM {
   .search-box {
-    height: .48rem;
-    line-height: .48rem;
+    height: 0.48rem;
+    line-height: 0.48rem;
     background: #fff;
-    border-bottom: .01rem solid #bfbec4;
+    border-bottom: 0.01rem solid #bfbec4;
     .search-postion {
-      height: .48rem;
-      line-height: .48rem;
+      height: 0.48rem;
+      line-height: 0.48rem;
       background: #fff;
-      border-bottom: .1rem solid #bfbec4;
+      border-bottom: 0.1rem solid #bfbec4;
       width: 100%;
       position: fixed;
       z-index: 99999;
       display: flex;
       input {
         flex: 4;
-        height: .14rem;
-        padding: .16rem 0;
+        height: 0.14rem;
+        padding: 0.16rem 0;
         border: none;
 
-        text-indent: .10rem;
+        text-indent: 0.1rem;
       }
       .clear {
-        margin: .02rem .06rem;
+        margin: 0.02rem 0.06rem;
       }
       .buts {
         width: 15%;
@@ -116,14 +118,13 @@
         flex: 1;
       }
       .border_but {
-        border-left: .01rem solid #8f8f8f;
-        height: .14rem;
-        line-height: .14rem;
-        margin: .17rem 0;
+        border-left: 0.01rem solid #8f8f8f;
+        height: 0.14rem;
+        line-height: 0.14rem;
+        margin: 0.17rem 0;
       }
     }
   }
-
 }
 .loading {
   position: fixed;
@@ -137,7 +138,7 @@
 export default {
   data() {
     return {
-      num:0,
+      num: 0,
       center: [], //经度+纬度
       search_key: "", //搜索值
       lists: [], //地点列表
@@ -157,7 +158,7 @@ export default {
       this.loading = true;
       //初始化地图
       var map = new AMap.Map("container", {
-        zoom: 14, //缩放级别
+        zoom: 14 //缩放级别
         // center: this.center //设置地图中心点
         //resizeEnable: true,  //地图初始化加载定位到当前城市
       });
@@ -168,11 +169,11 @@ export default {
 
       //创建标记
       this.marker = new AMap.Marker({
-        position: new AMap.LngLat(currentCenter.lng, currentCenter.lat),// 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-         icon:new AMap.Icon({            
-            size: new AMap.Size(32, 32),  //图标大小
-            image: "/static/icon/position.png"
-        })        
+        position: new AMap.LngLat(currentCenter.lng, currentCenter.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        icon: new AMap.Icon({
+          size: new AMap.Size(32, 32), //图标大小
+          image: "/static/icon/position.png"
+        })
       });
       // 将创建的点标记添加到已有的地图实例：
       map.add(this.marker);
@@ -224,8 +225,8 @@ export default {
     },
     keySearch() {
       this.loading = true;
-      this.lists=[];
-      this.num=0;
+      this.lists = [];
+      this.num = 0;
       AMap.service(["AMap.PlaceSearch"], () => {
         //构造地点查询类
         var placeSearch = new AMap.PlaceSearch({
@@ -241,10 +242,10 @@ export default {
         placeSearch.search(this.search_key, (status, result) => {
           if (status == "complete") {
             if (result.poiList.count === 0) {
-              console.log(result)
+              console.log(result);
               this.noSearchShow = true;
             } else {
-             console.log(result)
+              console.log(result);
               this.lists = result.poiList.pois; //将查询到的地点赋值
               this.noSearchShow = false;
               this.loading = false;
@@ -256,11 +257,12 @@ export default {
         });
       });
     },
-    onAddressLi(e,ind) {
-  this.num=ind;
-  console.log(e,ind)
-      this.marker.setPosition([e.location.lng, e.location.lat]);
+    onAddressLi(e, ind) {
+      this.num = ind;
+      console.log(e, ind);
      
+      this.$router.back(-1);
+      this.marker.setPosition([e.location.lng, e.location.lat]);
     },
     onSearchLi(e) {
       console.log(e.lng + "-" + e.lat);

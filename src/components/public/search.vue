@@ -2,7 +2,7 @@
   <div class="sear">
     <div>
       <span></span>
-      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord" />
+      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord" ref="input" />
     </div>
     <span class="btn" @click="star">搜索</span>
   </div>
@@ -24,9 +24,12 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+  },
   //方法集合
   methods: {
     // 搜索商品
@@ -39,9 +42,14 @@ export default {
         pageCount: "10"
       };
       this.postRequest(parmas).then(res => {
-        console.log(res);
+        console.log(res.data.dataList);
+        this.$emit('SearStar',res.data.dataList);
+
       });
-    }
+    },
+  },
+  directives:{
+  
   },
   //生命周期 - 创建之前
   beforeCreate() {},

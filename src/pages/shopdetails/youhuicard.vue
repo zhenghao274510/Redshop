@@ -2,7 +2,7 @@
   <div class="youhuibox">
     <p>优惠</p>
     <ul class="cardlist">
-      <li v-for="(item,index) in dataList" :key="index">
+      <li v-for="(item,index) in list" :key="index">
         <div class="info">
           <div>
             ￥
@@ -27,9 +27,9 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
+  props:['list'],
   data() {
     return {
-      dataList: []
     };
   },
   //监听属性 类似于data概念
@@ -41,15 +41,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //  商品优惠券
-    let parmas = {
-      cmd: "couponList"
-    };
-    this.postRequest(parmas).then(res => {
-      if (res.data.result == 0) {
-        console.log(res);
-        this.dataList = res.data.dataList;
-      }
-    });
+ 
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -60,7 +52,7 @@ export default {
     },
     //  领取优惠券
     GetCard(ind) {
-      let couponId = this.dataList[ind].couponId;
+      let couponId = this.list[ind].couponId;
       let parmas = {
         cmd: "addUserCoupon",
         couponId: couponId,

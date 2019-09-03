@@ -61,9 +61,9 @@ export default {
   },
   //方法集合
   methods: {
-    changeta(ind) {
-      this.num = ind;
-    }
+    // changeta(ind) {
+    //   this.num = ind;
+    // }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

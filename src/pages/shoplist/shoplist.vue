@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <sear></sear>
+      <sear @SearStar="SearResult"></sear>
 
      
         <Shop-L :list="ProductList"></Shop-L>
@@ -20,7 +20,7 @@ export default {
       isLoading: false,
       ProductObject:{},
       ProductList:[]
-
+      
     };
   },
   //监听属性 类似于data概念
@@ -53,6 +53,9 @@ export default {
         this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
+    },
+    SearResult(e){
+    this.ProductList=e;
     }
   },
   //生命周期 - 创建之前

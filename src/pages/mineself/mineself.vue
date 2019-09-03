@@ -22,8 +22,8 @@
           <i></i>
         </router-link>
       </li>
-       <li>
-        <router-link to="/myaddress">
+       <li  @click="GotoEad">
+        <router-link to="">
           <span>我的地址</span>
           <i></i>
         </router-link>
@@ -50,7 +50,11 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    GotoEad(){
+      this.$router.push({path:'/myaddress',query:{id:0}});
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

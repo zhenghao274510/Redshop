@@ -2,33 +2,39 @@
   <div class="box">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" @onload="onLoad">
       <!-- <Top title="商城"></Top> -->
-      <sear></sear>
+      <div class="sear">
+        <div>
+          <span></span>
+          <input type="text" placeholder="输入关键词搜索" name="search" ref="input" />
+        </div>
+        <span class="btn">搜索</span>
+      </div>
       <Zq></Zq>
-    
-     <div>
-    <!-- 首页推荐模块 -->
-    <Tit :title="activ"></Tit>
-    <ul class="tui_list">
-      <!-- <van-list class="tuijian" v-model="loading" @load="onLoad"> -->
-        <li v-for="(item,index) in ProductList" :key="index">
-          <router-link to>
-            <div class="list_img">
-              <img :src="'http://192.168.3.254:8099'+item.logo" alt />
-            </div>
-            <div class="list_info">
-              <p class="list_name">{{item.title}}</p>
-              <div class="list_icon">
-                <p class="col_max ft_mid">￥{{item.price}}</p>
-                <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(index)" />
+
+      <div>
+        <!-- 首页推荐模块 -->
+        <Tit :title="activ"></Tit>
+        <ul class="tui_list">
+          <!-- <van-list class="tuijian" v-model="loading" @load="onLoad"> -->
+          <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item.productid)">
+            <router-link to>
+              <div class="list_img">
+                <img :src="'http://192.168.3.254:8099'+item.logo" alt />
               </div>
-            </div>
-          </router-link>
-        </li>
-      <!-- </van-list> -->
-    </ul>
-    <div class="no_more"></div>
-  </div>
-  </van-pull-refresh>
+              <div class="list_info">
+                <p class="list_name">{{item.title}}</p>
+                <div class="list_icon">
+                  <p class="col_max ft_mid">￥{{item.price}}</p>
+                  <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item.productid)" />
+                </div>
+              </div>
+            </router-link>
+          </li>
+          <!-- </van-list> -->
+        </ul>
+        <div class="no_more"></div>
+      </div>
+    </van-pull-refresh>
     <!-- 弹出层 -->
 
     <van-popup v-model="First" round>
@@ -54,16 +60,13 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-// import vuescroll from "vuescroll/dist/vuescroll-slide";
 import Top from "./../../components/public/heade";
 import Zq from "./../../components/homec/hodong";
 import Tit from "./../../components/homec/title";
-// import TuiJan from "./../../components/homec/tuijian";
-import sear from "./../../components/public/search";
 export default {
   data() {
     return {
-        activ: { tit: "为你推荐", type: 1 },
+      activ: { tit: "为你推荐", type: 1 },
       First: true,
       isGet: true,
       id: "",
@@ -71,8 +74,8 @@ export default {
       finished: false,
       //优惠券
       dataObject: {},
-      ProductList:[],
-      ProductObject:{}
+      ProductList: [],
+      ProductObject: {}
     };
   },
   //监听属性 类似于data概念
@@ -82,7 +85,6 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     Top,
-    sear,
     Zq,
     Tit
   },
@@ -104,7 +106,7 @@ export default {
         this.First = false;
       }
     });
-      // 为你推荐
+    // 为你推荐
     let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
     this.postRequest(parmas3).then(res => {
       if (res.data.result == 0) {
@@ -116,6 +118,7 @@ export default {
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+    this.focus()
   },
   //方法集合
   methods: {
@@ -125,7 +128,7 @@ export default {
         this.isLoading = false;
       }, 500);
     },
-       onLoad() {
+    onLoad() {
       // 异步更新数据
       console.log(1);
       if (this.ProductObject.totalPage > this.num) {
@@ -151,11 +154,24 @@ export default {
     },
     GetJuan() {
       //  获取优惠券
-      let parmas = { cmd: "newCoupon", uid: "", couponid:this.dataObject.couponid};
+      let parmas = {
+        cmd: "newCoupon",
+        uid: "",
+        couponid: this.dataObject.couponid
+      };
       this.postRequest(parmas).then(res => {
         console.log(res);
       });
       isGet = false;
+    },
+    //  首页 获取焦点 跳转
+     focus(){
+      this.$refs.input.addEventListener('focus',()=>{
+          this.$router.push('/shoplist');
+      })
+    },
+    GoTO(e){
+      this.$router.push({path:'/shopdetails',parmas:{productid:e}});
     }
   },
   //生命周期 - 创建之前
@@ -212,43 +228,89 @@ export default {
 .box {
   background-color: #fff;
   .tui_list {
-  padding: 0.15rem;
-  li {
-    border-radius: 0.1rem;
-    box-shadow: 0 0 0.04rem 0 #33222222;
-    margin-bottom: 0.15rem;
-    a {
-      display: flex;
-      padding: 0.1rem;
-      justify-content: space-between;
-      .list_img {
-        width: 1.38rem;
-        height: 0.93rem;
-        overflow: hidden;
-      }
-      .list_info {
-        margin-left: 0.1rem;
+    padding: 0.15rem;
+    li {
+      border-radius: 0.1rem;
+      box-shadow: 0 0 0.04rem 0 #33222222;
+      margin-bottom: 0.15rem;
+      a {
         display: flex;
-        flex: 1;
-        flex-direction: column;
+        padding: 0.1rem;
         justify-content: space-between;
-        .list_name {
-          font-size: 0.13rem;
-          color: rgba(51, 51, 51, 1);
-          margin-bottom: 0.2rem;
-          text-align: left;
+        .list_img {
+          width: 1.38rem;
+          height: 0.93rem;
+          overflow: hidden;
         }
-        .list_icon {
+        .list_info {
+          margin-left: 0.1rem;
           display: flex;
+          flex: 1;
+          flex-direction: column;
           justify-content: space-between;
+          .list_name {
+            font-size: 0.13rem;
+            color: rgba(51, 51, 51, 1);
+            margin-bottom: 0.2rem;
+            text-align: left;
+          }
+          .list_icon {
+            display: flex;
+            justify-content: space-between;
+          }
         }
       }
     }
   }
-  
-}
-.no_more {
+  .no_more {
     margin-bottom: 0.5rem;
   }
+  .sear {
+  width: 100%;
+  height: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.1rem 0.15rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  div {
+    width: 2.9rem;
+    height: 0.3rem;
+    border: 0.01rem solid #e5e5e5;
+    border-radius: 0.05rem;
+    position: relative;
+    font-size: 0;
+    overflow: hidden;
+    input {
+      width: 100%;
+      height: 100%;
+      padding-left: 0.36rem;
+      font-size: 0.13rem;
+    }
+    ::-webkit-input-placeholder {
+      color: #9c9fa4;
+    }
+    span {
+      position: absolute;
+      top: 0.07rem;
+      left: 0.13rem;
+      width: 0.16rem;
+      height: 0.16rem;
+      background: url("/static/icon/souuso.png") no-repeat;
+      background-size: 100% 100%;
+      display: block;
+    }
+  }
+  .btn {
+    width: 0.43rem;
+    height: 0.3rem;
+    border-radius: 0.05rem;
+    background-color: #72bb29;
+    color: #fff;
+    text-align: center;
+    font-size: 0.13rem;
+    line-height: 0.3rem;
+  }
+}
 }
 </style>

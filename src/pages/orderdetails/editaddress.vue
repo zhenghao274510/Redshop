@@ -33,7 +33,7 @@
     <div class="pad">
       <van-button type="primary" size="large" color="#72BB29" @click="save">保存</van-button>
     </div>
-    <div id="container"></div>
+    <!-- <div id="container"></div> -->
   </div>
 </template>
 
@@ -67,32 +67,36 @@ export default {
   //方法集合
   methods: {
     save() {
+      this.uid = "1";
       if (this.istrue) {
         this.isdefault = 1;
       } else {
         this.isdefault = 0;
       }
-      let regphone = /^1([3|4|5|7|8|])\d{9}$/;
-      var regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
-      let parmas = {
-        cmd: "updateAddress",
-        uid: "",
-        addressId: this.addressId,
-        name: this.name,
-        phone: this.phone,
-        address: this.address,
-        detail: this.detail,
-        isdefault: this.isdefault
-      };
-      this.postRequest(params).then(res => {
-        console.log(res);
-      });
+      let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+      let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
+      if (reg.test(this.phone) && regname.test(this.name)) {
+        let parmas = {
+          cmd: "addAddress",
+          uid: this.uid,
+          addressId: this.addressId,
+          name: this.name,
+          phone: this.phone,
+          address: this.address,
+          detail: this.detail,
+          isdefault: this.isdefault
+        };
+        this.postRequest(parmas).then(res => {
+          console.log(res);
+          this.$toast(res.data.resultNote);
+        });
+      }
     },
     getCurrentPosition() {
       this.GetCurrentCity();
       setTimeout(() => {
         let FMadd = JSON.parse(localStorage.getItem("address"));
-          console.log(FMadd);
+        console.log(FMadd);
         if (FMadd) {
           this.address =
             FMadd.addressComponent.province +
@@ -101,9 +105,7 @@ export default {
           this.detail = FMadd.formattedAddress.slice(this.address.length);
           this.addressId = FMadd.addressComponent.citycode;
         }
-      
-      }, 10000);
-      // this.GetCurrentPosition();
+      }, 5000);
     }
   },
   //生命周期 - 创建之前

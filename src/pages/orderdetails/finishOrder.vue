@@ -93,7 +93,7 @@
           </div>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
+      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex"  @click="changej(1)">
         <span>支付方式</span>
         <div class="d_flex">
           <span>微信支付</span>
@@ -118,39 +118,22 @@
         </div>
       </div>
       <!-- 优惠卷 -->
-      <van-popup
-        v-model="show_juan"
-        round
-        position="bottom"
-        :style="{ height: '40%' }"
-        :close-on-click-overlay="jin"
-      >
-        <van-radio-group v-model="radioYouhui" v-if="direct==0">
+      <van-popup v-model="show_juan" round position="bottom" :style="{ height: '40%' }" :close-on-click-overlay="jin">
+        <van-radio-group v-model="radio">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
-            <van-cell title="满100减10" clickable @click="radioYouhui = '1'">
+            <van-cell  title="满100减10" clickable @click="radio = '1'">
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
             </van-cell>
-            <van-cell title="满100减10" clickable @click="radioYouhui = '2'">
+            <van-cell title="满100减10" clickable @click="radio = '2'">
               <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-radio-group v-model="radioPay" v-else>
-          <van-cell title="请选择支付方式"></van-cell>
-          <van-cell-group>
-            <van-cell title="微信支付" clickable @click="radioPay = '1'">
-              <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
-            </van-cell>
-            <van-cell title="充值卡支付" clickable @click="radioPay = '2'">
-              <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
-            </van-cell>
-          </van-cell-group>
-        </van-radio-group>
-        <van-cell @click="show_juan=false">
-          <span class="btn bg_g col_wh ft_mid">确定</span>
-        </van-cell>
+        <van-cell @click="show_juan=false"> <span class="btn bg_g col_wh ft_mid">确定</span></van-cell>
+       
       </van-popup>
+   
     </div>
   </div>
 </template>
@@ -165,22 +148,20 @@ export default {
   data() {
     return {
       // 禁止点击遮罩层
-      jin: false,
+      jin:false,
       // 0=> 确认订单 1=>订单详情
       direct: 0,
-      radioYouhui: "1",
-      radioPay: "1",
-      direct:0,
+       radio: '1',
       tit: "确认订单",
       num: "0",
       show_juan: false,
       goHome: false,
       goCrd: true,
       //订单编号
-      orderid: "",
+      orderid:'',
       //配送费
-      Freight: "",
-      uid:''
+      Freight:''
+
     };
   },
   //监听属性 类似于data概念
@@ -191,25 +172,26 @@ export default {
   components: {
     deZhi,
     Info,
-    btn
+    btn,
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.orderid = "1";
-    this.uid = "1";
-    let parmas = {
-      cmd: "orderDetail",
-      orderid: this.orderid,
-      uid: this.uid
-    };
-    this.postRequest(parmas).then(res => {
-      console.log(res);
-    });
-    let parmas1 = { cmd: "getFreight" };
-    this.postRequest(parmas1).then(res => {
-      // console.log(res);
-      this.Freight = res.data.amount;
-    });
+    // this.orderid=
+      // this.orderid='';
+      // let parmas = {
+      //   cmd: "orderDetail",
+      //   orderid:'',
+      //   uid:'1'
+      // };
+      // this.postRequest(parmas).then(res => {
+      //   console.log(res);
+      // });
+        let parmas1 = {cmd:"getFreight"}; 
+      this.postRequest(parmas1).then(res => {
+        console.log(res);
+      this.Freight=res.data.amount;
+          
+      });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -217,12 +199,9 @@ export default {
   methods: {
     changej(num) {
       this.show_juan = true;
-      switch (num) {
+      switch(num){
         case 0:
-       this.direct=0;
-        break;
-        case 1:
-       this.direct=1;
+
       }
     },
     changeMothed(num) {
@@ -254,6 +233,7 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
+
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;
@@ -269,15 +249,15 @@ export default {
       margin-left: 0.15rem;
     }
   }
-  .btn {
-    height: 0.44rem;
+  .btn{
+    height: .44rem;
     width: 3.45rem;
-    margin: 0 auto;
+    margin:0 auto;
     display: block;
     text-align: center;
-    line-height: 0.44rem;
-    border-radius: 0.05rem;
-    margin-top: 0.63rem;
+    line-height: .44rem;
+    border-radius: .05rem;
+    margin-top: .63rem;
   }
   .mothed {
     padding: 0 0.15rem;

@@ -1,7 +1,7 @@
 <template>
   <ul class="order_info bg_wh">
     <!-- 订单详情购物车信息 -->
-    <li v-for="item in arr">
+    <li>
       <router-link to="/orderdetails">
         <img src="/static/test/bg.png" alt />
         <div class="info_name">
@@ -19,7 +19,7 @@
           </p>
         </div>
       </router-link>
-      <div class="tui" v-if="num=='1'">
+      <div class="tui" v-if="num=='1'" @click="Shentui">
               <span>申请退换</span>
       </div>
     </li>
@@ -30,11 +30,11 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import btn from './btn'
+import { Dialog } from "vant";
 export default {
   props:["num","item"],
   data() {
     return {
-      arr:[1,2]
     };
   },
   //监听属性 类似于data概念
@@ -50,7 +50,21 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    Shentui(){
+   Dialog.confirm({
+       title:'申请退卡',
+        message: "申请退换请联系客服~"
+      })
+        .then(() => {
+          console.log(1);
+          this.$router.push("/service");
+        })
+        .catch(() => {
+          // on cancel
+        });
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

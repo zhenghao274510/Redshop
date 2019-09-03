@@ -174,6 +174,9 @@ export default {
     } else {
       return false;
     }
+  },
+  Geturl(url){
+    return  "http://192.168.3.254:8099"+url;
   }
 
 

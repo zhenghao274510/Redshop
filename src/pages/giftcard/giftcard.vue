@@ -4,7 +4,7 @@
       <div class="li_search">
         <span>查询</span>
       </div>
-      <Crd @ShowMsg="GetMsg"></Crd>
+      <Crd @ShowMsg="GetMsg" :list="dataObject"></Crd>
     </div>
 
     <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
@@ -31,7 +31,9 @@ export default {
   data() {
     return {
       MsgShare: false,
-      UseTelphone: ""
+      UseTelphone: "",
+      uid: "",
+      dataObject: {}
     };
   },
   //监听属性 类似于data概念
@@ -44,7 +46,18 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    
+    this.uid = "1";
+    let parmas = {
+      cmd: "giftCardList",
+      uid: this.uid,
+      nowPage: "1",
+      pageCount: "10",
+      cardid:''
+    };
+    this.postRequest(parmas).then(res => {
+      console.log(res);
+      this.dataObject=res.data.dataObject;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -54,10 +67,11 @@ export default {
       this.MsgShare = true;
     },
     close() {
+      let parmas={cmd:'sharingSMS',type:'',cardid:this.cardid,phone:this.phone};
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
       let isRegExp = Reg.test(this.tel);
-      if(isRegExp){
-        
+      if (isRegExp) {
+           
       }
     }
   },
@@ -102,7 +116,7 @@ export default {
   height: 2.6rem;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: .15rem;
+  padding-bottom: 0.15rem;
   align-items: center;
   div {
     width: 100%;

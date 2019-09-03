@@ -81,7 +81,7 @@ export default {
         });
       }else{
         console.log(1);
-         this.$router.push('/orderdetails')
+         this.$router.push('/orderdetails');
 
       }
     }

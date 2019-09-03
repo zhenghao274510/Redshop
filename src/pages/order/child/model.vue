@@ -6,7 +6,7 @@
           订单编号：
           <i>921029020992910</i>
         </span>
-        <em>待支付</em>
+        <em>{{navinfo[num]}}</em>
       </div>
       <Info></Info>
       <div class="order_tot" v-if="change!=5">共2件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥419.00</div>
@@ -36,7 +36,14 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    num(){
+
+      if(this.come>=1){
+        return this.come-1;
+      }
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用

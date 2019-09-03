@@ -1,7 +1,7 @@
 <template>
   <ul class="shop_o">
-    <li class="shop_de" v-for="(item,index) in list" :key="index">
-      <div class="shop_img" @click.prevent="goto">
+    <li class="shop_de" v-for="(item,index) in 3" :key="index">
+      <div class="shop_img" @click.prevent="goto(index)">
         <img :src="item.logo" alt />
       </div>
       <div class="shop_info">
@@ -24,7 +24,9 @@
 export default {
   props:['list'],
   data() {
-    return {};
+    return {
+      id:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -38,12 +40,14 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    goto() {
-      this.$router.push("/shopdetails");
+    goto(ind) {
+      this.id="bb7258451d5c45b398d35e31bead0b5b"
+      this.$store.commit('ChooseShop',this.list[ind]);
+      this.$router.push('/shopdetails');
     },
     addcar(ind) {
-      
-      let parmas={cmd:"addCart",uid:"",productId:list[ind].productid,skuId:'',count:'1'};
+      let productId=this.list[ind].productid;
+      let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:'1'};
        this.postRequest(parmas).then(res=>{
         //  console.log(res)
       })
@@ -69,6 +73,7 @@ export default {
 .shop_o {
   padding: 0 .075rem;
   overflow: hidden;
+  height: 100%;
   li{
     width: 1.65rem;
     height: 2.18rem;

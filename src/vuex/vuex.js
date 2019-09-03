@@ -15,15 +15,16 @@ const store=new Vuex.Store({
       //  用户信息
       useinfo:{
         uid:''
-      }
+      },
+      Shop:{}
     },
     mutations:{
       //修改tarba
       ChangeTabar(state,val){
         state.home.TB=val;
       },
-      ChangeBack(state,val){
-        state.home.TB-=val;
+      ChooseShop(state,val){
+        state.Shop=val;
       }
     },
     getters(){

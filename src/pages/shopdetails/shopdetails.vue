@@ -24,7 +24,7 @@
         </div>
         <div class="shop_info_juan" @click="see(0)">
           <div>优惠活动</div>
-          <div>满200减10卷</div>
+          <div>满{{CurrentCard.couponPrice}}减{{CurrentCard.couponAmount}}劵</div>
           <div>
             <span>更多优惠</span>
             <em></em>
@@ -77,7 +77,7 @@
     >
     
       <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy"></Addshop>
-      <Youcard @closec="FUC" v-if="see_card"></Youcard>
+      <Youcard @closec="FUC" v-if="see_card" :list="YuhuiCar"></Youcard>
       <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
     </van-popup>
     <!-- 呈高度 -->
@@ -129,7 +129,10 @@ export default {
       dataObject: {},
       productParam: {},
       skuList: [],
-      productCommentList: []
+      productCommentList: [],
+      YuhuiCar:[],
+      CurrentCard:{},
+      // 
     };
   },
   //监听属性 类似于data概念
@@ -145,9 +148,15 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    // 商品id
+    // this.ShopConent
+    this.id =this.$store.state.Shop.productid;
+    console.log(this.id);
+    // this.id="bb7258451d5c45b398d35e31bead0b5b"
+    // console.log(this.id);
     let parmas1 = {
       cmd: "productDetail",
-      productid: "db68be303f824bbab261b51b33e842c1",
+      productid:this.id,
       uid: "1"
     };
     this.postRequest(parmas1).then(res => {
@@ -163,7 +172,7 @@ export default {
     //   评价
     let parmas2 = {
       cmd: "productCommentList",
-      productid: "db68be303f824bbab261b51b33e842c1",
+      productid: this.id,
       nowPage: "1",
       pageCount: "10"
     };
@@ -171,6 +180,16 @@ export default {
       if (res.data.result == 0) {
         // console.log(res);
         // this.productCommentList=res.data.dataList[0];
+      }
+    });
+       let parmas3 = {
+      cmd: "couponList"
+    };
+    this.postRequest(parmas3).then(res => {
+      if (res.data.result == 0) {
+        // console.log(res);
+        this.YuhuiCar = res.data.dataList;
+       this.CurrentCard=this.YuhuiCar[0]
       }
     });
   },

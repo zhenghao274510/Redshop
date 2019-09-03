@@ -2,7 +2,7 @@
    <div class="hd_tit">
         <span class="hd_tit_info">{{title.tit}}</span>
         
-        <router-link to="" v-if="title.type==0" >
+        <router-link to="/active" v-if="title.type==0" >
           <span >查看更多</span>
           <i class="icon_more"></i>
         </router-link>      

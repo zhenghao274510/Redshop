@@ -1,37 +1,41 @@
 <template>
-  <ul class="container">
+  <div class="container">
     <!-- <van-cell :border="false"> -->
-    <li v-for="(item,index) in 3" :key="index" class="carlist">
-      <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
-        <div class="carlist_info" :class="{'bg':ishow}">
-          <div class="car_s" @click="changech(index)" v-show="ishow">
-            <img src="/static/icon/gouwuche-weixuanzhong.png" v-show="check[index]" />
-            <img src="/static/icon/gouwuche-xuanzhong.png" v-show="!check[index]" />
-          </div>
-          <div class="car_img">
-            <img src="/static/test/replace.jpg" />
-          </div>
-          <div class="car_info">
-            <p class="car_con">凯宝利519红葡萄酒750ml*6 澳大利亚进口红酒</p>
-            <div class="sum_tot">
-              <span class="price">
-                ￥
-                <i>{{pri}}</i>
-              </span>
-              <div class="total" v-show="ishow" @click="sub">
-                <van-stepper v-model="value[index]" integer />
+    <ul v-if="length!=0">
+      <li v-for="(item,index) in list" :key="index" class="carlist">
+        <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
+          <div class="carlist_info" :class="{'bg':ishow}">
+            <div class="car_s" @click="changech(index)" v-show="ishow">
+              <img src="/static/icon/gouwuche-weixuanzhong.png" v-show="check[index]" />
+              <img src="/static/icon/gouwuche-xuanzhong.png" v-show="!check[index]" />
+            </div>
+            <div class="car_img">
+              <img :src="item.image" />
+            </div>
+            <div class="car_info">
+              <p class="car_con">{{item.productName}}</p>
+              <div class="sum_tot">
+                <span class="price">
+                  ￥
+                  <i>{{item.price}}</i>
+                </span>
+                <div class="total" v-show="ishow" @click="sub">
+                  <van-stepper v-model="value[index]" integer />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <template slot="right">
-          <van-button square type="danger" text="删除" />
-        </template>
-      </van-swipe-cell>
-    </li>
+          <template slot="right">
+            <van-button square type="danger" text="删除" />
+          </template>
+        </van-swipe-cell>
+      </li>
+    </ul>
+
     <!-- </van-cell> -->
     <!-- 底部显示 -->
+    <div v-else class="nothing">购物车还是空的哟！</div>
     <div class="all_chose">
       <div class="all_left">
         <div class="all_s" @click="choseall">
@@ -53,38 +57,41 @@
       </div>
     </div>
     <div class="car_no"></div>
-  </ul>
+  </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
 import { Dialog } from "vant";
 export default {
-  props: ["ishow", "ischeck"],
+  props: ["ishow", "list"],
   data() {
     return {
+      AllLen:0,
       length: 0,
       LftW: 0,
-      arr: [1, 2, 3],
-      check: [true, true, true],
+      check: [],
       num: 1,
-      pri: 239,
-      value: [1, 2, 3],
+      value: [],
       RightW: 58,
       totalPrice: 0,
       allchecked: true
     };
   },
   //监听属性 类似于data概念
-  computed: {},
-  //监控data中的数据变化
-  watch: {
+  computed: {
   },
+  //监控data中的数据变化
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-
+    this.AllLen=this.list.length;
+    for (let i in this.AllLen) {
+      this.check.push(true);
+      this.value.push(this.list[i].count);
+    }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -97,12 +104,12 @@ export default {
       this.sub();
       if (!this.check[ind]) {
         this.length += 1;
-          if(this.check.indexOf(true)==-1){
-            this.allchecked=false;
-          }
+        if (this.check.indexOf(true) == -1) {
+          this.allchecked = false;
+        }
       } else {
         this.length -= 1;
-        this.allchecked=true;
+        this.allchecked = true;
       }
     },
 
@@ -117,17 +124,19 @@ export default {
           Dialog.confirm({
             message: "确定删除吗？"
           }).then(() => {
-            instance.close();
-            let parmas={cmd:'delCart',uid:'1',cartid:''}
+            // instance.close();
+            let parmas = { cmd: "delCart", uid: "1", cartid: "" };
           });
           break;
       }
     },
     sub() {
       this.totalPrice = 0;
-      for (let i = 0; i < 3; i++) {
-        if (!this.check[i]) {
-          this.totalPrice += this.value[i] * this.pri;
+      if ((this.AllLen!= 0)) {
+        for (let i = 0; i < this.AllLen; i++) {
+          if (!this.check[i]) {
+            this.totalPrice += this.value[i] * this.list.price[i];
+          }
         }
       }
     },
@@ -135,7 +144,7 @@ export default {
       this.check = [];
       this.length = 0;
       this.allchecked = !this.allchecked;
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < this.AllLen; i++) {
         this.check.push(this.allchecked);
         if (!this.allchecked) {
           this.length += 1;
@@ -145,15 +154,15 @@ export default {
     },
     gotopay() {
       // this.$router.push("/success");
-       let parmas = {
+      let parmas = {
         cmd: "addCartOrder",
         nowPage: "1",
-        cartid:'',
-        couponId:'',
-        remark:'',
-        amount:'',
+        cartid: "",
+        couponId: "",
+        remark: "",
+        amount: "",
         uid: "1",
-        pageCount:"10"
+        pageCount: "10"
       };
       this.postRequest(parmas).then(res => {
         console.log(res);
@@ -328,6 +337,17 @@ export default {
     .car_no {
       height: 1.2rem;
     }
+  }
+  .nothing {
+    width: 100%;
+    height: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 0.5rem;
+    font-size: 0.16rem;
+    text-align: center;
   }
 }
 </style>

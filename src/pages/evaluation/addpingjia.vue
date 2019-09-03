@@ -22,13 +22,13 @@
           <van-rate v-model="value" readonly />
         </div>
         <div class="ev_int">
-          <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）"></textarea>
+          <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）" v-model="content"></textarea>
           <div class="add_con">
             <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
               <img :src="item" alt />
             </div>
             <div class="add_img" @click="show=true" v-if="imgs.length!=3">
-              <input type="file" class="upfile" @change="Upfiles" ref="inp" multiple />
+              <input type="file" class="upfile" @change="Upfiles" />
               <span></span>
               <p>上传照片</p>
             </div>
@@ -36,6 +36,11 @@
         </div>
       </li>
     </ul>
+
+    <div class="end">
+      <input type="button" value="提交" class="btn" @click="getmsg" />
+    </div>
+
     <!-- <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }">
       <van-button type="primary" size="large">拍照</van-button>
       <van-button type="file" size="large">相册</van-button>
@@ -54,8 +59,10 @@ export default {
       value: 5,
       imgs: [],
       num: 0,
-      dataList:[],
-      imgBase64:[]
+      dataList: [],
+      imgBase64: [],
+      productId: "",
+      content: ""
     };
   },
   //监听属性 类似于data概念
@@ -67,35 +74,59 @@ export default {
     carInfo
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-     let parmas={cmd:'addOrderComment',uid:'1',orderid:'',comment:''}
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
+    getmsg() {
+      this.productId = "bb7258451d5c45b398d35e31bead0b5b";
+      if (this.content == "") {
+        this.content = "1111";
+      }
+      let comment = {
+        productId: this.productId,
+        commentScore: this.value,
+        content: this.content,
+        images: this.imgs
+      };
+      let parmas = {
+        cmd: "addOrderComment",
+        uid: "1",
+        orderid: "",
+        comment: comment
+      };
+      this.poatRequest(parmas).then(res => {
+        console.log(res);
+      });
+    },
     Upfiles() {
-         var _this = this;
-                var event = event || window.event;
-                var file = event.target.files[0];
-                let reg=  /image\/(png|jpg|jpeg|gif)$/; // 上传图片类型
-                if(reg.test(file.name)){
-                     var reader = new FileReader(); 
-                //转base64
-                reader.onload = function(e) {
-                    _this.imgs.push(e.target.result);
-                }
-                reader.readAsDataURL(file);
-                }
-              
+     var _this = this;
+      var event = event || window.event;
+      var file = event.target.files[0];
+       var img = new FormData();
+      img.append("file", file);
+      console.log(file);
+      let reg = /(png|jpg|jpeg|gif)$/; // 上传图片类型
+      console.log(reg.test(file.name));
+      if (reg.test(file.name)) {
+         
+        var reader = new FileReader();
+        //转base64
+        reader.onload = function(e) {
+          _this.imgs.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
 
      
-      var img = new FormData();
-      img.append("file", file);
+      this.postFile("api/uploadFile", img).then(res => {
+        console.log(res);
+      });
     },
     delimg(ind) {
-      console.log(1)
-    
+      console.log(1);
+
       this.imgs.splice(ind, 1);
     }
   },
@@ -253,6 +284,20 @@ export default {
         display: block;
       }
     }
+  }
+}
+.end {
+  padding: 0.15rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  .btn {
+    width: 100%;
+    height: 0.44rem;
+    background-color: #72bb29;
+    color: #fff;
+    margin-top: 0.4rem;
+    font-size: 0.14rem;
   }
 }
 </style>

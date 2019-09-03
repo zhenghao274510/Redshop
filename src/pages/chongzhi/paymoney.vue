@@ -3,9 +3,9 @@
     <h4>充值套餐</h4>
        <ul>
            <li>￥100.00</li>
-           <li>￥100.00</li>
-           <li>￥100.00</li>
-           <li>￥100.00</li>
+           <li>￥200.00</li>
+           <li>￥300.00</li>
+           <li>￥500.00</li>
        </ul>
        <div class="point">输入充值金额：￥<input type="text"></div>
        <div class="line">
@@ -23,7 +23,8 @@
 export default {
  data () {
  return {
-     show:false
+     show:false,
+
  }
  },
 methods: {},
