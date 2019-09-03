@@ -3,8 +3,9 @@
     <Top :title="$route.name"></Top>
     
     <tar v-if="$route.meta.showtabar"></tar>
-    
+    <transition :name="transitionName" mode="out-in">
       <router-view />
+      </transition>
  
   </div>
 </template>
@@ -18,8 +19,21 @@ export default {
   name: "App",
   data() {
     return {
-
+      transitionName:''
     };
+  },
+  watch:{
+ // 使用watch 监听$router的变化
+      $route (to, from) {
+        // 如果to索引大于from索引,判断为前进状态,反之则为后退状态
+        if (to.meta.index > from.meta.index){
+          // 设置动画名称
+          this.transitionName = 'slide-right';
+        } else{
+          this.transitionName = 'slide-left';
+        }
+      }
+     
   },
   mounted() {
     window.onload = window.onresize = set.setrem;
@@ -33,7 +47,6 @@ export default {
   },
   computed:{
     store(){
-      return this.$store.state;
     }
   }
 };

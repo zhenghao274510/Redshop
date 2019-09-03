@@ -1,6 +1,6 @@
 <template>
   <ul class="shop_o">
-    <li class="shop_de" v-for="(item,index) in 3" :key="index">
+    <li class="shop_de" v-for="(item,index) in 5" :key="index">
       <div class="shop_img" @click.prevent="goto(index)">
         <img :src="item.logo" alt />
       </div>

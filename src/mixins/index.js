@@ -149,7 +149,7 @@ export default {
   postFile(url, data = {}, method = 'post') {
     return new Promise((resolve, reject) => {
       axios({
-          url: encodeURI('http://192.168.3.254:8099/wineshop/' + url),
+          url: 'http://192.168.3.254:8099/wineshop/' + url,
           method: method,
           data: data,
           headers: {
@@ -174,9 +174,6 @@ export default {
     } else {
       return false;
     }
-  },
-  Geturl(url){
-    return  "http://192.168.3.254:8099"+url;
   }
 
 

@@ -60,6 +60,18 @@ export default new Router({
       name:"商品",
       component: resolve => require(['./../pages/shoplist/shoplist.vue'], resolve)
     },
+      // 抽奖
+      {
+        path: '/audio',
+        name:"发奖啦",
+        component: resolve => require(['./../pages/audio.vue'], resolve)
+      },
+      // 扫一扫
+      {
+        path: '/ScanCod',
+        name:"扫一扫",
+        component: resolve => require(['./../pages/ScanCod.vue'], resolve)
+      },
      // 修改昵称
      {
       path: '/edmitname',

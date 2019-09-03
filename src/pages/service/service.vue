@@ -9,26 +9,27 @@
         </p>
       </div>
       <ul class="kf_list">
-          <li>
-            <span class="one"></span>
-            <p>1799272607</p>
-            <i>拨打</i>
-          </li>
-          <li>
-            <span class="two"></span>
-            <p>1799272607</p>
-            <i>复制</i>
-          </li>
-          <li>
-            <span class="two"></span>
-            <p>1799272607</p>
-            <i>复制</i>
-          </li>
-          <li>
-            <span class="three"></span>
-            <p>1799272607</p>
-            <i>复制</i>
-          </li>
+        <li>
+          <a href="tel://18703858281"></a>
+          <span class="one"></span>
+          <p>1799272607</p>
+          <i>拨打</i>
+        </li>
+        <li>
+          <span class="two"></span>
+          <p>1799272607</p>
+          <i @click="copy">复制</i>
+        </li>
+        <li>
+          <span class="two"></span>
+          <p>1799272607</p>
+          <i @click="copy">复制</i>
+        </li>
+        <li>
+          <span class="three"></span>
+          <p>1799272607</p>
+          <i @click="copy">复制</i>
+        </li>
       </ul>
     </div>
   </div>
@@ -38,21 +39,40 @@
 //import 《组件名称》 from '《组件路径》';
 export default {
   data() {
-    return {};
+    return {
+      QQ:'1799272607'
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    copy() {
+        const input = document.createElement("input");
+        document.body.appendChild(input);
+        input.setAttribute("value", this.QQ);
+        input.select();
+        // input.setSelectionRange(0, 9999);
+        if (document.execCommand("copy")) {
+          document.execCommand("copy");
+          this.$toast("复制成功");
+        }
+        document.body.removeChild(input);
+    },
+    tell(){
+        const input = document.createElement("a");
+        document.body.appendChild(input);
+        input.setAttribute("ref", 'tel://'+this.QQ);
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -98,43 +118,48 @@ export default {
     }
     .kf_list {
       width: 100%;
-      padding: 0 .15rem;
+      padding: 0 0.15rem;
       // margin-top: -.1rem;
       z-index: 999;
-      li{
+      li {
         width: 100%;
         height: 1rem;
-        padding: 0 .15rem;
-        border-radius: .1rem;
-        background-color: #FFF;
+        padding: 0 0.15rem;
+        border-radius: 0.1rem;
+        background-color: #fff;
         display: flex;
         align-items: center;
-        margin-bottom: .1rem;
-        span{
-          height: .26rem;
-          width: .3rem;
+        margin-bottom: 0.1rem;
+        position: relative;
+        a{width:100%;height: 100%;display: block;position: absolute;top: 0;}
+        span {
+          height: 0.26rem;
+          width: 0.3rem;
           display: block;
-          margin-right: .18rem;
+          margin-right: 0.18rem;
         }
-        .one{
-          background: url('/static/icon/lianxikefu-dianhua.png') center center no-repeat;
+        .one {
+          background: url("/static/icon/lianxikefu-dianhua.png") center center
+            no-repeat;
           background-size: 100% 100%;
         }
-        .two{
-          background: url('/static/icon/lianxikefu-weixin.png') center center no-repeat;
+        .two {
+          background: url("/static/icon/lianxikefu-weixin.png") center center
+            no-repeat;
           background-size: 100% 100%;
         }
-        .three{
-          background: url('/static/icon/lianxikefu-qq.png') center center no-repeat;
+        .three {
+          background: url("/static/icon/lianxikefu-qq.png") center center
+            no-repeat;
           background-size: 100% 100%;
         }
-        p{
-          font-size: .15rem;
-          line-height: .25rem;
+        p {
+          font-size: 0.15rem;
+          line-height: 0.25rem;
           flex: 1;
         }
-        i{
-          font-size: .16rem;
+        i {
+          font-size: 0.16rem;
           color: #72bb29;
         }
       }

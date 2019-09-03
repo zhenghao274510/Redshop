@@ -15,7 +15,13 @@
         <!-- 首页推荐模块 -->
         <Tit :title="activ"></Tit>
         <ul class="tui_list">
-          <!-- <van-list class="tuijian" v-model="loading" @load="onLoad"> -->
+           <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+        :offset="10"
+      >
           <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item.productid)">
             <router-link to>
               <div class="list_img">
@@ -30,7 +36,7 @@
               </div>
             </router-link>
           </li>
-          <!-- </van-list> -->
+          </van-list>
         </ul>
         <div class="no_more"></div>
       </div>
@@ -66,11 +72,12 @@ import Tit from "./../../components/homec/title";
 export default {
   data() {
     return {
+       isLoading: false,
       activ: { tit: "为你推荐", type: 1 },
       First: true,
       isGet: true,
       id: "",
-      isLoading: false,
+       loading: false,
       finished: false,
       //优惠券
       dataObject: {},
@@ -124,7 +131,7 @@ export default {
   methods: {
     onRefresh() {
       setTimeout(() => {
-        this.$toast("刷新成功");
+        // this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
     },
@@ -141,16 +148,17 @@ export default {
         this.postRequest(parmas2).then(res => {
           console.log(res);
           if (res.data.result == 0) {
-            this.$toast("加载成功");
             this.ProductList.push(res.data.dataList);
+            this.loading = false;
           }
         });
       } else {
-        this.loading = false;
-        this.$toast("没有更多了!");
+            this.finished = true;
+            this.loading = false;
+        // this.$toast("没有更多了!");
       }
 
-      // this.finished = true;
+  
     },
     GetJuan() {
       //  获取优惠券

@@ -1,16 +1,16 @@
 <template>
   <div class="box">
-      <van-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="onLoad"
-            :offset="10"
-          >
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" @onload="onLoad">
-      <active-list :list="ProductList"></active-list>
-    </van-pull-refresh>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+        :offset="10"
+      >
+        <active-list :list="ProductList"></active-list>
       </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -24,8 +24,8 @@ export default {
       ProductList: [],
       ProductObject: {},
       num: 1,
-      loading:false,
-      finished:false
+      loading: false,
+      finished: false
     };
   },
   //监听属性 类似于data概念
@@ -43,7 +43,7 @@ export default {
       if (res.data.result == 0) {
         console.log(res);
         this.ProductList = res.data.dataList;
-        this.ProductObject = res.data;        
+        this.ProductObject = res.data;
       }
     });
   },
@@ -59,13 +59,12 @@ export default {
     },
     onLoad() {
       if (this.ProductObject.length > this.num) {
-      
         this.num += 1;
         this.loadMore();
-      }else{
+      } else {
         this.finished = true;
       }
-        this.loading = false;
+      this.loading = false;
     },
     loadMore() {
       // let self=this;
@@ -95,14 +94,16 @@ export default {
 };
 </script>
 <style scoped>
+/deep/.van-list {
+  height: 100%;
+}
 .box {
   margin-top: 0.5rem;
-
+  height: 100%;
 }
-  .nomore{
-     line-height: .5rem;
-     text-align: center;
-     font-size: .15rem;
-
-  }
+.nomore {
+  line-height: 0.5rem;
+  text-align: center;
+  font-size: 0.15rem;
+}
 </style>

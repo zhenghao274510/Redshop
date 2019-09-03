@@ -2,7 +2,7 @@
   <div class="sear">
     <div>
       <span></span>
-      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord" ref="input" />
+      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord" ref="input" v-focus />
     </div>
     <span class="btn" @click="star">搜索</span>
   </div>

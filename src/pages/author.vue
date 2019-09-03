@@ -54,3 +54,25 @@ export default {
 <style lang='less' scoped>
 </style>
  
+// router.beforeEach((to, from, next) => {
+//       //   第一次进入项目
+//       let token = window.localStorage.getItem("user_token");
+      
+//       if (!token && to.path != "/author") {
+//         window.localStorage.setItem("beforeLoginUrl", to.fullPath); // 保存用户进入的url
+//         next("/author");
+//         return false;
+//       } else if (token && !store.getters.userInfo) {
+//       //获取用户信息接口
+//         store
+//           .dispatch("GetUserInfo", {
+//             user_token: token
+//           })
+//           .catch(err => {
+//             window.localStorage.removeItem("user_token");
+//             router.go(0);
+//             return false;
+//           });
+//       }
+//       next();
+// }

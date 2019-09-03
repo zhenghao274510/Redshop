@@ -11,6 +11,7 @@ import router from './router'
 import store from './vuex/vuex'
 import mixins from './mixins'
 Vue.mixin(mixins)
+import {pathway} from './mixins/img'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
@@ -73,12 +74,21 @@ VueAMap.initAMapApiLoader({
 //   next();
 // });
 
-
+Vue.directive('focus',{
+  inserted(el){
+      el.focus();
+  }
+  })
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  data(){
+    return{
+      imgurl:pathway
+    }
+  },
   router,
   store,
   components: { App },
