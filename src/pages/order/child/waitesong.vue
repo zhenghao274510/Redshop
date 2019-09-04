@@ -1,6 +1,6 @@
 <template>
   <div class="order_mo">
-    <div class="order_con"  v-for="(item,index) in list" :key="index" @click="LookDetails(item)">
+    <div class="order_con"  v-for="(item,index) in arry" :key="index" @click="LookDetails(item)">
       <div class="order_tit">
         <span>
           订单编号：
@@ -33,14 +33,16 @@ export default {
   data() {
     return {
       show: false,
-      dataList:[]
+      dataList:[],
+      arry:[]
     };
   },
   //监听属性 类似于data概念
   computed: {
   },
   //监控data中的数据变化
-  watch: {},
+  watch: {
+  },
   //import引入的组件需要注入到对象中才能使用
   components: {
     Info
@@ -50,20 +52,20 @@ export default {
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-   this.list=[];
+   this.arry=[];
      let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
     this.postRequest(params).then(res => {     
       if (res.data.result == 0) {
         this.dataList = res.data.dataList;
-        console.log(this.dataList,typeof this.list);
+        // console.log(this.dataList,typeof this.list);
        
         this.dataList.forEach(item=>{
           let e=parseInt(item.status);
             if(e==2){
-               this.list.push(item);
+               this.arry.push(item);
             }
         })
-         console.log(this.list)
+         console.log(this.arry)
       }
      
     });

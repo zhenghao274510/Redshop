@@ -1,7 +1,7 @@
 <template>
   <div class="order_mo">
-    <div class="order_con" v-for="(item,index) in list" :key="index" @click="LookDetails(item)">
-      <div class="order_tit" >
+    <div class="order_con" v-for="(item,index) in arry" :key="index" @click="LookDetails(item)">
+      <div class="order_tit">
         <span>
           订单编号：
           <i>{{item.orderid}}</i>
@@ -9,10 +9,11 @@
         <em>待评价</em>
       </div>
       <Info :list="item.orderItem"></Info>
-      <div class="order_tot">共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
+      <div
+        class="order_tot"
+      >共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
-      
-        <span class="two"  @click="goto">去评价</span>
+        <span class="two" @click="goto">去评价</span>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false" />
@@ -24,25 +25,25 @@
 import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
-    props:['list'],
-    //  props:{
-    //   list:{
-    //      type:Array,
-    //      default:[]
-    //   }
-    // },
+  props: ["list"],
+  //  props:{
+  //   list:{
+  //      type:Array,
+  //      default:[]
+  //   }
+  // },
   data() {
     return {
       show: false,
-      dataList:[]
+      dataList: [],
+      arry:this.list
     };
   },
   //监听属性 类似于data概念
-  computed: {
-
-  },
+  computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+  },
   //import引入的组件需要注入到对象中才能使用
   components: {
     Info
@@ -51,22 +52,21 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.list=[];
-     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
-    this.postRequest(params).then(res => {     
+    this.arry = [];
+    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+    this.postRequest(params).then(res => {
       if (res.data.result == 0) {
         this.dataList = res.data.dataList;
-        console.log(this.dataList,typeof this.list);
-       
-        this.dataList.forEach(item=>{
-          let e=parseInt(item.status);
-            if(e==4){
-               this.list.push(item);
-            }
-        })
-         console.log(this.list)
+        console.log(this.dataList, typeof this.list);
+
+        this.dataList.forEach(item => {
+          let e = parseInt(item.status);
+          if (e == 4) {
+            this.arry.push(item);
+          }
+        });
+        console.log(this.arry);
       }
-     
     });
   },
   //方法集合
@@ -86,9 +86,9 @@ export default {
           // on cancel
         });
     },
-      LookDetails(e){
-      this.$store.commit('orderDetails',e);
-      this.$router.push('/orderdetails');
+    LookDetails(e) {
+      this.$store.commit("orderDetails", e);
+      this.$router.push("/orderdetails");
     }
   },
   //生命周期 - 创建之前
@@ -111,10 +111,10 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
- margin-top: .1rem;
+  margin-top: 0.1rem;
   .order_con {
     // font-size: 0;
-    margin-bottom: .1rem;
+    margin-bottom: 0.1rem;
     background-color: #ffffff;
     border-radius: 0.1rem;
     .order_tit {

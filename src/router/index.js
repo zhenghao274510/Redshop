@@ -48,24 +48,31 @@ export default new Router({
     // 我的订单
     {
       path: '/order',
+      
       component: resolve => require(['./../pages/order/order.vue'], resolve),
       meta:{
-        requireAuth: true
+        requireAuth: true,
       },
       children:[
         { path: '/',
         redirect: 'all'},
         { path: 'tui',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/tui.vue'], resolve)},
         { path: 'waitepay',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/waitepay.vue'], resolve)},
         { path: 'waiteping',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/waiteping.vue'], resolve)},
         { path: 'waitesong',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/waitesong.vue'], resolve)},
         { path: 'peing',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/peing.vue'], resolve)},
         { path: 'all',
+        "name":'我的订单',
         component: resolve => require(['./../pages/order/child/all.vue'], resolve)},
       ]
     },

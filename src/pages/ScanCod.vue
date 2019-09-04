@@ -1,146 +1,68 @@
 <template>
-  <div>
-    <!-- <topbar title="扫码">
-      <router-link to="/home" slot="left" @click.native='cancelScan' class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></router-link>
-    </topbar> -->
-    <div class="mui-content">
-      <div class="scan">
-        <div id="bcid">
-          <div class="content"></div>
-          <p class="tip">...载入中...</p>
-        </div>
-        <footer>
-          <button @click="startScan" v-show="isShow">点击扫描</button>
-          <button @click="cancelScan">取消</button>
-        </footer>
-      </div>
-    </div>
-  </div>
+  <div class></div>
 </template>
-
-<script  type='text/ecmascript-6'>
-
-  let scan = null;
-  //点手机虚拟返回键
-     document.addEventListener("plusready", function() {
-        // 注册返回按键事件
-        plus.key.addEventListener('backbutton', function() {
-            // 事件处理
-            scan.close();//关闭条码识别控件
-            window.history.back();
-        }, false);
-    });
-    
-  export default{
-      data(){
-        return{
-          codeUrl: '',
-          isShow:true
+ 
+<script>
+export default {
+ data () {
+ return {}
+ },
+methods: {
+  
+        sys_click : function()
+        {
+        //这里【url参数一定是去参的本网址】
+        $.get("获取微信认证参数的地址?url=去参的本网页地址", function(data){
+        var jsondata=$.parseJSON(data);
+            wx.config({
+                // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                debug: false,
+                // 必填，公众号的唯一标识
+                appId: jsondata.model.appId,
+                // 必填，生成签名的时间戳
+                timestamp: "" + jsondata.model.timestamp,
+                // 必填，生成签名的随机串
+                nonceStr: jsondata.model.nonceStr,
+                // 必填，签名
+                signature: jsondata.model.signature,
+                // 必填，需要使用的JS接口列表，所有JS接口列表
+                jsApiList: ['checkJsApi', 'scanQRCode']
+            });
+        });
+        wx.error(function (res) {
+            alert("出错了：" + res.errMsg);//这个地方的好处就是wx.config配置错误，会弹出窗口哪里错误，然后根据微信文档查询即可。
+        });
+ 
+        wx.ready(function () {
+            wx.checkJsApi({
+                jsApiList: ['scanQRCode'],
+                success: function (res) {
+ 
+                }
+            });
+ 
+                wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        alert("扫描结果："+result);
+                        window.location.href = result;//因为我这边是扫描后有个链接，然后跳转到该页面
+                    }
+                });
+ 
+        }); 
         }
-      },
-      components:{
-            // topbar
-        },
-      mounted () {
-        this.startScan()//进入页面就调取扫一扫
-      },
-      created(){
-        this.startRecognize();
-        this.startScan();
-      },
-      methods: {
-      //创建扫描控件
-      startRecognize() {
-        let that = this;
-        if (!window.plus) return;
-        that.isShow=false;
-        // 创建条码扫描识别控件
-        scan = new plus.barcode.Barcode('bcid');
-        // 条码识别成功
-        scan.onmarked = onmarked;
-        function onmarked(type, result, file) {
-          switch (type) {
-            case plus.barcode.QR:
-              type = 'QR';
-              break;
-            case plus.barcode.EAN13:
-              type = 'EAN13';
-              break;
-            case plus.barcode.EAN8:
-              type = 'EAN8';
-              break;
-            default:
-              type = '其它' + type;
-              break;
-          }
-          result = result.replace(/\n/g, '');
-          that.codeUrl = result;//扫描后返回值
-          alert(result);
-          scan.cancel();//关闭扫描
-          scan.close();//关闭条码识别控件
-          if(that.codeUrl){
-            that.isShow=true
-          }
-        }
-      },
-      //开始扫描
-      startScan() {
-        if (!window.plus) return;
-        this.startRecognize()//创建控件
-        scan.start();
-      },
+ 
 
-      cancelScan(){
-        this.isShow=true;
-        scan.cancel();//关闭扫描
-        scan.close();//关闭条码识别控件
-      }
-    }
-  };
+},
+
+ moutend () {
+   this.sys_click();
+ }
+}
 </script>
-<style scoped>
- .mui-content{
-  padding: 44px 0 60px 0;/*px*/
-  box-sizing: border-box;
-  margin-top: 60px;/*px*/
-}
-.scan {
-    height: 100%;
-}
-.scan #bcid {
-      width: 100%;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 50px;/*px*/
-      bottom:3rem;
-      text-align: center;
-      color: #fff;
-      background: #ccc;
-}
-.scan footer {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%);
-      bottom: 1rem;
-      width: 100%;
-      height: 1rem;
-      /*line-height: 2rem;*/
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-}
-.scan footer button{
-  width: 45%;
-  font-size: 30px;/*px*/
-}
-.clickBtn,.cancelBtn{
-  margin-top:20px;/*px*/
-  width: 150px;/*px*/
-  height: 60px;/*px*/
-  text-align: center;;
-}
-.cancelBtn{
-  margin-left: 20px;/*px*/
-}
+ 
+<style scoped lang = "less">
 </style>
+

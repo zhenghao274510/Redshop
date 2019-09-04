@@ -31,7 +31,7 @@ export default {
   //方法集合
   methods: {
     back() {
-      this.$router.go(-1);
+      this.$router.back(-1);
      
     }
   },

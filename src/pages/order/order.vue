@@ -2,12 +2,14 @@
   <div class="order_box" style="margin-top:.5rem">
     <ul class="order_nav">
       <li v-for="(item,index) in navinfo" :key="index" @click="changeta(index)">
-        <router-link :to="item.url">
+        <router-link to>
           <span :class="{'active':num==index}">{{item.tit}}</span>
         </router-link>
       </li>
     </ul>
+   
     <router-view></router-view>
+
   </div>
 </template>
 
@@ -38,7 +40,6 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
@@ -47,6 +48,7 @@ export default {
   methods: {
     changeta(ind) {
       this.num = ind;
+      this.$router.replace(this.navinfo[ind].url);
     }
   },
   //生命周期 - 创建之前
