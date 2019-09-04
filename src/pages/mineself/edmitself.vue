@@ -1,10 +1,15 @@
 <template>
-  <div class='edmit'>
+  <div class="edmit">
     <div class="edmit_cont">
-       <textarea name="useSelf" id="Self" placeholder="输入你的签名"></textarea>
-      <van-button type="primary" size="large" color="#72BB29" style="margin-top:1rem">确定</van-button>
+      <textarea name="useSelf" id="Self" placeholder="输入你的签名" v-model="selfname"></textarea>
+      <van-button
+        type="primary"
+        size="large"
+        color="#72BB29"
+        style="margin-top:1rem"
+        @click="SaveSelf"
+      >确定</van-button>
     </div>
-    
   </div>
 </template>
 
@@ -14,7 +19,7 @@
 export default {
   data() {
     return {
-
+      selfname: ""
     };
   },
   //监听属性 类似于data概念
@@ -22,20 +27,14 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-
-  },
+  mounted() {},
   //方法集合
   methods: {
-
+    SaveSelf() {}
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -50,20 +49,20 @@ export default {
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
-  activated() {},
-}
+  activated() {}
+};
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.edmit{
-  padding: 0 .15rem;
-  .edmit_cont{
-    margin-top:.6rem;
-    #Self{
-      border: .01rem solid #72BB29;
-      font-size: .15rem;
+.edmit {
+  padding: 0 0.15rem;
+  .edmit_cont {
+    margin-top: 0.6rem;
+    #Self {
+      border: 0.01rem solid #72bb29;
+      font-size: 0.15rem;
       height: 1.82rem;
       width: 100%;
-      padding: .1rem;
+      padding: 0.1rem;
     }
   }
 }

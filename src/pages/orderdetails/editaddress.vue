@@ -75,7 +75,7 @@ export default {
       }
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
       let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
-      if (reg.test(this.phone) && regname.test(this.name)) {
+      // if (Reg.test(this.phone) && regname.test(this.name)) {
         let parmas = {
           cmd: "addAddress",
           uid: this.uid,
@@ -89,8 +89,12 @@ export default {
         this.postRequest(parmas).then(res => {
           console.log(res);
           this.$toast(res.data.resultNote);
+           if(res.data.result==0){
+             this.$store.commit('AddAdress',parmas);
+             this.$router.back(-1);
+           }
         });
-      }
+      // }
     },
     getCurrentPosition() {
       this.GetCurrentCity();

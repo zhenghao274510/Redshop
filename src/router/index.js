@@ -47,12 +47,27 @@ export default new Router({
     },
     // 我的订单
     {
-      path: '/order/:ShopId',
-      name:"我的订单",
+      path: '/order',
       component: resolve => require(['./../pages/order/order.vue'], resolve),
       meta:{
         requireAuth: true
-      }
+      },
+      children:[
+        { path: '/',
+        redirect: 'all'},
+        { path: 'tui',
+        component: resolve => require(['./../pages/order/child/tui.vue'], resolve)},
+        { path: 'waitepay',
+        component: resolve => require(['./../pages/order/child/waitepay.vue'], resolve)},
+        { path: 'waiteping',
+        component: resolve => require(['./../pages/order/child/waiteping.vue'], resolve)},
+        { path: 'waitesong',
+        component: resolve => require(['./../pages/order/child/waitesong.vue'], resolve)},
+        { path: 'peing',
+        component: resolve => require(['./../pages/order/child/peing.vue'], resolve)},
+        { path: 'all',
+        component: resolve => require(['./../pages/order/child/all.vue'], resolve)},
+      ]
     },
     // 商品
     {
@@ -114,13 +129,13 @@ export default new Router({
       name:"充值",
       component: resolve => require(['./../pages/chongzhi/paymoney.vue'], resolve)
     }, 
-     // 充值
+     // 查询
      {
       path: '/chaxun',
       name:"查询",
       component: resolve => require(['./../pages/chongzhi/chaxun.vue'], resolve)
     }, 
-       // 充值
+       // 配送成功
        {
         path: '/peisongsuccess',
         name:"配送成功",

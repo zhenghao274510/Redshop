@@ -9,7 +9,7 @@
         </div>
         <span class="btn">搜索</span>
       </div>
-      <Zq></Zq>
+      <Zq :list="firstpath"></Zq>
 
       <div>
         <!-- 首页推荐模块 -->
@@ -22,16 +22,16 @@
         @load="onLoad"
         :offset="10"
       >
-          <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item.productid)">
+          <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item)">
             <router-link to>
               <div class="list_img">
-                <img :src="'http://192.168.3.254:8099'+item.logo" alt />
+                <img :src="imgurl+item.logo" alt />
               </div>
               <div class="list_info">
                 <p class="list_name">{{item.title}}</p>
                 <div class="list_icon">
                   <p class="col_max ft_mid">￥{{item.price}}</p>
-                  <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item.productid)" />
+                  <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
                 </div>
               </div>
             </router-link>
@@ -66,12 +66,14 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Top from "./../../components/public/heade";
-import Zq from "./../../components/homec/hodong";
-import Tit from "./../../components/homec/title";
+import {pathway} from '@/mixins/img'
+import Top from "@/components/public/heade";
+import Zq from "@/components/homec/hodong";
+import Tit from "@/components/homec/title";
 export default {
   data() {
     return {
+      imgurl:pathway.imgurl,
        isLoading: false,
       activ: { tit: "为你推荐", type: 1 },
       First: true,
@@ -82,7 +84,9 @@ export default {
       //优惠券
       dataObject: {},
       ProductList: [],
-      ProductObject: {}
+      ProductObject: {},
+      firstpath:{}
+
     };
   },
   //监听属性 类似于data概念
@@ -99,13 +103,14 @@ export default {
   created() {
     // this.id =this.$route.query.id;
     //  主页 部分
-    let params1 = { cmd: "firstPage" };
+    let params1 = { cmd:"firstPage"};
     this.postRequest(params1).then(res => {
-      // console.log(res);
+      console.log(res);
+      this.firstpath=res.data.dataObject;
     });
     //  优惠卷
-    let params2 = { cmd: "newCoupon" };
-    this.postRequest(params2).then(res => {
+    let parmas2 = { cmd: "newCoupon" };
+    this.postRequest(parmas2).then(res => {
       if (res.data.result == 0) {
         // console.log(res);
         this.dataObject = res.data.dataObject;
@@ -120,7 +125,7 @@ export default {
         this.ProductList = res.data.dataList;
         this.ProductObject = res.data;
       }
-      console.log(res);
+      // console.log(res);
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -137,7 +142,7 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      console.log(1);
+      // console.log(1);
       if (this.ProductObject.totalPage > this.num) {
         this.num += 1;
         let parmas2 = {
@@ -179,7 +184,8 @@ export default {
       })
     },
     GoTO(e){
-      this.$router.push({path:'/shopdetails',parmas:{productid:e}});
+      this.$store.commit('ChooseShop',e)
+      this.$router.push({path:'/shopdetails'});
     }
   },
   //生命周期 - 创建之前

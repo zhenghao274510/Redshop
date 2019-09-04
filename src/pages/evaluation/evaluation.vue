@@ -5,7 +5,7 @@
       <li v-for="(item,index) in dataList" :key="index">
         <div class="ev_info">
           <div class="ev_name">
-            <img src="/static/test/bg.png" alt />
+            <img :src="imgurl+item.userIcon" alt />
             <div class="ev_star">
               <p>{{item.userName}}</p>
               <van-rate v-model="item.commentScore" />
@@ -15,7 +15,7 @@
         </div>
         <p class="ev_main">{{item.commentContent}}</p>
         <ul class="show_img" v-if="item.commentImages">
-           <li v-for="i in item.commentImages" :key="i"><img :src="i" alt=""></li>
+           <li v-for="i in item.commentImages" :key="i"><img :src="imgurl+i" alt=""></li>
         </ul>
       </li>
     </ul>
@@ -24,11 +24,14 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import {pathway} from '@/mixins/img'
 export default {
   data() {
     return {
+      imgurl:pathway.imgurl,
       value: 5,
-      dataList:[]
+      dataList:[],
+      productid:''
     };
   },
   //监听属性 类似于data概念
@@ -40,7 +43,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     let parmas={cmd:"productCommentList",nowPage:'1',pageCount:'10',productid:'db68be303f824bbab261b51b33e842c1'};
+      this.productid =this.$store.state.Shop.productid;
+     let parmas={cmd:"productCommentList",nowPage:'1',pageCount:'10',productid:this.productid};
        this.postRequest(parmas).then(res=>{
          console.log(res);
          this.dataList=res.data.dataList;

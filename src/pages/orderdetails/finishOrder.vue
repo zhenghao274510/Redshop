@@ -1,31 +1,37 @@
 <template>
   <div class="order_de bg_c">
     <div class="order_de_info">
-      <div class="tit bg_wh ft_mid pad mg_bot" v-if="direct==1">等待买家付款</div>
-      <de-zhi></de-zhi>
+      <div class="tit bg_wh ft_mid pad mg_bot">等待买家付款</div>
+       <div class="de_zhi pad bg_wh">
+        <span class="pos"></span>
+        <div class="info col_mix no_use" v-if="store.useAddres!=''">
+          <p class="ft_mid">收货人：{{store.useAddres.name}}&nbsp; &nbsp; &nbsp;{{store.useAddres.phone}}</p>
+          <p class="ft_mix">收货地址：{{store.useAddres.address}}{{store.useAddres.detail}}</p>
+        </div>
+        <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
+        <i class="back"></i>
+      </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-if="direct==1">买家清单</div>
-      <Info></Info>
+      <Info :item="productSkuid" :obj="productObject"></Info>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
-        <span class="col_mid ft_mix fr">配送费￥10元</span>
+        <span class="col_mid ft_mix fr">配送费￥{{Freight}}元</span>
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
-        <input class="pad_l" type="text" v-if="direct==0" placeholder="给买家留言（选填）" />
-        <p class="pad_l" v-else></p>
+        <input class="pad_l" type="text"  placeholder="给买家留言（选填）" />
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot clearfix">
         <div class="fr">
-          <span>共一件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
+          <span>共{{productSkuid.conut}}件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
           <span>
             合计:
-            <i class="col_max">￥219</i>
+            <i class="col_max">￥{{total}}</i>
           </span>
         </div>
       </div>
-      <ul class="de_info bg_wh" v-if="direct==1">
+      <ul class="de_info bg_wh">
         <li class="col_mid">
           <span class="ft_mid">商品总价</span>
           <span class="ft_cmix">
@@ -55,13 +61,13 @@
           </span>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top" v-if="direct==1">订单信息</div>
-      <div class="tit bg_wh ft_mid pad mg_top d_flex" v-else @click="changej(0)">
+      <div class="tit bg_wh ft_mid pad mg_top">订单信息</div>
+      <div class="tit bg_wh ft_mid pad mg_top d_flex"  @click="changej(0)">
         <span>可使用优惠卷</span>
         <i class="more_j"></i>
       </div>
 
-      <ul class="de_info bg_wh" v-if="direct==1">
+      <ul class="de_info bg_wh">
         <li class="col_mid">
           <span class="ft_mid">订单编号：27900219</span>
           <span class="ft_cmix">复制</span>
@@ -69,14 +75,8 @@
         <li class="col_mid">
           <span class="ft_mid">创建时间：2019.07.01 11:27:21</span>
         </li>
-        <li class="col_mid">
-          <span class="ft_mid">付款时间：2019.07.01 11:29:21</span>
-        </li>
-        <li class="col_mid">
-          <span class="ft_mid">配送时间：2019.07.01 11:29:21</span>
-        </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-else>配送方式</div>
+      <div class="tit bg_wh ft_mid pad mg_top bo_bot">配送方式</div>
       <ul class="mothed bg_wh">
         <li @click="changeMothed(0)">
           <span>配送到家</span>
@@ -93,7 +93,7 @@
           </div>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex"  @click="changej(1)">
+      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
         <span>支付方式</span>
         <div class="d_flex">
           <span>微信支付</span>
@@ -105,10 +105,10 @@
       <div class="no_more bg_wh mg_top"></div>
 
       <!-- 底部 -->
-      <div class="end bg_wh" v-if="direct==1">
+      <!-- <div class="end bg_wh" v-if="direct==1">
         <btn :come="num"></btn>
-      </div>
-      <div class="end bg_wh" v-else>
+      </div> -->
+      <div class="end bg_wh">
         <div class="ok bo_top ft_max">
           <span class="bg_g col_wh ft_mid sub">提交订单</span>
           <span class="col_mix lin_h">
@@ -118,22 +118,36 @@
         </div>
       </div>
       <!-- 优惠卷 -->
-      <van-popup v-model="show_juan" round position="bottom" :style="{ height: '40%' }" :close-on-click-overlay="jin">
-        <van-radio-group v-model="radio">
+      <van-popup
+        v-model="show_juan"
+        round
+        position="bottom"
+        :style="{ height: '40%' }"
+        :close-on-click-overlay="jin"
+      >
+        <van-radio-group v-model="radioYouhui" v-if="direct==0">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
-            <van-cell  title="满100减10" clickable @click="radio = '1'">
+            <van-cell  clickable @click="radioYouhui = '1'" v-for="(item,index) in CanuseCard" :key="index">{{item.couponAmount}}
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
             </van-cell>
-            <van-cell title="满100减10" clickable @click="radio = '2'">
+          </van-cell-group>
+        </van-radio-group>
+        <van-radio-group v-model="radioPay" v-else>
+          <van-cell title="请选择支付方式"></van-cell>
+          <van-cell-group>
+            <van-cell title="微信支付" clickable @click="radioPay = '1'">
+              <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
+            </van-cell>
+            <van-cell title="充值卡支付" clickable @click="radioPay = '2'">
               <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-cell @click="show_juan=false"> <span class="btn bg_g col_wh ft_mid">确定</span></van-cell>
-       
+        <van-cell @click="show_juan=false">
+          <span class="btn bg_g col_wh ft_mid">确定</span>
+        </van-cell>
       </van-popup>
-   
     </div>
   </div>
 </template>
@@ -147,61 +161,82 @@ import btn from "./../order/child/btn";
 export default {
   data() {
     return {
+      no_use_dizhi:false,
+      isaddress: true,
       // 禁止点击遮罩层
-      jin:false,
-      // 0=> 确认订单 1=>订单详情
-      direct: 0,
-       radio: '1',
-      tit: "确认订单",
+      jin: false,
+      direct:0,
+      radioYouhui: "1",
+      radioPay: "1",
       num: "0",
       show_juan: false,
       goHome: false,
       goCrd: true,
       //订单编号
-      orderid:'',
+      orderid: "",
       //配送费
-      Freight:''
-
+      Freight: 10,
+      uid: "",
+      productObject:{},
+      productSkuid:{},
+      // 可用优惠券
+      CanuseCard:[],
+      time:null
+      
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+      return this.$store.state
+    },
+    total(){
+      let price=parseInt(this.productSkuid.shop.skuPrice);
+      let num=parseInt(this.productSkuid.count);
+
+      return Number(price*num+Number(this.Freight)); 
+    },
+    Check(){
+      return index+1;
+    }
+    
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
     deZhi,
     Info,
-    btn,
+    btn
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this.orderid=
-      // this.orderid='';
-      // let parmas = {
-      //   cmd: "orderDetail",
-      //   orderid:'',
-      //   uid:'1'
-      // };
-      // this.postRequest(parmas).then(res => {
-      //   console.log(res);
-      // });
-        let parmas1 = {cmd:"getFreight"}; 
-      this.postRequest(parmas1).then(res => {
-        console.log(res);
-      this.Freight=res.data.amount;
-          
-      });
+    this.uid = "1";
+      this.productObject=this.store.Shop;
+      this.productSkuid=this.store.Buy;
+      console.log(this.store.Shop,this.productSkuid)
+    let parmas1 = { cmd: "getFreight" };
+    this.postRequest(parmas1).then(res => {
+      // console.log(res);
+      this.Freight = res.data.amount;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    console.log(this.$store.state.useAddres)
+  },
   //方法集合
   methods: {
     changej(num) {
       this.show_juan = true;
-      switch(num){
+      switch (num) {
         case 0:
-
+        //可用优惠券
+          this.direct = 0;
+          this.GetMyCard();
+          break;
+        case 1:
+          this.direct = 1;
       }
     },
     changeMothed(num) {
@@ -214,6 +249,16 @@ export default {
           this.goHome = true;
           this.goCrd = false;
       }
+    },
+    goto(){
+      this.$router.push('/editaddress');
+    },
+    GetMyCard(){
+      let parmas={cmd:"myCouponList",uid:"1"};
+      this.postRequest(parmas).then(res=>{
+        console.log(res);
+        this.CanuseCard=res.data.dataList;
+      })
     }
   },
   //生命周期 - 创建之前
@@ -233,7 +278,27 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-
+ .de_zhi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 0.79rem;
+ .pos {
+      width: 0.2rem;
+      height: 0.2rem;
+      background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
+      background-size: 100% 100%;
+      display: block;
+      margin-right: 0.14rem;
+    }
+      .back {
+      display: block;
+      width: 0.1rem;
+      height: 0.17rem;
+      background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
+      background-size: 100% 100%;
+    }
+ }
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;
@@ -249,15 +314,15 @@ export default {
       margin-left: 0.15rem;
     }
   }
-  .btn{
-    height: .44rem;
+  .btn {
+    height: 0.44rem;
     width: 3.45rem;
-    margin:0 auto;
+    margin: 0 auto;
     display: block;
     text-align: center;
-    line-height: .44rem;
-    border-radius: .05rem;
-    margin-top: .63rem;
+    line-height: 0.44rem;
+    border-radius: 0.05rem;
+    margin-top: 0.63rem;
   }
   .mothed {
     padding: 0 0.15rem;
@@ -289,6 +354,7 @@ export default {
       align-items: center;
       line-height: 0.27rem;
     }
+    p{padding-right: .15rem;}
   }
 
   .no_more {

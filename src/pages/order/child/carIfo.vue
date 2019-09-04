@@ -1,27 +1,27 @@
 <template>
-  <ul class="order_info bg_wh">
+  <ul class="order_info bg_wh" >
     <!-- 订单详情购物车信息 -->
-    <li>
-      <router-link to="/orderdetails">
-        <img src="/static/test/bg.png" alt />
+    <li v-for="(item,index) in list" :key="index" >
+      <router-link to="">
+        <img :src="imgurl+item.productImage" alt />
         <div class="info_name">
-          <p class="info_top">凯宝利519红葡萄酒750ml *6澳大利亚进口红酒</p>
-          <p class="info_bot">进口葡萄酒礼盒</p>
+          <p class="info_top">{{item.productName}}</p>
+          <p class="info_bot">{{item.productSkuName}}</p>
         </div>
         <div class="info_price">
           <p>
             ￥
-            <span>219</span>
+            <span>{{item.productPrice}}</span>
           </p>
           <p>
             ×
-            <span>1</span>
+            <span>{{item.productCount}}</span>
           </p>
         </div>
       </router-link>
-      <div class="tui" v-if="num=='1'" @click="Shentui">
+      <!-- <div class="tui" v-if="num=='1'" @click="Shentui">
               <span>申请退换</span>
-      </div>
+      </div> -->
     </li>
    
   </ul>
@@ -29,12 +29,20 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import btn from './btn'
+import {pathway} from '@/mixins/img'
+// import btn from './btn'
 import { Dialog } from "vant";
 export default {
-  props:["num","item"],
+  props:['list'],
+  // props:{
+  //   list:{
+  //     type:Array,
+  //     default:[]
+  //   }
+  // },
   data() {
     return {
+      imgurl:pathway.imgurl
     };
   },
   //监听属性 类似于data概念
@@ -43,7 +51,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    btn
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -64,6 +71,7 @@ export default {
           // on cancel
         });
     }
+  
   },
   //生命周期 - 创建之前
   beforeCreate() {},

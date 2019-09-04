@@ -2,49 +2,55 @@
   <div class="huodong">
     <!-- 大图 -->
     <div class="banner">
-      <router-link to>
-        <img src="/static/test/bg.png" />
-      </router-link>
+      <a :href="list.url">
+        <img :src="imgurl+list.image1" />
+      </a>
     </div>
     <!-- 活动专区 -->
     <div class="hd_zuan">
       <Tit :title="actions"></Tit>
       <!-- 第一张大图 -->
       <div class="hd_list">
-        <router-link to>
-          <div class="hd_img_con">
-            <img src="/static/test/replace.jpg" />
-          </div>
-          <div class="hd_info one-txt-cut">
-            <p class="ft_mid col_mix" style="font-weight:bold">凯宝利519红葡萄酒750ml*6澳大利亚进口红酒...</p>
-            <p class="ft_mid">
-              <span class="col_max">￥219</span>
-              <i class="col_mid">￥229</i>
-            </p>
-          </div>
-        </router-link>
+        <ul>
+          <li v-for="(item,index) in ProductList" :key="index">
+            <router-link to>
+              <div class="hd_img_con">
+                <img :src="imgurl+item.logo" />
+              </div>
+              <div class="hd_info one-txt-cut">
+                <p class="ft_mid col_mix" style="font-weight:bold">{{item.title}}</p>
+                <p class="ft_mid">
+                  <span class="col_max">￥{{item.price}}</span>
+                  <i class="col_mid">￥{{item.oldPrice}}</i>
+                </p>
+              </div>
+            </router-link>
+          </li>
+        </ul>
       </div>
-        <Shop-L></Shop-L>
-    
+      <!-- <Shop-L ></Shop-L> -->
     </div>
     <router-link to class="banner">
-      <img src="/static/test/replace.jpg" />
+      <img :src="imgurl+list.image2" />
     </router-link>
   </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import ShopL from "./../../components/public/shangpin";
+import { pathway } from "@/mixins/img";
+import ShopL from "@/components/public/shangpin";
 import Tit from "./title";
 export default {
+  props: ["list"],
   data() {
     return {
+      imgurl: pathway.imgurl,
       actions: { tit: "活动专区", type: 0 },
-      ProductObject:{},
-      MiddleProductList:[],
-      ProductFirst:[],
-      ProductLast:[],
+      ProductObject: {},
+      MiddleProductList: [],
+      ProductFirst: [],
+      ProductList: []
     };
   },
   //监听属性 类似于data概念
@@ -58,19 +64,18 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    let parmas={cmd:'activityArea'};
-    this.postRequest(parmas).then(res=>{
-      if(res.data.result==0){
-    // console.log(res);
-      this.ProductList = res.data.dataList;
+    let parmas = { cmd: "activityArea" };
+    this.postRequest(parmas).then(res => {
+      if (res.data.result == 0) {
+        // console.log(res);
+        this.ProductList = res.data.dataList;
         //  this.ProductList=res.data.dataList.slice(1,1);
         //  this.ProductLast=res.data.dataList.slice(-1,1);
         //  this.MiddleProductList=res.data.dataList.slice(1,1).pop;
 
         this.ProductObject = res.data;
       }
-   
-    })
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -109,26 +114,32 @@ export default {
       width: 100%;
       padding: 0 0.15rem;
       margin: 0.1rem 0;
-      a {
-        flex: 1;
+      li {
         padding: 0.15rem;
-        height: 4rem;
         box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
-        .hd_img_con {
-           height: 3.2rem;
+        &:nth-child(1) {
+          width: 100%;
         }
-        .hd_info {
-          p {
-            line-height: 0.2rem;
-            i {
-              text-decoration: line-through;
-              margin-left: 0.1rem;
+        a {
+          flex: 1;
+
+          height: 4rem;
+
+          .hd_img_con {
+            height: 3.2rem;
+          }
+          .hd_info {
+            p {
+              line-height: 0.2rem;
+              i {
+                text-decoration: line-through;
+                margin-left: 0.1rem;
+              }
             }
           }
         }
       }
     }
-    
   }
 }
 </style>

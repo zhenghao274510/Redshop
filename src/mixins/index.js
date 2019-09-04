@@ -54,7 +54,7 @@ export default {
     postRequest(data = {}, method = 'post') {
       return new Promise((resolve, reject) => {
         axios({
-            url: encodeURI("http://192.168.3.254:8099/wineshop/api/service?json=" + JSON.stringify(data)),
+            url: encodeURI("http://192.168.3.254:8090/wineshop/api/service?json=" + JSON.stringify(data)),
             method: method,
             headers: {
               'Content-Type': 'application/json'

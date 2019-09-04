@@ -1,8 +1,8 @@
 <template>
   <ul class="shop_o">
-    <li class="shop_de" v-for="(item,index) in 5" :key="index">
-      <div class="shop_img" @click.prevent="goto(index)">
-        <img :src="item.logo" alt />
+    <li class="shop_de" v-for="(item,index) in list" :key="index">
+      <div class="shop_img" @click.prevent="goto(index,item)">
+        <img :src="imgurl+item.logo" alt />
       </div>
       <div class="shop_info">
         <p class="shop_name">{{item.title}}</p>
@@ -20,11 +20,12 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
+import {pathway} from '@/mixins/img'
 export default {
   props:['list'],
   data() {
     return {
+    imgurl:pathway.imgurl,
       id:''
     };
   },
@@ -40,10 +41,10 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    goto(ind) {
-      this.id="bb7258451d5c45b398d35e31bead0b5b"
-      this.$store.commit('ChooseShop',this.list[ind]);
-      this.$router.push('/shopdetails');
+    goto(ind,e) {
+       console.log(e);
+      this.$store.commit('ChooseShop',e);
+      this.$router.push({path:'/shopdetails'});
     },
     addcar(ind) {
       let productId=this.list[ind].productid;

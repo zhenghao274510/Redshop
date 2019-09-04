@@ -30,10 +30,12 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import {pathway} from '@/mixins/img'
 import sear from "./../../components/public/search";
 export default {
   data() {
     return {
+       imgurl:pathway.imgurl,
       num: 0,
       left: [],
       ProductList: [],

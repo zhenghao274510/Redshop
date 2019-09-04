@@ -3,7 +3,7 @@
     <div v-for="(item,index) in list" :key="index">
       <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="no_use_dizhi">
+        <div class="info col_mix no_use" v-if="$store.state.Buy">
           <p class="ft_mid">收货人：{{item.name}}&nbsp; &nbsp; &nbsp;{{item.phone}}</p>
           <p class="ft_mix">收货地址：{{item.address}}{{item.detail}}</p>
         </div>
@@ -39,7 +39,8 @@ export default {
   data() {
     return {
       no_use_dizhi: false,
-      uid:''
+      uid:'',
+      id:''
     };
   },
   //监听属性 类似于data概念
@@ -50,9 +51,9 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    let id = this.$route.query.id;
-    console.log(id);
-    if (id == 0) {
+      this.id = this.$route.query.id;
+    console.log(this.id);
+    if (this.id == 0) {
       this.no_use_dizhi = true;
     }
   },

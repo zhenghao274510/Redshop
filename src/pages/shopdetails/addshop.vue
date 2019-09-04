@@ -15,14 +15,14 @@
       <span
         v-for="(item,index) in list"
         :key="index"
-        @click="change(index)"
+        @click="change(index,item)"
         :class="{'active':num==index}"
       >{{item.skuName}}</span>
       <!-- <span>威士忌原装进口洋酒礼盒</span> -->
     </div>
     <div class="buy_num">
       <span>购买数量</span>
-      <van-stepper v-model="value" integer />
+      <van-stepper v-model="value[num]" integer />
     </div>
     <div class="buy_or">
       <span class="btn" @click="GetInCar">确定</span>
@@ -37,18 +37,29 @@ export default {
   props: ["list", "isbuy"],
   data() {
     return {
-      value: 1,
-      num: 0
+      value: [],
+      num: 0,
+      skuId: "",
+      productid: "",
+      uid: ""
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store() {
+      return this.$store.state;
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.skuId = this.list[0].skuId;
+    for (let i in this.list) {
+      this.value.push(1);
+    }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -57,21 +68,23 @@ export default {
     close() {
       this.$emit("closec", 2);
     },
-    change(ind) {
+    change(ind, e) {
       this.num = ind;
+      this.skuId = e.skuId;
     },
 
     //  添加购物车
     GetInCar() {
-      let skuId = this.list[this.num].skuId;
-    
       if (!this.isbuy) {
+        this.productid = this.store.Shop.productid;
+        // this.uid =this.store.Use.uid;
+        this.uid = "1";
         let parmas = {
           cmd: "addCart",
-          productid: "db68be303f824bbab261b51b33e842c1",
-          uid: "1",
-          skuId: skuId,
-          count: this.value
+          productid: this.productid,
+          uid: this.uid,
+          skuId: this.skuId,
+          count: this.value[this.num]
         };
         this.postRequest(parmas).then(res => {
           console.log(res);
@@ -79,10 +92,11 @@ export default {
             this.$toast(res.data.resultNote);
           }
         });
-      }else{
+      } else {
         console.log(1);
-         this.$router.push('/orderdetails');
-
+        let obj={conut:this.value[this.num],shop:this.list[this.num]};
+        this.$store.commit("BuyShop", obj);
+        this.$router.push({ path: "/finishOrder" });
       }
     }
   },

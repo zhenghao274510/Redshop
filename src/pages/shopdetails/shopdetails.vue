@@ -46,16 +46,19 @@
             </div>
           </div>
           <div class="use_info">
-            <img src="/static/test/qiandao.png" />
+            <img :src="productCommentList.userIcon" />
             <div class="use_info_cont">
               <div class="use_name">
-                <span>用户昵称</span>
-                <span>2019-07-01</span>
+                <span>{{productCommentList.userName}}</span>
+                <span>{{productCommentList.commentDate}}</span>
               </div>
-              <van-rate v-model="value" readonly />
+              <van-rate v-model="productCommentList.commentScore" readonly />
             </div>
           </div>
-          <div class="use_cont">已经收到，配送很快，价格也很实惠，味道纯正，价格合理, 非常喜欢。</div>
+          <div class="use_cont">productCommentList.commentContent</div>
+          <div class="productimg">
+            <img :src="i" alt="" class="Commentimg" v-for="i in productCommentList.commentImages" :key="i">
+          </div>
         </div>
         <div class="shop_info_details">
           <div class="shop_details_tit">商品详情</div>
@@ -85,7 +88,7 @@
     <!-- 加入购物车 -->
     <div class="buy">
       <div class="buy_left">
-        <router-link to="/shopcar">
+        <router-link to="" @click="Route">
           <span class="icon_car"></span>
           <p>购物车</p>
         </router-link>
@@ -108,6 +111,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import {pathway} from '@/mixins/img'
 import De from "./../../components/public/banner";
 import Addshop from "./addshop";
 import Youcard from "./youhuicard";
@@ -115,6 +119,7 @@ import Canshu from "./canshu";
 export default {
   data() {
     return {
+      imgurl:pathway.imgurl,
       jin: false,
       value: 5,
       show: false,
@@ -129,14 +134,18 @@ export default {
       dataObject: {},
       productParam: {},
       skuList: [],
-      productCommentList: [],
+      productCommentList: {},
       YuhuiCar:[],
       CurrentCard:{},
       // 
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+      return this.$store.state;
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
@@ -150,10 +159,10 @@ export default {
   created() {
     // 商品id
     // this.ShopConent
-    this.id =this.$store.state.Shop.productid;
+    this.id =this.store.Shop.productid;
+    this.uid =this.$store.state.Use.uid;
+   this.uid='1'
     console.log(this.id);
-    // this.id="bb7258451d5c45b398d35e31bead0b5b"
-    // console.log(this.id);
     let parmas1 = {
       cmd: "productDetail",
       productid:this.id,
@@ -178,8 +187,8 @@ export default {
     };
     this.postRequest(parmas2).then(res => {
       if (res.data.result == 0) {
-        // console.log(res);
-        // this.productCommentList=res.data.dataList[0];
+        console.log(res);
+        this.productCommentList=res.data.dataList[0];
       }
     });
        let parmas3 = {
@@ -253,7 +262,15 @@ export default {
         this.$toast("刷新成功");
         this.isLoading = false;
       }, 500);
-    }
+    },
+    Route(){
+      console.log(1)
+      this.$store.commit('ChangeTabar',2)
+      this.$router.push('/shopcar');
+    },
+    // GtoBuy(){
+    //   this.$store.commit('ChooseBuy',)
+    // }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -275,6 +292,8 @@ export default {
 /deep/ .van-rate__icon {
   font-size: 0.1rem;
 }
+.productimg{ display: flex;align-items: center;}
+.Commentimg{width: .8rem;height: auto;margin-right: .1rem;}
 em {
   width: 0.07rem;
   height: 0.14rem;
@@ -421,9 +440,14 @@ em {
         color: #666;
       }
       .shop_img {
-        // width: 100%;
-        height: 0.8rem;
-        background: #ed670d;
+        width: 100%;
+        // height: 0.8rem;
+        // background: #ed670d;
+        iframe{
+          width: 100%;
+          border: none;
+          box-sizing: border-box;
+        }
       }
     }
   }

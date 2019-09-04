@@ -1,18 +1,36 @@
 <template>
   <div class="order_con">
-
-      <Mo come="0"></Mo>
-    </div>
-
+    <!-- 退款 -->
+    <tui-h v-if="tuiH!=''" :list="tuiH"></tui-h>
+    <!-- 配送中 -->
+    <peing-sing v-if="peingSing!=''" :list="peingSing"></peing-sing>
+    <!-- 待配送 -->
+    <waite-song v-if="waiteSong!=''" :list="waiteSong"></waite-song>
+    <!-- 待评价 -->
+    <waite-ping v-if="waitePing!=''" :list="waitePing"></waite-ping>
+    <!-- 待付款 -->
+    <waite-pay v-if="waitePay!=''" :list="waitePay"></waite-pay>
+  </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Mo from './model'
+import tuiH from "./tui";
+import peingSing from "./peing";
+import waitePay from "./waitepay";
+import waiteSong from "./waitesong";
+import waitePing from "./waiteping";
 export default {
-  // props:['item'],
   data() {
-    return {};
+    return {
+      uid:'',
+      dataList:[],
+      tuiH:[],
+      peingSing:[],
+      waitePay:[],
+      waitePing:[],
+      waiteSong:[]
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -20,10 +38,49 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Mo
+    tuiH,
+    peingSing,
+    waitePay,
+    waiteSong,
+    waitePing
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    // this.uid=this.$store.Use.uid;
+    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+    this.postRequest(params).then(res => {
+      console.log(res);
+      
+      if (res.data.result == 0) {
+        this.dataList = res.data.dataList;
+        console.log(this.dataList);
+        this.dataList.forEach(item=>{
+          let _this=this;
+          let e=parseInt(item.status);
+             switch(e){
+               case 1:
+               _this.waitePay.push(item);
+               break;
+               case 2:
+               _this.waiteSong.push(item);
+               break;
+                 case 3:
+               _this.peingSing.push(item);
+               break;
+               case 4:
+               _this.waitePing.push(item);
+               break;
+                 case 5:
+               _this.tuiH.push(item);
+               break;
+             }
+             
+        })
+         console.log(this.waitePay)
+      }
+     
+    });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
@@ -46,6 +103,6 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .order_con {
-    padding: 0.1rem 0.15rem 0 0.15rem;
+  padding: 0.1rem 0.15rem 0 0.15rem;
 }
 </style>

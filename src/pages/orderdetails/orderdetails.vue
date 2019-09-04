@@ -1,11 +1,19 @@
 <template>
   <div class="order_de bg_c">
     <div class="order_de_info">
-      <div class="tit bg_wh ft_mid pad mg_bot" v-if="direct==1">等待买家付款</div>
-      <de-zhi></de-zhi>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-if="direct==1">买家清单</div>
-      <Info></Info>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='1'">等待买家付款</div>
+       <div class="de_zhi pad bg_wh">
+        <span class="pos"></span>
+        <div class="info col_mix no_use">
+          <p class="ft_mid">收货人：{{productObject.receiverName}}&nbsp; &nbsp; &nbsp;{{productObject.receiverPhone}}</p>
+          <p class="ft_mix">收货地址：{{productObject.receiverAddress}}</p>
+        </div>
+        <!-- <div class="col_mix ft_mid no_use"  @click="goto">请选择你的收货地址地址</div> -->
+        <i class="back"></i>
+      </div>
+      <!-- <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-if="direct==1">购物清单</div> -->
+      <div class="tit bg_wh ft_mid pad mg_top bo_bot" >购物清单</div>
+      <Info :list="productObject.orderItem"></Info>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
@@ -16,21 +24,12 @@
         <input class="pad_l" type="text" v-if="direct==0" placeholder="给买家留言（选填）" />
         <p class="pad_l" v-else></p>
       </div>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot clearfix">
-        <div class="fr">
-          <span>共一件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
-          <span>
-            合计:
-            <i class="col_max">￥219</i>
-          </span>
-        </div>
-      </div>
-      <ul class="de_info bg_wh" v-if="direct==1">
+      <ul class="de_info bg_wh">
         <li class="col_mid">
           <span class="ft_mid">商品总价</span>
           <span class="ft_cmix">
             ￥
-            <i>219.00</i>
+            <i>{{productObject.orderPrice}}</i>
           </span>
         </li>
         <li class="col_mid">
@@ -44,40 +43,46 @@
           <span class="ft_mid">优惠卷抵扣</span>
           <span class="ft_cmix">
             -￥
-            <i>5.00</i>
+            <i>{{productObject.couponAmount}}</i>
           </span>
         </li>
         <li class="col_mid">
           <span class="ft_mid">实际支付</span>
           <span class="ft_cmix col_max">
             ￥
-            <i>214.00</i>
+            <i>{{productObject.orderAmount}}</i>
           </span>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top" v-if="direct==1">订单信息</div>
-      <div class="tit bg_wh ft_mid pad mg_top d_flex" v-else @click="changej(0)">
+      <div class="tit bg_wh ft_mid pad mg_top" v-if="status==1">订单信息</div>
+      <!-- <div class="tit bg_wh ft_mid pad mg_top d_flex" v-else @click="changej(0)">
         <span>可使用优惠卷</span>
         <i class="more_j"></i>
-      </div>
+      </div> -->
 
-      <ul class="de_info bg_wh" v-if="direct==1">
+      <ul class="de_info bg_wh">
         <li class="col_mid">
-          <span class="ft_mid">订单编号：27900219</span>
+          <span class="ft_mid">订单编号：{{orderid}}</span>
           <span class="ft_cmix">复制</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid">创建时间：2019.07.01 11:27:21</span>
+          <span class="ft_mid">创建时间：{{productObject.createdDate}}</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid">付款时间：2019.07.01 11:29:21</span>
+          <span class="ft_mid" v-if="status!=1">付款时间：{{productObject.payDate}}</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid">配送时间：2019.07.01 11:29:21</span>
+          <span class="ft_mid" v-if="status==5">退款时间：{{productObject.refundDate}}</span>
+        </li>
+         <li class="col_mid">
+          <span class="ft_mid" v-if="status!=3">配送时间：{{productObject.deliveryDate}}</span>
+        </li>
+         <li class="col_mid">
+          <span class="ft_mid" v-if="status==4">收货时间：{{productObject.finishDate}}</span>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-else>配送方式</div>
-      <ul class="mothed bg_wh">
+      <!-- <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-else>配送方式</div> -->
+      <!-- <ul class="mothed bg_wh">
         <li @click="changeMothed(0)">
           <span>配送到家</span>
           <div>
@@ -92,14 +97,14 @@
             <img src="/static/icon/goumaifangshi-xuanzhong.png" v-else />
           </div>
         </li>
-      </ul>
-      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
+      </ul> -->
+      <!-- <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
         <span>支付方式</span>
         <div class="d_flex">
           <span>微信支付</span>
           <i class="more_j"></i>
         </div>
-      </div>
+      </div> -->
 
       <!-- 层高度 -->
       <div class="no_more bg_wh mg_top"></div>
@@ -113,44 +118,10 @@
           <span class="bg_g col_wh ft_mid sub">提交订单</span>
           <span class="col_mix lin_h">
             实付:
-            <i class="col_max">￥219</i>
+            <i class="col_max">￥{{productObject.orderAmount}}</i>
           </span>
         </div>
       </div>
-      <!-- 优惠卷 -->
-      <van-popup
-        v-model="show_juan"
-        round
-        position="bottom"
-        :style="{ height: '40%' }"
-        :close-on-click-overlay="jin"
-      >
-        <van-radio-group v-model="radioYouhui" v-if="direct==0">
-          <van-cell title="优惠"></van-cell>
-          <van-cell-group>
-            <van-cell title="满100减10" clickable @click="radioYouhui = '1'">
-              <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
-            </van-cell>
-            <van-cell title="满100减10" clickable @click="radioYouhui = '2'">
-              <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
-            </van-cell>
-          </van-cell-group>
-        </van-radio-group>
-        <van-radio-group v-model="radioPay" v-else>
-          <van-cell title="请选择支付方式"></van-cell>
-          <van-cell-group>
-            <van-cell title="微信支付" clickable @click="radioPay = '1'">
-              <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
-            </van-cell>
-            <van-cell title="充值卡支付" clickable @click="radioPay = '2'">
-              <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
-            </van-cell>
-          </van-cell-group>
-        </van-radio-group>
-        <van-cell @click="show_juan=false">
-          <span class="btn bg_g col_wh ft_mid">确定</span>
-        </van-cell>
-      </van-popup>
     </div>
   </div>
 </template>
@@ -164,27 +135,21 @@ import btn from "./../order/child/btn";
 export default {
   data() {
     return {
-      // 禁止点击遮罩层
-      jin: false,
-      // 0=> 确认订单 1=>订单详情
-      direct: 0,
-      radioYouhui: "1",
-      radioPay: "1",
-      direct:0,
-      tit: "确认订单",
-      num: "0",
-      show_juan: false,
-      goHome: false,
-      goCrd: true,
-      //订单编号
-      orderid: "",
+      isaddress: true,
       //配送费
       Freight: "",
-      uid:''
+      uid: "",
+      productObject:{},
+      status:0,
+      orderid:''
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+      return this.$store.state.orderDetails
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
@@ -195,16 +160,22 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.orderid = "1";
     this.uid = "1";
-    let parmas = {
-      cmd: "orderDetail",
-      orderid: this.orderid,
-      uid: this.uid
-    };
-    this.postRequest(parmas).then(res => {
-      console.log(res);
-    });
+    this.orderid=this.store.orderid;
+    this.status=this.store.status;
+
+
+      let parmas = {
+        cmd: "orderDetail",
+        orderid: this.orderid,
+        uid: this.uid
+      };
+      this.postRequest(parmas).then(res => {
+        console.log(res.data);
+        this.productObject=res.data.dataObject;
+      });
+ 
+
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
       // console.log(res);
@@ -219,10 +190,10 @@ export default {
       this.show_juan = true;
       switch (num) {
         case 0:
-       this.direct=0;
-        break;
+          this.direct = 0;
+          break;
         case 1:
-       this.direct=1;
+          this.direct = 1;
       }
     },
     changeMothed(num) {
@@ -254,6 +225,27 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
+ .de_zhi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 0.79rem;
+ .pos {
+      width: 0.2rem;
+      height: 0.2rem;
+      background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
+      background-size: 100% 100%;
+      display: block;
+      margin-right: 0.14rem;
+    }
+      .back {
+      display: block;
+      width: 0.1rem;
+      height: 0.17rem;
+      background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
+      background-size: 100% 100%;
+    }
+ }
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;

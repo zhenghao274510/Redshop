@@ -4,9 +4,6 @@
       <van-swipe-item v-for="i in list" :key="i">
         <img :src="i" alt />
       </van-swipe-item>
-      <!-- <van-swipe-item>
-        <img src="/static/test/bg.png" alt />
-      </van-swipe-item> -->
       <div class="custom_indicator" slot="indicator">{{ current + 1 }}/2</div>
     </van-swipe>
   </div>

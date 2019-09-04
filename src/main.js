@@ -10,8 +10,8 @@ import App from './App'
 import router from './router'
 import store from './vuex/vuex'
 import mixins from './mixins'
+// import {pathway} from './mixins/img'
 Vue.mixin(mixins)
-import {pathway} from './mixins/img'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
@@ -86,7 +86,7 @@ new Vue({
   el: '#app',
   data(){
     return{
-      imgurl:pathway
+      
     }
   },
   router,
