@@ -6,7 +6,7 @@ export default new Router({
   mode: "hash",
   routes: [{
       path: '/',
-     redirect:'/home'
+     redirect:'/author'
     },
     // 首页
     {
@@ -16,6 +16,11 @@ export default new Router({
       meta: {
         showtabar: true
       }
+    },
+     // 首页
+     {
+      path: '/author',
+      component: resolve => require(['./../pages/author.vue'], resolve),
     },
     //  分类
     {

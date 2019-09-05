@@ -9,9 +9,8 @@ const store = new Vuex.Store({
     },
 
     // 购物车数据
-    carinfo: {
-      chose: true
-    },
+    carinfo: [],
+  
     //  用户信息
     Use: {
       uid: ''
@@ -20,7 +19,10 @@ const store = new Vuex.Store({
     //  立即购买
     Buy: {},
     useAddres: {},
-    orderDetails: {}
+    orderDetails: {},
+    ShopPingJia:[],
+    gifCradInfo:{},
+    gifCradDetails:[]
   },
   mutations: {
     //修改tarba
@@ -39,6 +41,18 @@ const store = new Vuex.Store({
     },
     orderDetails(state, val) {
       state.orderDetails = val;
+    },
+    LookCarinfo(state,val){
+          state.carinfo=val;
+    },
+    addPingJia(state,val){
+      state.ShopPingJia=val;
+    },
+    LookGifcard(state,val){
+      state.gifCradInfo=val;
+    },
+    LookGifcardDetails(state,val){
+      state.gifCradDetails=val;
     }
   },
   getters() {

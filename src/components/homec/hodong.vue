@@ -12,7 +12,7 @@
       <!-- 第一张大图 -->
       <div class="hd_list">
         <ul>
-          <li v-for="(item,index) in ProductList" :key="index">
+          <li v-for="(item,index) in ProductList" :key="index" @click="GetshopDetails(item)">
             <router-link to>
               <div class="hd_img_con">
                 <img :src="imgurl+item.logo" />
@@ -78,9 +78,19 @@ export default {
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    
+  },
   //方法集合
-  methods: {},
+  methods: {
+    GetshopDetails(e){
+      this.$store.commit('ChooseShop',e);
+      // console.log(e);
+         this.$router.push('/shopdetails');
+
+     
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

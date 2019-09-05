@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <By ishow="true" :list="dataList"></By>    
+    <By ishow="true"></By>    
     <div style="height:1.2rem;"></div>
     
   </div>
@@ -13,8 +13,7 @@ import By from "./../../components/public/carlist";
 export default {
   data() {
     return {
-      dataList:[],
-      dataObject:{}
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -27,10 +26,12 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    // this.uid=this.$store.Use.uid;
+    this.uid='1'
      let parmas = {
         cmd: "getCartList",
         nowPage: "1",
-        uid: "1",
+        uid: this.uid,
         pageCount:"10"
       };
       this.postRequest(parmas).then(res => {
@@ -38,8 +39,9 @@ export default {
         if(res.data.result==0){
             this.dataList=res.data.dataList;
             this.dataObject=res.data;
+            this.$store.commit('LookCarinfo',this.dataList);
         }
-        // console.log(res);
+        console.log(this.dataList);
       });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

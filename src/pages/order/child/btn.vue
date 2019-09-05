@@ -1,12 +1,12 @@
 <template>
 <div>
 
-  <div class="order_zhuang" v-if="come!='4'">
-    <span class="one" v-if="come=='0'">取消订单</span>
-    <span class="two" v-if="come=='0'">去支付</span>
-    <span class="one" v-if="come=='1'">申请退换</span>
-    <span class="two" v-if="come=='2'" @click="shou_huo">确认收货</span>
-    <span class="two" v-if="come=='3'" @click="goto">去评价</span>
+  <div class="order_zhuang">
+    <span class="one" v-if="come=='1'">取消订单</span>
+    <span class="two" v-if="come=='1'">去支付</span>
+    <span class="one" v-if="come=='2'">申请退换</span>
+    <span class="two" v-if="come=='3'" @click="shou_huo">确认收货</span>
+    <span class="two" v-if="come=='4'" @click="goto">去评价</span>
   </div>
    <van-overlay :show="show" @click="show = false" />
 </div>

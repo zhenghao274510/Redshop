@@ -24,7 +24,8 @@
 export default {
   data() {
     return {
-      name: ""
+      name: "",
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -40,9 +41,12 @@ export default {
   //方法集合
   methods: {
     changename() {
+      // this.uid=this.$store.state.Use.uid;
+      this.uid="1";
       let params = { cmd: "updateUserName", uid: this.uid, name: this.name };
       this.postRequest(params).then(res => {
         console.log(res);
+        this.$toast(res.data.resultNote);
       });
     }
   },

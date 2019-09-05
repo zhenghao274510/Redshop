@@ -1,8 +1,8 @@
 <template>
   <div class="li_card">
     <ul>
-      <li>
-        <router-link to="/giftcardetails">
+      <li v-for="(item,index) in list" :key="index">
+        <router-link to="">
           <div class="gif_card_tit">
             <div class="gif_name">和天下酒业礼品卡</div>
             <div class="gif_name_icon">
@@ -13,11 +13,11 @@
           <div class="gif_card_hao">
             <div>
               卡号:
-              <span>2222222</span>
+              <span>{{item.cardnum}}</span>
             </div>
             <div>
               密码:
-              <span>2222222</span>
+              <span>{{item.pwd}}</span>
             </div>
           </div>
           <div class="gif_card_adder">
@@ -35,7 +35,7 @@
 //import 《组件名称》 from '《组件路径》';
 
 export default {
-  props: [],
+  props: ["list"],
   data() {
     return {
       //   短信分享

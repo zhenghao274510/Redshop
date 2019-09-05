@@ -1,10 +1,39 @@
 <template>
   <div>
     <div class="li_pin_card">
-      <div class="li_search">
+      <div class="li_search" @click="SearchCard">
         <span>查询</span>
       </div>
-      <Crd @ShowMsg="GetMsg" :list="dataObject"></Crd>
+        <div class="li_card">
+    <ul>
+      <li v-for="(item,index) in dataList" :key="index" >
+        <router-link to="">
+          <div class="gif_card_tit"  @click.prevent="GoToGif(item)">
+            <div class="gif_name">和天下酒业礼品卡</div>
+            <div class="gif_name_icon">
+              <i @click.prevent.self="Goto"></i>
+              <span @click.prevent.self="GetMsg(index)"></span>
+            </div>
+          </div>
+          <div class="gif_card_hao">
+            <div>
+              卡号:
+              <span>{{item.cardnum}}</span>
+            </div>
+            <div>
+              密码:
+              <span>{{item.pwd}}</span>
+            </div>
+          </div>
+          <div class="gif_card_adder">
+            <p class="tel">0595-23195678</p>
+            <p class="addres">安溪县城厢镇新兴路149号(特产城移动公司后)</p>
+          </div>
+        </router-link>
+      </li>
+    </ul>
+   
+  </div>
     </div>
 
     <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
@@ -14,9 +43,9 @@
           <i @click="close"></i>
         </div>
         <div class="Use_tel">
-          <input type="text" placeholder="请输入手机号" v-model="UseTelphone" />
+          <input type="text" placeholder="请输入手机号" v-model="phone" />
         </div>
-        <div @click="close">
+        <div @click.prevent="GotoTell">
           <span>确定</span>
         </div>
       </div>
@@ -26,14 +55,15 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import Crd from "./../../components/public/lipincard";
 export default {
   data() {
     return {
       MsgShare: false,
-      UseTelphone: "",
+      phone: "",
       uid: "",
-      dataObject: {}
+      dataObject: {},
+      dataList:[],
+      num:0
     };
   },
   //监听属性 类似于data概念
@@ -42,7 +72,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    Crd
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -56,24 +85,47 @@ export default {
     };
     this.postRequest(parmas).then(res => {
       console.log(res);
-      this.dataObject=res.data.dataObject;
+      this.dataList=res.data.dataList;
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    GetMsg() {
-      this.MsgShare = true;
+    close(){
+   this.MsgShare=false;
     },
-    close() {
-      let parmas={cmd:'sharingSMS',type:'',cardid:this.cardid,phone:this.phone};
+    GetMsg(ind) {
+      this.num=ind;
+      this.MsgShare=true;
+     
+    },
+    SearchCard() {
+     this.$router.push('/chaxun');
+     
+    },
+    Goto(){
+      this.$router.push('/share');
+    },
+    GotoTell(){
+        this.cardid=this.dataList[this.num].cardid;
+         let parmas={cmd:'sharingSMS',type:'1',cardid:this.cardid,phone:this.phone};
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
-      let isRegExp = Reg.test(this.tel);
+      let isRegExp = Reg.test(this.phone);
       if (isRegExp) {
-           
+              this.postRequest(parmas).then(res=>{
+                  console.log(res);
+                  this.$toast(res.data.resultNote);
+                  this.MsgShare=false;
+              })
       }
+    },
+    GoToGif(e){
+     console.log(e),
+     this.$store.commit('LookGifcard',e)
+     this.$router.push('/giftcardetails');
     }
+
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -143,6 +195,7 @@ export default {
       height: 0.22rem;
       background: url("/static/icon/tankuang-quxiao.png") no-repeat;
       background-size: 100% 100%;
+      z-index: 99;
     }
     span {
       display: block;
@@ -152,6 +205,81 @@ export default {
       color: #fff;
       text-align: center;
       line-height: 0.45rem;
+      z-index: 99;
+    }
+  }
+}
+.li_card {
+  width: 100%;
+  padding: 0 0.15rem;
+  ul {
+    width: 100%;
+    li {
+      width: 100%;
+      height: 1.44rem;
+      border-radius: 0.1rem;
+      background-color: #72bb29;
+
+      a {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        color: #fff;
+        z-index: 2;
+        .gif_card_tit {
+          display: flex;
+          height: 0.5rem;
+          padding: 0 0.16rem;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0;
+          .gif_name {
+            font-size: 0.17rem;
+            text-align: left;
+          }
+          .gif_name_icon {
+            i,
+            span {
+              display: inline-block;
+              width: 0.25rem;
+              height: 0.2rem;
+              z-index: 99;
+            }
+            i {
+              background: url("/static/icon/chongzhika-tupianfenxiang.png")
+                center center no-repeat;
+              background-size: 100% 100%;
+              margin-right: 0.14rem;
+            }
+            span {
+              background: url("/static/icon/chongzhika-duanxinfenxiang.png")
+                center center no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+        }
+        .gif_card_hao {
+          height: 0.35rem;
+          background: #59a112;
+          padding: 0 0.16rem;
+          font-size: 0.16rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .gif_card_adder {
+          padding: 0.15rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .tel {
+            font-size: 0.1rem;
+          }
+          .addres {
+            font-size: 0.12rem;
+          }
+        }
+      }
     }
   }
 }

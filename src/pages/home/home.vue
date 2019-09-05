@@ -13,29 +13,29 @@
 
       <div>
         <!-- 首页推荐模块 -->
-        <Tit :title="activ"></Tit>
+        <Tit :title="activ" style="margin-top:.15rem;"></Tit>
         <ul class="tui_list">
-           <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-        :offset="10"
-      >
-          <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item)">
-            <router-link to>
-              <div class="list_img">
-                <img :src="imgurl+item.logo" alt />
-              </div>
-              <div class="list_info">
-                <p class="list_name">{{item.title}}</p>
-                <div class="list_icon">
-                  <p class="col_max ft_mid">￥{{item.price}}</p>
-                  <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
+          <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+            :offset="10"
+          >
+            <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item)">
+              <router-link to>
+                <div class="list_img">
+                  <img :src="imgurl+item.logo" alt />
                 </div>
-              </div>
-            </router-link>
-          </li>
+                <div class="list_info">
+                  <p class="list_name">{{item.title}}</p>
+                  <div class="list_icon">
+                    <p class="col_max ft_mid">￥{{item.price}}</p>
+                    <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
+                  </div>
+                </div>
+              </router-link>
+            </li>
           </van-list>
         </ul>
         <div class="no_more"></div>
@@ -66,27 +66,27 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
+import { pathway } from "@/mixins/img";
 import Top from "@/components/public/heade";
 import Zq from "@/components/homec/hodong";
 import Tit from "@/components/homec/title";
 export default {
   data() {
     return {
-      imgurl:pathway.imgurl,
-       isLoading: false,
-      activ: { tit: "为你推荐", type: 1 },
+      imgurl: pathway.imgurl,
+      isLoading: false,
+      activ: { tit: "为您推荐", type: 1 },
       First: true,
       isGet: true,
       id: "",
-       loading: false,
+      loading: false,
       finished: false,
       //优惠券
       dataObject: {},
       ProductList: [],
       ProductObject: {},
-      firstpath:{}
-
+      firstpath: {},
+      uid: ""
     };
   },
   //监听属性 类似于data概念
@@ -103,21 +103,26 @@ export default {
   created() {
     // this.id =this.$route.query.id;
     //  主页 部分
-    let params1 = { cmd:"firstPage"};
+    let params1 = { cmd: "firstPage" };
     this.postRequest(params1).then(res => {
       console.log(res);
-      this.firstpath=res.data.dataObject;
+      this.firstpath = res.data.dataObject;
     });
     //  优惠卷
     let parmas2 = { cmd: "newCoupon" };
-    this.postRequest(parmas2).then(res => {
-      if (res.data.result == 0) {
-        // console.log(res);
-        this.dataObject = res.data.dataObject;
-      } else {
-        this.First = false;
-      }
-    });
+    if (localStorage.getItem("first")) {
+      this.First = false;
+    } else {
+      this.postRequest(parmas2).then(res => {
+        if (res.data.result == 0) {
+          // console.log(res);
+          this.dataObject = res.data.dataObject;
+        } else {
+          this.First = false;
+        }
+      });
+    }
+
     // 为你推荐
     let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
     this.postRequest(parmas3).then(res => {
@@ -129,9 +134,7 @@ export default {
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.focus()
-  },
+  mounted() {},
   //方法集合
   methods: {
     onRefresh() {
@@ -158,34 +161,37 @@ export default {
           }
         });
       } else {
-            this.finished = true;
-            this.loading = false;
+        this.finished = true;
+        this.loading = false;
         // this.$toast("没有更多了!");
       }
-
-  
     },
     GetJuan() {
       //  获取优惠券
+      // this.uid=this.$store.state.Use.uid;
+      this.uid = "1";
+      this.$toast('获取中');
       let parmas = {
         cmd: "newCoupon",
-        uid: "",
+        uid: this.uid,
         couponid: this.dataObject.couponid
       };
       this.postRequest(parmas).then(res => {
-        console.log(res);
+        if (res.data.result == 0) {
+          this.isGet=false;
+          localStorage.setItem("first", '');
+        }
       });
-      isGet = false;
     },
     //  首页 获取焦点 跳转
-     focus(){
-      this.$refs.input.addEventListener('focus',()=>{
-          this.$router.push('/shoplist');
-      })
+    focus() {
+      this.$refs.input.addEventListener("focus", () => {
+        this.$router.push("/shoplist");
+      });
     },
-    GoTO(e){
-      this.$store.commit('ChooseShop',e)
-      this.$router.push({path:'/shopdetails'});
+    GoTO(e) {
+      this.$store.commit("ChooseShop", e);
+      this.$router.push({ path: "/shopdetails" });
     }
   },
   //生命周期 - 创建之前
@@ -280,51 +286,51 @@ export default {
     margin-bottom: 0.5rem;
   }
   .sear {
-  width: 100%;
-  height: 0.5rem;
-  margin-top: 0.5rem;
-  padding: 0.1rem 0.15rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  div {
-    width: 2.9rem;
-    height: 0.3rem;
-    border: 0.01rem solid #e5e5e5;
-    border-radius: 0.05rem;
-    position: relative;
-    font-size: 0;
-    overflow: hidden;
-    input {
-      width: 100%;
-      height: 100%;
-      padding-left: 0.36rem;
+    width: 100%;
+    height: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.1rem 0.15rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    div {
+      width: 2.9rem;
+      height: 0.3rem;
+      border: 0.01rem solid #e5e5e5;
+      border-radius: 0.05rem;
+      position: relative;
+      font-size: 0;
+      overflow: hidden;
+      input {
+        width: 100%;
+        height: 100%;
+        padding-left: 0.36rem;
+        font-size: 0.13rem;
+      }
+      ::-webkit-input-placeholder {
+        color: #9c9fa4;
+      }
+      span {
+        position: absolute;
+        top: 0.07rem;
+        left: 0.13rem;
+        width: 0.16rem;
+        height: 0.16rem;
+        background: url("/static/icon/souuso.png") no-repeat;
+        background-size: 100% 100%;
+        display: block;
+      }
+    }
+    .btn {
+      width: 0.43rem;
+      height: 0.3rem;
+      border-radius: 0.05rem;
+      background-color: #72bb29;
+      color: #fff;
+      text-align: center;
       font-size: 0.13rem;
-    }
-    ::-webkit-input-placeholder {
-      color: #9c9fa4;
-    }
-    span {
-      position: absolute;
-      top: 0.07rem;
-      left: 0.13rem;
-      width: 0.16rem;
-      height: 0.16rem;
-      background: url("/static/icon/souuso.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
+      line-height: 0.3rem;
     }
   }
-  .btn {
-    width: 0.43rem;
-    height: 0.3rem;
-    border-radius: 0.05rem;
-    background-color: #72bb29;
-    color: #fff;
-    text-align: center;
-    font-size: 0.13rem;
-    line-height: 0.3rem;
-  }
-}
 }
 </style>

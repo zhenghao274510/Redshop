@@ -2,18 +2,18 @@
   <div class="order_de bg_c">
     <div class="order_de_info">
       <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='1'">等待买家付款</div>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='4'">您已收货成功，赶快去评价啦~</div>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='2'">正在配送中</div>
        <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
         <div class="info col_mix no_use">
           <p class="ft_mid">收货人：{{productObject.receiverName}}&nbsp; &nbsp; &nbsp;{{productObject.receiverPhone}}</p>
           <p class="ft_mix">收货地址：{{productObject.receiverAddress}}</p>
         </div>
-        <!-- <div class="col_mix ft_mid no_use"  @click="goto">请选择你的收货地址地址</div> -->
         <i class="back"></i>
       </div>
-      <!-- <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-if="direct==1">购物清单</div> -->
       <div class="tit bg_wh ft_mid pad mg_top bo_bot" >购物清单</div>
-      <Info :list="productObject.orderItem"></Info>
+      <Info :list="productList"></Info>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
@@ -21,7 +21,7 @@
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
-        <input class="pad_l" type="text" v-if="direct==0" placeholder="给买家留言（选填）" />
+        <input class="pad_l" type="text" v-if="status==0" placeholder="给买家留言（选填）" />
         <p class="pad_l" v-else></p>
       </div>
       <ul class="de_info bg_wh">
@@ -55,10 +55,6 @@
         </li>
       </ul>
       <div class="tit bg_wh ft_mid pad mg_top" v-if="status==1">订单信息</div>
-      <!-- <div class="tit bg_wh ft_mid pad mg_top d_flex" v-else @click="changej(0)">
-        <span>可使用优惠卷</span>
-        <i class="more_j"></i>
-      </div> -->
 
       <ul class="de_info bg_wh">
         <li class="col_mid">
@@ -75,53 +71,20 @@
           <span class="ft_mid" v-if="status==5">退款时间：{{productObject.refundDate}}</span>
         </li>
          <li class="col_mid">
-          <span class="ft_mid" v-if="status!=3">配送时间：{{productObject.deliveryDate}}</span>
+          <span class="ft_mid" v-if="status!=3 || status==1">配送时间：{{productObject.deliveryDate}}</span>
         </li>
          <li class="col_mid">
           <span class="ft_mid" v-if="status==4">收货时间：{{productObject.finishDate}}</span>
         </li>
       </ul>
-      <!-- <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-else>配送方式</div> -->
-      <!-- <ul class="mothed bg_wh">
-        <li @click="changeMothed(0)">
-          <span>配送到家</span>
-          <div>
-            <img src="/static/icon/goumaifangshi-weixuanzhong.png" v-if="goHome" />
-            <img src="/static/icon/goumaifangshi-xuanzhong.png" v-else />
-          </div>
-        </li>
-        <li @click="changeMothed(1)">
-          <span>存为礼品卡</span>
-          <div>
-            <img src="/static/icon/goumaifangshi-weixuanzhong.png" v-if="goCrd" />
-            <img src="/static/icon/goumaifangshi-xuanzhong.png" v-else />
-          </div>
-        </li>
-      </ul> -->
-      <!-- <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
-        <span>支付方式</span>
-        <div class="d_flex">
-          <span>微信支付</span>
-          <i class="more_j"></i>
-        </div>
-      </div> -->
 
       <!-- 层高度 -->
-      <div class="no_more bg_wh mg_top"></div>
+      <!-- <div class="no_more bg_wh mg_top"></div> -->
 
       <!-- 底部 -->
-      <div class="end bg_wh" v-if="direct==1">
-        <btn :come="num"></btn>
-      </div>
-      <div class="end bg_wh" v-else>
-        <div class="ok bo_top ft_max">
-          <span class="bg_g col_wh ft_mid sub">提交订单</span>
-          <span class="col_mix lin_h">
-            实付:
-            <i class="col_max">￥{{productObject.orderAmount}}</i>
-          </span>
-        </div>
-      </div>
+      <!-- <div class="end bg_wh" v-if="status==1"> -->
+        <btn :come="status"></btn>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -129,7 +92,7 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import deZhi from "./adderss";
-import Info from "./../order/child/carIfo";
+import Info from "./orderInfo";
 import btn from "./../order/child/btn";
 
 export default {
@@ -140,6 +103,7 @@ export default {
       Freight: "",
       uid: "",
       productObject:{},
+      productList:[],
       status:0,
       orderid:''
     };
@@ -147,7 +111,7 @@ export default {
   //监听属性 类似于data概念
   computed: {
     store(){
-      return this.$store.state.orderDetails
+      return 
     }
   },
   //监控data中的数据变化
@@ -161,18 +125,20 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid = "1";
-    this.orderid=this.store.orderid;
-    this.status=this.store.status;
-
-
+ this.orderid=this.$store.state.orderDetails.orderid;
+   this.status=this.$store.state.orderDetails.status;
+   console.log(this.status);
       let parmas = {
         cmd: "orderDetail",
         orderid: this.orderid,
         uid: this.uid
       };
       this.postRequest(parmas).then(res => {
-        console.log(res.data);
+     
         this.productObject=res.data.dataObject;
+        this.productList=res.data.dataObject.orderItem ;
+           console.log(this.productObject);
+
       });
  
 
@@ -185,29 +151,7 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {
-    changej(num) {
-      this.show_juan = true;
-      switch (num) {
-        case 0:
-          this.direct = 0;
-          break;
-        case 1:
-          this.direct = 1;
-      }
-    },
-    changeMothed(num) {
-      switch (num) {
-        case 0:
-          this.goHome = false;
-          this.goCrd = true;
-          break;
-        case 1:
-          this.goHome = true;
-          this.goCrd = false;
-      }
-    }
-  },
+  methods: {},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -246,6 +190,7 @@ export default {
       background-size: 100% 100%;
     }
  }
+ .order_de{overflow: auto;}
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;

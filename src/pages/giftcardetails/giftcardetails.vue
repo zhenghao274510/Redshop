@@ -1,10 +1,18 @@
 <template>
   <div class="gif_card_de">
     <div class="cont">
-      <my-address></my-address>
+        <div class="de_zhi pad bg_wh">
+        <span class="pos"></span>
+        <div class="info col_mix no_use" v-if="store.address">
+          <p class="ft_mid">收货人：{{store.name}}&nbsp; &nbsp; &nbsp;{{store.phone}}</p>
+          <p class="ft_mix">收货地址：{{store.address}}{{store.detail}}</p>
+        </div>
+        <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
+        <i class="back"></i>
+      </div>
 
       <div class="tit bg_wh ft_max pad bo_top">购物清单</div>
-      <Info :num="id"></Info>
+      <Info :num="id" :list="productList"></Info>
       <div class="line"></div>
       <div class="tui">
         <div class="changemi">
@@ -31,41 +39,68 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import Info from "./../order/child/carIfo";
-import myAddress from "./../orderdetails/adderss";
+// import myAddress from "./../orderdetails/adderss";
 export default {
   data() {
     return {
       id: 1,
-      giftObject: {},
-      remark: ""
+      productList:[],
+      remark: "",
+      cardnum:'',
+      pwd:'',
+      uid:"",
+      addressId:'',
+      giftcardId:''
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+      return this.$store.state.useAddres;
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
     Info,
-    myAddress
+    // myAddress
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    //  this.giftObject=this.$route.query.id;
+    // this.uid=this.$store.state.Use.uid;
+    this.uid="1";
+    this.cardnum=this.$store.state.gifCradInfo.cardnum;
+    this.pwd=this.$store.state.gifCradInfo.pwd;
+    console.log(this.$store.state.useAddres)
+    let parmas={cmd:"findGiftCard",uid:this.uid,cardnum:this.cardnum,pwd:this.pwd};
+    this.postRequest(parmas).then(res=>{
+      //  console.log(res)
+       this.productList=res.data.dataObject.orderItem;
+       this.$store.commit('LookGifcardDetails',this.productList);
+      //  console.log(this.productList)
+    })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
     getmsg() {
+      // this.uid=this.$store.state.Use.uid;
+       this.giftcardId=this.$store.state.gifCradInfo.cardid;
+       this.addressId=this.$store.state.useAddres
       this.uid = "1";
+
       let parmas = {
         cmd: "giftCardDelivery",
         uid: this.uid,
-        giftcardId: this.giftObject.giftcardId,
-        addressId: "",
+        giftcardId: this.giftcardId,
+        addressId: this.addressId,
         remark: this.remark
       };
+    },
+    goto(){
+      this.$router.push('/editaddress');
     }
   },
   //生命周期 - 创建之前
@@ -128,4 +163,32 @@ export default {
     font-size: 0.14rem;
   }
 }
+  .de_zhi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 0.79rem;
+    .pos {
+      width: 0.2rem;
+      height: 0.2rem;
+      background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
+      background-size: 100% 100%;
+      display: block;
+      margin-right: 0.14rem;
+    }
+
+    .back {
+      display: block;
+      width: 0.1rem;
+      height: 0.17rem;
+      background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
+      background-size: 100% 100%;
+    }
+    .no_use {
+      flex: 1;
+      p {
+        line-height: 0.2rem;
+      }
+    }
+  }
 </style>

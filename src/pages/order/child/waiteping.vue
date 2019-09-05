@@ -1,7 +1,8 @@
 <template>
   <div class="order_mo">
-    <div class="order_con" v-for="(item,index) in arry" :key="index" @click="LookDetails(item)">
-      <div class="order_tit">
+    <div class="order_con" v-for="(item,index) in arry" :key="index">
+      <div  @click="LookDetails(item)">
+           <div class="order_tit" >
         <span>
           订单编号：
           <i>{{item.orderid}}</i>
@@ -9,11 +10,13 @@
         <em>待评价</em>
       </div>
       <Info :list="item.orderItem"></Info>
+      </div>
+     
       <div
         class="order_tot"
       >共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
-        <span class="two" @click="goto">去评价</span>
+        <span class="two" @click="goto(item)">去评价</span>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false" />
@@ -71,7 +74,8 @@ export default {
   },
   //方法集合
   methods: {
-    goto() {
+    goto(e) {
+      this.$store.commit('addPingJia',e);
       this.$router.push("/addpingjia");
     },
     shou_huo() {
@@ -87,6 +91,7 @@ export default {
         });
     },
     LookDetails(e) {
+      console.log(e);
       this.$store.commit("orderDetails", e);
       this.$router.push("/orderdetails");
     }

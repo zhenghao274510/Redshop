@@ -1,7 +1,7 @@
 <template>
   <ul class="order_info bg_wh" >
     <!-- 订单详情购物车信息 -->
-    <li v-for="(item,index) in arry" :key="index" >
+    <li v-for="(item,index) in list" :key="index" >
       <router-link to="">
         <img :src="imgurl+item.productImage" alt />
         <div class="info_name">
@@ -34,22 +34,15 @@ import {pathway} from '@/mixins/img'
 import { Dialog } from "vant";
 export default {
   props:['list'],
-  // props:{
-  //   list:{
-  //     type:Array,
-  //     default:[]
-  //   }
-  // },
+
   data() {
     return {
+      // arry:this.list,
       imgurl:pathway.imgurl
     };
   },
   //监听属性 类似于data概念
   computed: {
-    arry(){
-      return this.list;
-    }
   },
   //监控data中的数据变化
   watch: {},

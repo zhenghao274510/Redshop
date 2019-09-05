@@ -4,18 +4,18 @@
     <div class="tel_cont">
       <div class="tel_info">
         <h3>恭喜你获得抽奖码</h3>
-        <p>1234567</p>
+        <p>{{qrcode}}</p>
         <ul class="bind_tel">
           <li class="title">绑定手机号</li>
           <li class="bind_inp">
             <input type="text" placeholder="请输入手机号" v-model="phone" />
           </li>
           <li class="bind_inp flexbox">
-            <input type="text" placeholder="请输入验证码" ref="YZM" />
+            <input type="text" placeholder="请输入验证码" ref="useinit" />
             <span @click="GetMa">获取验证码</span>
           </li>
           <li style="font-size:0;margin-top:.3rem;">
-            <button class="btn">确认绑定</button>
+            <button class="btn" @click="bindOk">确认绑定</button>
           </li>
           <li class="end">注：获得抽奖码以后，请您绑定手机号，中奖以后线下工作人员将会以短信的形式发送给您</li>
         </ul>
@@ -31,7 +31,8 @@ export default {
   data() {
     return {
       phone:'',
-      ma:''
+      ma:'',
+      qrcode:''
     };
   },
   //监听属性 类似于data概念
@@ -52,8 +53,28 @@ export default {
         let parmas={cmd:'getValidateCode',phone:this.phone};
       this.postRequest(parmas).then(res=>{
           console.log(res);
+          if(res.data.result==0){
+            this.$toast(res.data.resultNote);
+            this.ma=res.data.code;
+          }
       })
       }
+    },
+    bindOk(){
+       var re = new RegExp(/^[1][3456789]\d{9}$/);
+       let use=this.$refs.useinit.value;
+      if(re.test(this.phone)&&this.ma==use){
+        let parmas={cmd:'bindPhone',phone:this.phone,qrcode:this.qrcode};
+      this.postRequest(parmas).then(res=>{
+          console.log(res);
+          if(res.data.result==0){
+            this.$toast(res.data.resultNote);
+            this.ma=res.data.code;
+          }
+      })
+    }else{
+      this.$toast('信息输入有误!');
+    }
     }
   },
   //生命周期 - 创建之前

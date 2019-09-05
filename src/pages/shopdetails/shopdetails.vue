@@ -1,7 +1,14 @@
 <template>
   <div class="shop_de">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <De :list="dataObject.productImages"></De>
+        <div class="banner">
+    <van-swipe :autoplay="3000"  @change="Onchange">
+      <van-swipe-item v-for="(item,index) in dataObject.productImages" :key="index">
+        <img :src="item" alt />
+      </van-swipe-item>
+      <div class="custom_indicator" slot="indicator">{{current+1}}/{{ length }}</div>
+    </van-swipe>
+  </div>
       <div class="shop_info">
         <div class="shop_info_tit">
           <p>{{dataObject.productName}}</p>
@@ -55,9 +62,15 @@
               <van-rate v-model="productCommentList.commentScore" readonly />
             </div>
           </div>
-          <div class="use_cont">productCommentList.commentContent</div>
+          <div class="use_cont">{{productCommentList.commentContent}}</div>
           <div class="productimg">
-            <img :src="i" alt="" class="Commentimg" v-for="i in productCommentList.commentImages" :key="i">
+            <img
+              :src="i"
+              alt
+              class="Commentimg"
+              v-for="i in productCommentList.commentImages"
+              :key="i"
+            />
           </div>
         </div>
         <div class="shop_info_details">
@@ -65,11 +78,10 @@
           <div class="zi">
             <p>{{dataObject.content}}</p>
           </div>
-          <div class="shop_img">
-            <iframe :src="dataObject.url" frameborder="0"></iframe>
-          </div>
+          <div class="shop_img"></div>
         </div>
       </div>
+      <iframe :src="dataObject.url" frameborder="0" class="shopendmore" scrolling="no"></iframe>
     </van-pull-refresh>
     <van-popup
       v-model="show"
@@ -78,7 +90,6 @@
       :style="{ height: '70%' }"
       :close-on-click-overlay="jin"
     >
-    
       <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy"></Addshop>
       <Youcard @closec="FUC" v-if="see_card" :list="YuhuiCar"></Youcard>
       <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
@@ -88,13 +99,13 @@
     <!-- 加入购物车 -->
     <div class="buy">
       <div class="buy_left">
-        <router-link to="" @click="Route">
+        <router-link to @click="Route">
           <span class="icon_car"></span>
           <p>购物车</p>
         </router-link>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/shangpinxiangqing-shoucang.png" v-if="addshou" />
+            <img src="/static/icon/shangpinxiangqing-shoucang.png" v-if="!addshou" />
             <img src="/static/icon/wodeshoucang.png" v-else />
           </div>
           <p>收藏</p>
@@ -111,15 +122,17 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
-import De from "./../../components/public/banner";
+import { pathway } from "@/mixins/img";
+// import De from "./../../components/public/banner";
 import Addshop from "./addshop";
 import Youcard from "./youhuicard";
 import Canshu from "./canshu";
 export default {
   data() {
     return {
-      imgurl:pathway.imgurl,
+      length:0,
+       current:0,
+      imgurl: pathway.imgurl,
       jin: false,
       value: 5,
       show: false,
@@ -135,14 +148,15 @@ export default {
       productParam: {},
       skuList: [],
       productCommentList: {},
-      YuhuiCar:[],
-      CurrentCard:{},
-      // 
+      YuhuiCar: [],
+      CurrentCard: {},
+      uid: ""
+      //
     };
   },
   //监听属性 类似于data概念
   computed: {
-    store(){
+    store() {
       return this.$store.state;
     }
   },
@@ -150,7 +164,6 @@ export default {
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
-    De,
     Addshop,
     Youcard,
     Canshu
@@ -158,20 +171,20 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // 商品id
-    // this.ShopConent
-    this.id =this.store.Shop.productid;
-    this.uid =this.$store.state.Use.uid;
-   this.uid='1'
+    this.id = this.store.Shop.productid;
+    // this.uid = this.$store.state.Use.uid;
+    this.uid = "1";
     console.log(this.id);
     let parmas1 = {
       cmd: "productDetail",
-      productid:this.id,
-      uid: "1"
+      productid: this.id,
+      uid: this.uid
     };
     this.postRequest(parmas1).then(res => {
       if (res.data.result == 0) {
         console.log(res);
         this.dataObject = res.data.dataObject;
+        this.length=res.data.dataObject.productImages.length;
         // 规格
         this.productParam = res.data.productParam;
         //库存
@@ -187,18 +200,18 @@ export default {
     };
     this.postRequest(parmas2).then(res => {
       if (res.data.result == 0) {
-        console.log(res);
-        this.productCommentList=res.data.dataList[0];
+        // console.log(res);
+        this.productCommentList = res.data.dataList[0];
       }
     });
-       let parmas3 = {
+    let parmas3 = {
       cmd: "couponList"
     };
     this.postRequest(parmas3).then(res => {
       if (res.data.result == 0) {
         // console.log(res);
         this.YuhuiCar = res.data.dataList;
-       this.CurrentCard=this.YuhuiCar[0]
+        this.CurrentCard = this.YuhuiCar[0];
       }
     });
   },
@@ -206,6 +219,9 @@ export default {
   mounted() {},
   //方法集合
   methods: {
+     Onchange(index){
+      this.current=index;
+    },
     see(ind) {
       this.show = true;
       switch (ind) {
@@ -222,7 +238,7 @@ export default {
           this.add_car = true;
           this.buy = false;
           break;
-          // 立即购买
+        // 立即购买
         case 3:
           this.add_car = true;
           this.buy = true;
@@ -233,8 +249,8 @@ export default {
     GetInShou() {
       let parmas = {
         cmd: "collectProduct",
-        productid: "db68be303f824bbab261b51b33e842c1",
-        uid: "1"
+        productid: this.id,
+        uid: this.uid
       };
       this.postRequest(parmas).then(res => {
         console.log(res);
@@ -263,11 +279,11 @@ export default {
         this.isLoading = false;
       }, 500);
     },
-    Route(){
-      console.log(1)
-      this.$store.commit('ChangeTabar',2)
-      this.$router.push('/shopcar');
-    },
+    Route() {
+      console.log(1);
+      this.$store.commit("ChangeTabar", 2);
+      this.$router.push("/shopcar");
+    }
     // GtoBuy(){
     //   this.$store.commit('ChooseBuy',)
     // }
@@ -292,8 +308,32 @@ export default {
 /deep/ .van-rate__icon {
   font-size: 0.1rem;
 }
-.productimg{ display: flex;align-items: center;}
-.Commentimg{width: .8rem;height: auto;margin-right: .1rem;}
+.banner {
+  margin-top: 0.5rem;
+  position: relative;
+  .custom_indicator{
+    position: absolute;
+    right: .15rem;
+    bottom: .07rem;
+    width: .5rem;
+    height: .21rem;
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    font-size: .15rem;
+    border-radius: .11rem;
+    text-align: center;
+    line-height: .21rem;
+  }
+}
+.productimg {
+  display: flex;
+  align-items: center;
+}
+.Commentimg {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.1rem;
+}
 em {
   width: 0.07rem;
   height: 0.14rem;
@@ -441,13 +481,6 @@ em {
       }
       .shop_img {
         width: 100%;
-        // height: 0.8rem;
-        // background: #ed670d;
-        iframe{
-          width: 100%;
-          border: none;
-          box-sizing: border-box;
-        }
       }
     }
   }
@@ -533,5 +566,8 @@ em {
 }
 .no_con {
   height: 0.6rem;
+}
+.shopendmore {
+  width: 100%;
 }
 </style>

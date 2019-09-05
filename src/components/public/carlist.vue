@@ -1,19 +1,19 @@
 <template>
   <div class="container">
     <!-- <van-cell :border="false"> -->
-    <ul v-if="length!=0">
-      <li v-for="(item,index) in list" :key="index" class="carlist">
+    <ul v-if="store.length!=0">
+      <li v-for="(item,index) in store" :key="index" class="carlist">
         <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
           <div class="carlist_info" :class="{'bg':ishow}">
             <div class="car_s" @click="changech(index)" v-show="ishow">
-              <img src="/static/icon/gouwuche-weixuanzhong.png" v-show="check[index]" />
-              <img src="/static/icon/gouwuche-xuanzhong.png" v-show="!check[index]" />
+              <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="check[index]" />
+              <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
             </div>
             <div class="car_img">
               <img :src="item.image" />
             </div>
             <div class="car_info">
-              <p class="car_con">{{item.productName}}</p>
+              <p class="car_con"  @click="GetOrderDetails(item)">{{item.productName}}</p>
               <div class="sum_tot">
                 <span class="price">
                   ￥
@@ -67,7 +67,7 @@ export default {
   props: ["ishow", "list"],
   data() {
     return {
-      AllLen:0,
+      AllLen: 0,
       length: 0,
       LftW: 0,
       check: [],
@@ -75,23 +75,38 @@ export default {
       value: [],
       RightW: 58,
       totalPrice: 0,
-      allchecked: true
+      allchecked: true,
+      arry: this.store
     };
   },
   //监听属性 类似于data概念
   computed: {
+    store() {
+      return this.$store.state.carinfo;
+    }
   },
   //监控data中的数据变化
-  watch: {},
+  watch: {
+  },
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.AllLen=this.list.length;
-    for (let i in this.AllLen) {
+   
+   
+    console.log(this.store);
+    this.AllLen = this.store.length;
+    setTimeout(()=>{
+       this.value = [];
+        this.check=[];
+      this.store.forEach(item => {
       this.check.push(true);
-      this.value.push(this.list[i].count);
-    }
+      this.value.push(item.count);
+    });
+    console.log(this.value, "value");
+    // console.log(this.check, "check");
+    },100)
+   
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -99,7 +114,9 @@ export default {
   methods: {
     changech(ind) {
       //   事件不触发   先添加 在删除触发
+      console.log(ind);
       this.check.push(0), this.check.pop();
+      console.log(this.check[ind]);
       this.check[ind] = !this.check[ind];
       this.sub();
       if (!this.check[ind]) {
@@ -124,18 +141,18 @@ export default {
           Dialog.confirm({
             message: "确定删除吗？"
           }).then(() => {
-            // instance.close();
-            let parmas = { cmd: "delCart", uid: "1", cartid: "" };
+            console.log(index);
+            let parmas = { cmd: "delCart", uid: this.uid, cartid: "" };
           });
           break;
       }
     },
     sub() {
       this.totalPrice = 0;
-      if ((this.AllLen!= 0)) {
+      if (this.AllLen!= 0) {
         for (let i = 0; i < this.AllLen; i++) {
           if (!this.check[i]) {
-            this.totalPrice += this.value[i] * this.list.price[i];
+            this.totalPrice += this.value[i] * this.store[i].price;
           }
         }
       }
@@ -153,6 +170,10 @@ export default {
       this.sub();
     },
     gotopay() {
+       this.check.forEach(item,index=>{
+         if(!item){
+         }
+       })
       // this.$router.push("/success");
       let parmas = {
         cmd: "addCartOrder",
@@ -167,6 +188,11 @@ export default {
       this.postRequest(parmas).then(res => {
         console.log(res);
       });
+    },
+    GetOrderDetails(item) {
+      this.$store.commit("Shop", item);
+      console.log(item);
+      this.$router.push("/shopdetails");
     }
   },
   //生命周期 - 创建之前

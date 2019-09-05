@@ -2,10 +2,12 @@
   <div class="order_de bg_c">
     <div class="order_de_info">
       <div class="tit bg_wh ft_mid pad mg_bot">等待买家付款</div>
-       <div class="de_zhi pad bg_wh">
+      <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="store.useAddres!=''">
-          <p class="ft_mid">收货人：{{store.useAddres.name}}&nbsp; &nbsp; &nbsp;{{store.useAddres.phone}}</p>
+        <div class="info col_mix no_use" v-if="store.useAddres.name">
+          <p
+            class="ft_mid"
+          >收货人：{{store.useAddres.name}}&nbsp; &nbsp; &nbsp;{{store.useAddres.phone}}</p>
           <p class="ft_mix">收货地址：{{store.useAddres.address}}{{store.useAddres.detail}}</p>
         </div>
         <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
@@ -20,14 +22,14 @@
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
-        <input class="pad_l" type="text"  placeholder="给买家留言（选填）" />
+        <input class="pad_l" type="text" placeholder="给买家留言（选填）" />
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot clearfix">
         <div class="fr">
           <span>共{{productSkuid.conut}}件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
           <span>
             合计:
-            <i class="col_max">￥{{total}}</i>
+            <i class="col_max">￥{{shoptotal}}</i>
           </span>
         </div>
       </div>
@@ -36,7 +38,7 @@
           <span class="ft_mid">商品总价</span>
           <span class="ft_cmix">
             ￥
-            <i>219.00</i>
+            <i>{{shoptotal}}</i>
           </span>
         </li>
         <li class="col_mid">
@@ -46,34 +48,34 @@
             <i>{{Freight}}</i>
           </span>
         </li>
-        <li class="col_mid">
+        <!-- <li class="col_mid" >
           <span class="ft_mid">优惠卷抵扣</span>
           <span class="ft_cmix">
             -￥
-            <i>5.00</i>
+            <i>{{}}</i>
           </span>
-        </li>
+        </li> -->
         <li class="col_mid">
           <span class="ft_mid">实际支付</span>
           <span class="ft_cmix col_max">
             ￥
-            <i>214.00</i>
+            <i>{{total}}</i>
           </span>
         </li>
       </ul>
       <div class="tit bg_wh ft_mid pad mg_top">订单信息</div>
-      <div class="tit bg_wh ft_mid pad mg_top d_flex"  @click="changej(0)">
+      <div class="tit bg_wh ft_mid pad mg_top d_flex" @click="changej(0)">
         <span>可使用优惠卷</span>
         <i class="more_j"></i>
       </div>
 
       <ul class="de_info bg_wh">
         <li class="col_mid">
-          <span class="ft_mid">订单编号：27900219</span>
+          <span class="ft_mid">订单编号：{{orderid}}</span>
           <span class="ft_cmix">复制</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid">创建时间：2019.07.01 11:27:21</span>
+          <span class="ft_mid">创建时间：{{time}}</span>
         </li>
       </ul>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">配送方式</div>
@@ -107,13 +109,13 @@
       <!-- 底部 -->
       <!-- <div class="end bg_wh" v-if="direct==1">
         <btn :come="num"></btn>
-      </div> -->
+      </div>-->
       <div class="end bg_wh">
         <div class="ok bo_top ft_max">
-          <span class="bg_g col_wh ft_mid sub">提交订单</span>
+          <span class="bg_g col_wh ft_mid sub" @click="SubOrder">提交订单</span>
           <span class="col_mix lin_h">
             实付:
-            <i class="col_max">￥219</i>
+            <i class="col_max">￥{{total}}</i>
           </span>
         </div>
       </div>
@@ -128,7 +130,13 @@
         <van-radio-group v-model="radioYouhui" v-if="direct==0">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
-            <van-cell  clickable @click="radioYouhui = '1'" v-for="(item,index) in CanuseCard" :key="index">{{item.couponAmount}}
+            <van-cell
+              clickable
+              @click="radioYouhui = '1'"
+              v-for="(item,index) in CanuseCard"
+              :key="index"
+            >
+                满{{item.couponPrice}}元减 {{item.couponAmount}}
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
@@ -155,51 +163,75 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import deZhi from "./adderss";
-import Info from "./../order/child/carIfo";
+import Info from "./orderInfo";
 import btn from "./../order/child/btn";
 
 export default {
   data() {
     return {
-      no_use_dizhi:false,
+      no_use_dizhi: false,
       isaddress: true,
       // 禁止点击遮罩层
       jin: false,
-      direct:0,
-      radioYouhui: "1",
-      radioPay: "1",
+      direct: 0,
+      radioYouhui: 1,
+      radioPay: 1,
       num: "0",
       show_juan: false,
       goHome: false,
       goCrd: true,
       //订单编号
-      orderid: "",
+      orderid:'',
       //配送费
       Freight: 10,
       uid: "",
-      productObject:{},
-      productSkuid:{},
+      productObject: {},
+      productSkuid: {},
       // 可用优惠券
-      CanuseCard:[],
-      time:null
-      
+      CanuseCard: [],
+      time: ''
     };
   },
   //监听属性 类似于data概念
   computed: {
-    store(){
-      return this.$store.state
+    store() {
+      return this.$store.state;
     },
-    total(){
-      let price=parseInt(this.productSkuid.shop.skuPrice);
-      let num=parseInt(this.productSkuid.count);
+    total() {
+      let price = parseInt(this.productSkuid.shop.skuPrice);
+      let num = parseInt(this.productSkuid.conut);
+      let fight=parseInt(this.Freight);
+      let allprice=price * num+fight;
+      //  if(allprice>this.CanuseCard[this.radioYouhui].couponPrice){
+      //    return allprice-this.CanuseCard[this.radioYouhui].couponPrice
+      //  }else{
+          return allprice;
+      //  }
+      
+    },
+    //  isYouhui(){
+    //   let price = parseInt(this.productSkuid.shop.skuPrice);
+    //   let num = parseInt(this.productSkuid.conut);
+    //   let fight=parseInt(this.Freight);
+    //   let allprice=price * num+fight;
+    //    if(allprice>this.CanuseCard[this.radioYouhui].couponPrice){
+    //      return true
+    //    }else{
+    //       return false;
+    //    }
+    //  },
+     shoptotal() {
 
-      return Number(price*num+Number(this.Freight)); 
+      let price = parseInt(this.productSkuid.shop.skuPrice);
+      let num = parseInt(this.productSkuid.conut);
+      let allprice =price * num;
+     
+
+      return (price * num);
     },
-    Check(){
-      return index+1;
+    Check() {
+      return index + 1;
     }
-    
   },
   //监控data中的数据变化
   watch: {},
@@ -212,18 +244,28 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid = "1";
-      this.productObject=this.store.Shop;
-      this.productSkuid=this.store.Buy;
-      console.log(this.store.Shop,this.productSkuid)
+    this.productObject = this.store.Shop;
+    this.productSkuid = this.store.Buy;
+    console.log( this.productSkuid);
+  
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
       // console.log(res);
       this.Freight = res.data.amount;
     });
+      let parmas2 = { cmd: "myCouponList", uid: "1" };
+      this.postRequest(parmas2).then(res => {
+        console.log(res);
+        this.CanuseCard = res.data.dataList;
+      });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    console.log(this.$store.state.useAddres)
+    this.orderid=new Date().getTime()+ parseInt(Math.random()*1000);
+    this.time=  this.formtime();
+  },
+  filters:{
+   
   },
   //方法集合
   methods: {
@@ -231,7 +273,7 @@ export default {
       this.show_juan = true;
       switch (num) {
         case 0:
-        //可用优惠券
+          //可用优惠券
           this.direct = 0;
           this.GetMyCard();
           break;
@@ -250,15 +292,32 @@ export default {
           this.goCrd = false;
       }
     },
-    goto(){
-      this.$router.push('/editaddress');
+    goto() {
+      this.$router.push("/editaddress");
     },
-    GetMyCard(){
-      let parmas={cmd:"myCouponList",uid:"1"};
-      this.postRequest(parmas).then(res=>{
-        console.log(res);
-        this.CanuseCard=res.data.dataList;
-      })
+    GetMyCard() {
+    
+    },
+     formtime(){
+       let val=new Date();
+        let Y=val.getFullYear();
+        let M=val.getMonth()+1;
+        let D=val.getDate();
+        let HH=val.getHours();
+        let MM=val.getMinutes();
+        let SS=val.getSeconds();
+        M<10?M="0"+M:M;
+        D<10?D="0"+D:D;
+        HH<10?HH="0"+HH:HH;
+        MM<10?MM="0"+MM:MM;
+        SS<10?SS="0"+SS:SS;
+      return Y+'-'+M+'-'+D+'  '+HH+':'+MM+':'+SS
+        
+    },
+    SubOrder(){
+      if(this.store.useAddres.name==''){
+        this.$toast('请添加收货地址');
+      }
     }
   },
   //生命周期 - 创建之前
@@ -278,27 +337,27 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
- .de_zhi {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 0.79rem;
- .pos {
-      width: 0.2rem;
-      height: 0.2rem;
-      background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.14rem;
-    }
-      .back {
-      display: block;
-      width: 0.1rem;
-      height: 0.17rem;
-      background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
-      background-size: 100% 100%;
-    }
- }
+.de_zhi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.79rem;
+  .pos {
+    width: 0.2rem;
+    height: 0.2rem;
+    background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
+    background-size: 100% 100%;
+    display: block;
+    margin-right: 0.14rem;
+  }
+  .back {
+    display: block;
+    width: 0.1rem;
+    height: 0.17rem;
+    background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
+    background-size: 100% 100%;
+  }
+}
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;
@@ -354,7 +413,9 @@ export default {
       align-items: center;
       line-height: 0.27rem;
     }
-    p{padding-right: .15rem;}
+    p {
+      padding-right: 0.15rem;
+    }
   }
 
   .no_more {

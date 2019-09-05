@@ -1,7 +1,8 @@
 <template>
   <div class="order_mo">
-    <div class="order_con" v-for="(item,index) in arry" :key="index" @click="LookDetails(item)">
-      <div class="order_tit">
+    <div class="order_con" v-for="(item,index) in arry" :key="index" >
+      <div @click="LookDetails(item)">
+           <div class="order_tit" >
         <span>
           订单编号：
           <i>{{item.orderid}}</i>
@@ -9,6 +10,8 @@
         <em>待付款</em>
       </div>
       <Info :list="item.orderItem"></Info>
+      </div>
+     
       <div class="order_tot">共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="one" @click="delOrder">取消订单</span>

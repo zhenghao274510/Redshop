@@ -103,11 +103,11 @@ export default {
         console.log(FMadd);
         if (FMadd) {
           this.address =
-            FMadd.addressComponent.province +
-            FMadd.addressComponent.city +
-            FMadd.addressComponent.district;
-          this.detail = FMadd.formattedAddress.slice(this.address.length);
-          this.addressId = FMadd.addressComponent.citycode;
+            FMadd.regeocode.addressComponent.province +
+            FMadd.regeocode.addressComponent.city +
+            FMadd.regeocode.addressComponent.district;
+          this.detail = FMadd.regeocode.formattedAddress.slice(this.address.length);
+          this.addressId = FMadd.regeocode.addressComponent.citycode;
         }
       }, 5000);
     }

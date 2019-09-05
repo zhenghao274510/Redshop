@@ -5,10 +5,10 @@
       <div class="us_info">
         <div class="us_info_all">
           <div class="us_photo">
-            <img src="/static/test/bg.png" />
+            <img :src="useInfo.icon" />
             <div class="us_con">
-              <p class="us_name">昵称</p>
-              <p class="us_self">个性签名</p>
+              <p class="us_name">{{useInfo.name}}</p>
+              <p class="us_self">{{}}</p>
             </div>
           </div>
         </div>
@@ -106,7 +106,10 @@
 
 export default {
   data() {
-    return {};
+    return {
+      uid:'',
+      useInfo:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -118,10 +121,12 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     // this.id =this.$route.query.id;
-    let params={cmd:'firstPage'}
+    //  this.uid=this.$store.state.Use.uid;
+     this.uid="1";
+    let params={cmd:'userInfo',uid:this.uid};
     this.postRequest(params).then(res=>{
          console.log(res)
+         this.useInfo=res.data.dataObject;
     })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
