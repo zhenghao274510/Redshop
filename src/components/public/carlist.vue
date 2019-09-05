@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <!-- <van-cell :border="false"> -->
-    <ul v-if="store.length!=0">
+    <ul>
       <li v-for="(item,index) in store" :key="index" class="carlist">
-        <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
+        <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
           <div class="carlist_info" :class="{'bg':ishow}">
             <div class="car_s" @click="changech(index)" v-show="ishow">
               <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="check[index]" />
@@ -35,7 +35,7 @@
 
     <!-- </van-cell> -->
     <!-- 底部显示 -->
-    <div v-else class="nothing">购物车还是空的哟！</div>
+    <div  class="nothing">购物车还是空的哟！</div>
     <div class="all_chose">
       <div class="all_left">
         <div class="all_s" @click="choseall">
@@ -76,7 +76,8 @@ export default {
       RightW: 58,
       totalPrice: 0,
       allchecked: true,
-      arry: this.store
+      arry: this.store,
+      carid:''
     };
   },
   //监听属性 类似于data概念
@@ -130,7 +131,7 @@ export default {
       }
     },
 
-    onClose(clickPosition, instance) {
+    onClose(clickPosition, instance,name) {
       switch (clickPosition) {
         case "left":
         case "cell":
@@ -141,8 +142,14 @@ export default {
           Dialog.confirm({
             message: "确定删除吗？"
           }).then(() => {
-            console.log(index);
-            let parmas = { cmd: "delCart", uid: this.uid, cartid: "" };
+            console.log(name.name);
+          
+            let parmas = { cmd: "delCart", uid: this.uid, cartid: this.list[name.name].cartid };
+            this.postRequest(parmas).then(res=>{
+              if(res.data.result==0)
+              this.list.splice(name.name);
+              this.$toast(res.data.resultNote);
+            })
           });
           break;
       }

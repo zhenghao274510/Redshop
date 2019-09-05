@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/vuex/vuex'
 import {
   Toast
 } from 'vant';
@@ -52,6 +53,11 @@ export default {
     // },
     //  数据请求
     postRequest(data = {}, method = 'post') {
+      store.state.isLoading=true;
+      // Toast.loading({
+      //   mask: true,
+      //   message: '加载中...'
+      // });
       return new Promise((resolve, reject) => {
         axios({
             url: encodeURI("http://192.168.3.254:8090/wineshop/api/service?json=" + JSON.stringify(data)),
@@ -62,7 +68,8 @@ export default {
 
           })
           .then(res => {
-            Toast.clear();
+            store.state.isLoading=false;
+            // Toast.clear();
             //成功
             if (res.data.result == '0') {
               resolve(res)
@@ -79,6 +86,7 @@ export default {
             //失败
             // reject(res)
             Toast('请求超时！')
+          
           })
       })
     },

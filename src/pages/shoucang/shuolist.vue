@@ -2,7 +2,7 @@
   <ul class="container">
     <!-- <van-cell :border="false"> -->
     <li v-for="(item,index) in list" :key="index" class="carlist">
-      <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose">
+      <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
         <div class="carlist_info" :class="{'bg':ishow}">
           <div class="car_img">
             <img :src="item.productImage" />

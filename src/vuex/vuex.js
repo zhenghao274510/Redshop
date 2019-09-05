@@ -22,7 +22,8 @@ const store = new Vuex.Store({
     orderDetails: {},
     ShopPingJia:[],
     gifCradInfo:{},
-    gifCradDetails:[]
+    gifCradDetails:[],
+    isLoading:true
   },
   mutations: {
     //修改tarba
