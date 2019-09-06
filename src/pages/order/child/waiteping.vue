@@ -14,7 +14,7 @@
      
       <div
         class="order_tot"
-      >共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
+      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="two" @click="goto(item)">去评价</span>
       </div>
@@ -63,8 +63,9 @@ export default {
         console.log(this.dataList, typeof this.list);
 
         this.dataList.forEach(item => {
-          let e = parseInt(item.status);
-          if (e == 4) {
+          let e = item.status;
+          let p=item.isComment;
+          if (e == 3&&p==0) {
             this.arry.push(item);
           }
         });
@@ -75,25 +76,13 @@ export default {
   //方法集合
   methods: {
     goto(e) {
-      this.$store.commit('addPingJia',e);
-      this.$router.push("/addpingjia");
+      // this.$store.commit('addPingJia',e);
+    this.$router.push({path:'/addpingjia',query:{orderid:e.orderid}});
     },
-    shou_huo() {
-      Dialog.confirm({
-        title: "确认收货成功",
-        message: "赶快去评论一下~"
-      })
-        .then(() => {
-          this.$router.push("/addpingjia");
-        })
-        .catch(() => {
-          // on cancel
-        });
-    },
+  
     LookDetails(e) {
-      console.log(e);
-      this.$store.commit("orderDetails", e);
-      this.$router.push("/orderdetails");
+      console.log(e.orderid);
+      this.$router.push({path:'/orderdetails',query:{orderid:e.orderid}});
     }
   },
   //生命周期 - 创建之前
@@ -116,7 +105,7 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
-  margin-top: 0.1rem;
+  margin-top: 0.5rem;
   .order_con {
     // font-size: 0;
     margin-bottom: 0.1rem;

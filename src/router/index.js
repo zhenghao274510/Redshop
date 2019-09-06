@@ -6,7 +6,7 @@ export default new Router({
   mode: "hash",
   routes: [{
       path: '/',
-     redirect:'/author'
+     redirect:'/home'
     },
     // 首页
     {

@@ -19,7 +19,7 @@
       <Info :list="item.orderItem"></Info>
       </div>
      
-      <div class="order_tot">共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
+      <div class="order_tot">共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="one" @click="opcatiy">申请退换</span>
       </div>
@@ -71,7 +71,7 @@ export default {
        
         this.dataList.forEach(item=>{
           let e=parseInt(item.status);
-            if(e==2){
+            if(e==1){
                this.arry.push(item);
             }
         })
@@ -95,9 +95,7 @@ export default {
         });
     },
       LookDetails(e){
-        console.log(e)
-      this.$store.commit('orderDetails',e);
-      this.$router.push('/orderdetails');
+  this.$router.push({path:'/orderdetails',query:{orderid:e.orderid}});
     }
   },
   //生命周期 - 创建之前

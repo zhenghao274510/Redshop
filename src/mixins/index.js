@@ -60,7 +60,7 @@ export default {
       // });
       return new Promise((resolve, reject) => {
         axios({
-            url: encodeURI("http://192.168.3.254:8090/wineshop/api/service?json=" + JSON.stringify(data)),
+            url: encodeURI("http://192.168.3.254:8099/wineshop/api/service?json=" + JSON.stringify(data)),
             method: method,
             headers: {
               'Content-Type': 'application/json'
@@ -156,27 +156,7 @@ export default {
 
   },
 
-  // 图片上传
-  postFile(url, data = {}, method = 'post') {
-    return new Promise((resolve, reject) => {
-      axios({
-          url: 'http://192.168.3.254:8099/wineshop/' + url,
-          method: method,
-          data: data,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => {
-          //成功
-          resolve(res)
-        })
-        .catch(res => {
-          //失败
-          reject(res)
-        })
-    })
-  },
+ 
   GetQueryString(name) {
     var url = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var newUrl = window.location.search.substr(1).match(url);

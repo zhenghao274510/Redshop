@@ -170,7 +170,7 @@ export default {
       //  获取优惠券
       // this.uid=this.$store.state.Use.uid;
       this.uid = "1";
-      this.$toast('获取中');
+      this.$toast("获取中");
       let parmas = {
         cmd: "newCoupon",
         uid: this.uid,
@@ -178,20 +178,23 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {
-          this.isGet=false;
-          localStorage.setItem("first", '');
+          this.isGet = false;
+          localStorage.setItem("first", "");
         }
       });
     },
     //  首页 获取焦点 跳转
     focus() {
+      console.log(111);
       this.$refs.input.addEventListener("focus", () => {
         this.$router.push("/shoplist");
       });
     },
     GoTO(e) {
-      this.$store.commit("ChooseShop", e);
-      this.$router.push({ path: "/shopdetails" });
+      this.$router.push({
+        path: "/shopdetails",
+        query: { productid: e.productid }
+      });
     }
   },
   //生命周期 - 创建之前

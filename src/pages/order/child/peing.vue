@@ -14,9 +14,9 @@
 
       <div
         class="order_tot"
-      >共{{item.orerItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
+      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
-        <span class="two" @click="shou_huo">确认收货</span>
+        <span class="two" @click="shou_huo(item)">确认收货</span>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false" />
@@ -73,16 +73,13 @@ export default {
   },
   //方法集合
   methods: {
-    goto() {
-      this.$router.push("/addpingjia");
-    },
-    shou_huo() {
+    shou_huo(e) {
       Dialog.confirm({
         title: "确认收货成功",
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push("/addpingjia");
+          this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
         })
         .catch(() => {
           // on cancel
@@ -90,8 +87,8 @@ export default {
     },
     LookDetails(e) {
       console.log(e);
-      this.$store.commit("orderDetails", e);
-      this.$router.push('/orderdetails');
+     this.$router.push({path:'/orderdetails',query:{orderid:e.orderid}});
+      // this.$router.push('/orderdetails');
     }
   },
   //生命周期 - 创建之前

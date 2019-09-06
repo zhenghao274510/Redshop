@@ -1,12 +1,12 @@
 <template>
   <ul class="order_info bg_wh" >
     <!-- 订单详情购物车信息 -->
-    <li v-for="(item,index) in store" :key="index">
+    <li v-for="(item,index) in list" :key="index">
       <router-link to="">
         <img :src="imgurl+item.productImage" alt />
         <div class="info_name">
-          <p class="info_top">{{item.productName}}</p>
-          <p class="info_bot">{{item.productSkuName}}</p>
+          <p class="info_top txt-cut">{{item.productName}}</p>
+          <p class="info_bot txt-cut">{{item.productSkuName}}</p>
         </div>
         <div class="info_price">
           <p>

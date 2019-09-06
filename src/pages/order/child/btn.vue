@@ -1,25 +1,24 @@
 <template>
-<div>
-
-  <div class="order_zhuang">
-    <span class="one" v-if="come=='1'">取消订单</span>
-    <span class="two" v-if="come=='1'">去支付</span>
-    <span class="one" v-if="come=='2'">申请退换</span>
-    <span class="two" v-if="come=='3'" @click="shou_huo">确认收货</span>
-    <span class="two" v-if="come=='4'" @click="goto">去评价</span>
+  <div>
+    <div class="order_zhuang">
+      <span class="one" v-if="come=='1'">取消订单</span>
+      <span class="two" v-if="come=='1'">去支付</span>
+      <span class="one" v-if="come=='2'">申请退换</span>
+      <span class="two" v-if="come=='3'" @click="shou_huo">确认收货</span>
+      <span class="two" v-if="come=='4'" @click="goto">去评价</span>
+    </div>
+    <van-overlay :show="show" @click="show = false" />
   </div>
-   <van-overlay :show="show" @click="show = false" />
-</div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {Dialog} from 'vant'
+import { Dialog } from "vant";
 export default {
   props: ["come"],
   data() {
     return {
-      show:false
+      show: false
     };
   },
   //监听属性 类似于data概念
@@ -34,7 +33,7 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-      goto() {
+    goto() {
       this.$router.push("/addpingjia");
     },
     shou_huo() {
@@ -43,7 +42,7 @@ export default {
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push('/addpingjia');
+          this.$router.push("/addpingjia");
         })
         .catch(() => {
           // on cancel

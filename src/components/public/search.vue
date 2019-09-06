@@ -2,9 +2,9 @@
   <div class="sear">
     <div>
       <span></span>
-      <input type="text" placeholder="输入关键词搜索" name="search" v-model="KeyWord" ref="input"  />
+      <input type="text" placeholder="输入关键词搜索" name="search" v-model="keywords" ref="input"  />
     </div>
-    <span class="btn" @click="star">搜索</span>
+    <span class="btn" @click.prevent="star">搜索</span>
   </div>
 </template>
 
@@ -14,7 +14,7 @@
 export default {
   data() {
     return {
-      KeyWord: ""
+      keywords: ""
     };
   },
   //监听属性 类似于data概念
@@ -34,7 +34,6 @@ export default {
   methods: {
     // 搜索商品
     star() {
-      this.keywords="白酒";
       let parmas = {
         cmd: "searchProduct",
         keywords: this.keywords,
@@ -42,7 +41,7 @@ export default {
         pageCount: "10"
       };
       this.postRequest(parmas).then(res => {
-        console.log(res.data.dataList);
+        console.log(res);
         this.$emit('SearStar',res.data.dataList);
 
       });

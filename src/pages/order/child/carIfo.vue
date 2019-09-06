@@ -10,8 +10,7 @@
         </div>
         <div class="info_price">
           <p>
-            ￥
-            <span>{{item.productPrice}}</span>
+            ￥{{item.productPrice}}
           </p>
           <p>
             ×
@@ -121,12 +120,14 @@ export default {
           }
           .info_name {
             display: flex;
-            flex: 3;
+            // flex: 1;
             flex-direction: column;
             text-align: left;
             .info_top {
               font-size: 0.14rem;
               color: #333333;
+              // width: 100%;
+              // flex: 1;
             }
             .info_bot {
               font-size: 0.12rem;

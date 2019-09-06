@@ -1,7 +1,7 @@
 <template>
   <div class="add_ping">
     <ul class="add_inf">
-      <li v-for="(item,index) in 1" :key="index">
+      <li v-for="(item,index) in dataList" :key="index">
         <div class="carlist_info">
           <div class="car_img">
             <img :src="item.productImage" />
@@ -13,7 +13,7 @@
                 ￥
                 <i>{{item.productPrice}}</i>
               </span>
-              <span class="price" style="color:#333333">x 1</span>
+              <span class="price" style="color:#333333">x {{item.productCount}}</span>
             </div>
           </div>
         </div>
@@ -25,7 +25,7 @@
           <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）" v-model="content"></textarea>
           <div class="add_con">
             <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
-              <img :src="item" alt />
+              <img :src="imgurl+item" alt />
             </div>
             <div class="add_img" @click="show=true" v-if="imgs.length!=3">
               <input type="file" class="upfile" @change="Upfiles" />
@@ -38,7 +38,7 @@
     </ul>
 
     <div class="end">
-      <input type="button" value="提交" class="btn" @click="getmsg" />
+      <input type="button" value="提交" class="btn" @click.prevent="getmsg" />
     </div>
 
     <!-- <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }">
@@ -51,10 +51,13 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import carInfo from "./../shoucang/shuolist";
+import Up from "@/mixins/upfile";
+import { pathway } from "@/mixins/img";
 export default {
   props: ["list"],
   data() {
     return {
+      imgurl: pathway.imgurl,
       show: false,
       value: 5,
       imgs: [],
@@ -62,7 +65,9 @@ export default {
       dataList: [],
       imgBase64: [],
       productId: "",
-      content: ""
+      content: "",
+      orderid: "",
+      uid: ""
     };
   },
   //监听属性 类似于data概念
@@ -74,55 +79,74 @@ export default {
     carInfo
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.orderid = this.$route.query.orderid;
+    this.uid = "1";
+    console.log(this.orderid);
+    //  this.orderid = "xd2019083009500001";
+    console.log(this.orderid);
+    let parmas = {
+      cmd: "orderDetail",
+      orderid: this.orderid,
+      uid: this.uid
+    };
+    this.postRequest(parmas).then(res => {
+      this.dataList = res.data.dataObject.orderItem;
+    });
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
     getmsg() {
-      this.productId = "bb7258451d5c45b398d35e31bead0b5b";
       if (this.content == "") {
         this.content = "1111";
       }
-      let comment = {
-        productId: this.productId,
-        commentScore: this.value,
-        content: this.content,
-        images: this.imgs
-      };
+      let upimgs;
+      if (this.imgs == 0) {
+        upimgs = "";
+      } else {
+        this.imgs.forEach(item => {
+          upimgs += item + ",";
+        });
+      }
+
+      console.log(upimgs);
+      let comment = [
+        {
+          productId: this.productId,
+          commentScore: this.value,
+          content: this.content,
+          images: upimgs
+        }
+      ];
       let parmas = {
         cmd: "addOrderComment",
-        uid: "1",
-        orderid: "",
+        uid: this.uid,
+        orderid: this.orderid,
         comment: comment
       };
-      this.poatRequest(parmas).then(res => {
+      this.postRequest(parmas).then(res => {
         console.log(res);
       });
     },
     Upfiles() {
-     var _this = this;
+      var _this = this;
       var event = event || window.event;
       var file = event.target.files[0];
-       var img = new FormData();
+      var img = new FormData();
       img.append("file", file);
       console.log(file);
       let reg = /(png|jpg|jpeg|gif)$/; // 上传图片类型
       console.log(reg.test(file.name));
       if (reg.test(file.name)) {
-         
-        var reader = new FileReader();
-        //转base64
-        reader.onload = function(e) {
-          _this.imgs.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
+        Up.postFile("api/uploadFile", img).then(res => {
+          if (res.data.result == 0) {
+            this.$toast("上传成功!");
+            this.imgs.push(res.data.filepath);
+          }
+        });
       }
-
-     
-      this.postFile("api/uploadFile", img).then(res => {
-        console.log(res);
-      });
     },
     delimg(ind) {
       console.log(1);

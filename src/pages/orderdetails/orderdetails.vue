@@ -1,18 +1,21 @@
 <template>
   <div class="order_de bg_c">
     <div class="order_de_info">
-      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='1'">等待买家付款</div>
-      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='4'">您已收货成功，赶快去评价啦~</div>
-      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status=='2'">正在配送中</div>
-       <div class="de_zhi pad bg_wh">
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status==0">等待买家付款</div>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status==1">买家已付款,等待配送中</div>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status==4">您已收货成功，赶快去评价啦~</div>
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="status==3">正在配送中</div>
+      <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
         <div class="info col_mix no_use">
-          <p class="ft_mid">收货人：{{productObject.receiverName}}&nbsp; &nbsp; &nbsp;{{productObject.receiverPhone}}</p>
+          <p
+            class="ft_mid"
+          >收货人：{{productObject.receiverName}}&nbsp; &nbsp; &nbsp;{{productObject.receiverPhone}}</p>
           <p class="ft_mix">收货地址：{{productObject.receiverAddress}}</p>
         </div>
         <i class="back"></i>
       </div>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot" >购物清单</div>
+      <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
       <Info :list="productList"></Info>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
@@ -70,21 +73,24 @@
         <li class="col_mid">
           <span class="ft_mid" v-if="status==5">退款时间：{{productObject.refundDate}}</span>
         </li>
-         <li class="col_mid">
-          <span class="ft_mid" v-if="status!=3 || status==1">配送时间：{{productObject.deliveryDate}}</span>
+        <li class="col_mid">
+          <span class="ft_mid" v-if="status!=3 || status==4">配送时间：{{productObject.deliveryDate}}</span>
         </li>
-         <li class="col_mid">
+        <li class="col_mid">
           <span class="ft_mid" v-if="status==4">收货时间：{{productObject.finishDate}}</span>
         </li>
       </ul>
 
-      <!-- 层高度 -->
-      <!-- <div class="no_more bg_wh mg_top"></div> -->
-
-      <!-- 底部 -->
-      <!-- <div class="end bg_wh" v-if="status==1"> -->
-        <btn :come="status"></btn>
-      <!-- </div> -->
+      <div>
+        <div class="order_zhuang">
+          <span class="one" v-if="status==0">取消订单</span>
+          <span class="two" v-if="status==0">去支付</span>
+          <span class="one" v-if="status==1||status==3">申请退换</span>
+          <span class="two" v-if="status==2" @click="shou_huo">确认收货</span>
+          <span class="two" v-if="status==4" @click="goto">去评价</span>
+        </div>
+        <!-- <van-overlay :show="show" @click="show = false" /> -->
+      </div>
     </div>
   </div>
 </template>
@@ -102,16 +108,16 @@ export default {
       //配送费
       Freight: "",
       uid: "",
-      productObject:{},
-      productList:[],
-      status:0,
-      orderid:''
+      productObject: {},
+      productList: [],
+      status: 0,
+      orderid: ""
     };
   },
   //监听属性 类似于data概念
   computed: {
-    store(){
-      return 
+    store() {
+      return;
     }
   },
   //监控data中的数据变化
@@ -125,22 +131,20 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid = "1";
- this.orderid=this.$store.state.orderDetails.orderid;
-   this.status=this.$store.state.orderDetails.status;
-   console.log(this.status);
-      let parmas = {
-        cmd: "orderDetail",
-        orderid: this.orderid,
-        uid: this.uid
-      };
-      this.postRequest(parmas).then(res => {
-     
-        this.productObject=res.data.dataObject;
-        this.productList=res.data.dataObject.orderItem ;
-           console.log(this.productObject);
-
-      });
- 
+     this.orderid=this.$route.query.orderid;
+    // this.orderid = "xd2019083009500001";
+    console.log(this.orderid);
+    let parmas = {
+      cmd: "orderDetail",
+      orderid: this.orderid,
+      uid: this.uid
+    };
+    this.postRequest(parmas).then(res => {
+      this.status = res.data.dataObject.status;
+      this.productObject = res.data.dataObject;
+      this.productList = res.data.dataObject.orderItem;
+      console.log(res);
+    });
 
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
@@ -151,7 +155,23 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+     goto() {
+      this.$router.push({path:"/addpingjia",query:{orderid:this.orderid}});
+    },
+    shou_huo() {
+      Dialog.confirm({
+        title: "确认收货成功",
+        message: "赶快去评论一下~"
+      })
+        .then(() => {
+          this.$router.push("/addpingjia");
+        })
+        .catch(() => {
+          // on cancel
+        });
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -169,28 +189,30 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
- .de_zhi {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 0.79rem;
- .pos {
-      width: 0.2rem;
-      height: 0.2rem;
-      background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.14rem;
-    }
-      .back {
-      display: block;
-      width: 0.1rem;
-      height: 0.17rem;
-      background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
-      background-size: 100% 100%;
-    }
- }
- .order_de{overflow: auto;}
+.de_zhi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.79rem;
+  .pos {
+    width: 0.2rem;
+    height: 0.2rem;
+    background: url("/static/icon/dingdanxiangqing-dizhi.png") no-repeat;
+    background-size: 100% 100%;
+    display: block;
+    margin-right: 0.14rem;
+  }
+  .back {
+    display: block;
+    width: 0.1rem;
+    height: 0.17rem;
+    background: url("/static/icon/dingdanxiangqing-jiantou.png") no-repeat;
+    background-size: 100% 100%;
+  }
+}
+.order_de {
+  overflow: auto;
+}
 .order_de_info {
   margin-top: 0.5rem;
   height: 100%;
@@ -272,6 +294,31 @@ export default {
         padding: 0.17rem 0.23rem;
       }
     }
+  }
+}
+.order_zhuang {
+  height: 0.5rem;
+  border-top: 0.01rem solid #e5e5e5;
+  padding-right: 0.15rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  span {
+    display: block;
+    width: 0.77rem;
+    height: 0.28rem;
+    line-height: 0.28rem;
+    font-size: 0.15rem;
+    border-radius: 0.05rem;
+    text-align: center;
+  }
+  .one {
+    border: 0.01rem solid #666666;
+  }
+  .two {
+    border: 0.01rem solid #72bb29;
+    color: #72bb29;
+    margin-left: 0.15rem;
   }
 }
 </style>

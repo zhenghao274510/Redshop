@@ -3,7 +3,7 @@
     <!-- <van-cell :border="false"> -->
     <li v-for="(item,index) in list" :key="index" class="carlist">
       <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
-        <div class="carlist_info" :class="{'bg':ishow}">
+        <div class="carlist_info" :class="{'bg':ishow}" @click="GotoDetails(item)">
           <div class="car_img">
             <img :src="item.productImage" />
           </div>
@@ -36,7 +36,7 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-// import { Dialog } from "vant";
+import { Dialog } from "vant";
 export default {
   props: ["ishow",'list'],
   data() {
@@ -45,6 +45,8 @@ export default {
       num: 1,
       pri: 239,
       RightW: 58,
+      uid:'',
+      productid:''
     
     };
   },
@@ -57,14 +59,15 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    
+    //  this.uid=this.$store.state.Use.uid;
+     this.uid="1";
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
 
-    onClose(clickPosition, instance) {
+    onClose(clickPosition, instance,name) {
       switch (clickPosition) {
         case "left":
         case "cell":
@@ -73,15 +76,25 @@ export default {
           break;
         case "right":
           Dialog.confirm({
-            message: "确定删除吗？"
+            message: "确定删除吗？删除后无法无法恢复"
           }).then(() => {
-             let parmas={};
-            instance.close();
+             this.productid=this.list[name.name].productId;
+             let parmas={cmd:'collectProduct',productid:this.productid,uid:this.uid,};
+             this.postRequest(parmas).then(res=>{
+                if(res.data.result==0){
+                  this.$toast('删除成功');
+                  this.list.splice(name.name);
+                }
+             })
+            // instance.close();
           });
           break;
       }
     },
-   
+   GotoDetails(e){
+     console.log(e);
+      this.$router.push({path:"/shopdetails",query:{productid:e.productId}});
+   }
    
   },
   //生命周期 - 创建之前

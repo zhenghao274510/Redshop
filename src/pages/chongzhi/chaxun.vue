@@ -2,7 +2,7 @@
   <div class="box">
     <input type="text" placeholder="请输入卡号" v-model="cardnum" />
     <input type="password" placeholder="请输入密码" v-model="pwd" />
-    <input type="button" value="查询" class="btn" @click="getmsg" />
+    <span   class="btn" @click="getmsg" > 查询</span>
 
     <ul class="result" v-if="dataObject">
   
@@ -61,6 +61,12 @@ export default {
     background-color: #72bb29;
     color: #fff;
     margin-top: 1.2rem;
+    display: block;
+    widows: 100%;
+    height: .44rem;
+    font-size: .14rem;
+    text-align: center;
+    line-height: .44rem;
   }
   .result {
     margin-top: .2rem;

@@ -14,7 +14,28 @@
         <i class="back"></i>
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
-      <Info :item="productSkuid" :obj="productObject"></Info>
+      <!-- 订单详细信息 -->
+      <ul class="order_info bg_wh">
+        <li v-for="(item,index) in productList" :key="index">
+          <router-link to>
+            <img :src="imgurl+item.logo" alt />
+            <div class="info_name">
+              <p class="info_top txt-cut">{{item.title}}</p>
+              <p class="info_bot txt-cut">{{item.skuName}}</p>
+            </div>
+            <div class="info_price">
+              <p>
+                ￥
+                <span>{{item.skuPrice}}</span>
+              </p>
+              <p>
+                ×
+                <span>{{item.count}}</span>
+              </p>
+            </div>
+          </router-link>
+        </li>
+      </ul>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
@@ -26,7 +47,7 @@
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot clearfix">
         <div class="fr">
-          <span>共{{productSkuid.conut}}件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
+          <span>共{{totalcount}}件商品</span> &nbsp;&nbsp;&nbsp;&nbsp;
           <span>
             合计:
             <i class="col_max">￥{{shoptotal}}</i>
@@ -48,36 +69,26 @@
             <i>{{Freight}}</i>
           </span>
         </li>
-        <!-- <li class="col_mid" >
+        <li class="col_mid">
           <span class="ft_mid">优惠卷抵扣</span>
-          <span class="ft_cmix">
+          <span class="ft_cmix" v-if="choseCard!=''">
             -￥
-            <i>{{}}</i>
+            <i>{{choseCard}}</i>
           </span>
-        </li> -->
+        </li>
         <li class="col_mid">
           <span class="ft_mid">实际支付</span>
           <span class="ft_cmix col_max">
             ￥
-            <i>{{total}}</i>
+            <i>{{MinTotalPrice}}</i>
           </span>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top">订单信息</div>
+      <!-- <div class="tit bg_wh ft_mid pad mg_top">订单信息</div> -->
       <div class="tit bg_wh ft_mid pad mg_top d_flex" @click="changej(0)">
         <span>可使用优惠卷</span>
         <i class="more_j"></i>
       </div>
-
-      <ul class="de_info bg_wh">
-        <li class="col_mid">
-          <span class="ft_mid">订单编号：{{orderid}}</span>
-          <span class="ft_cmix">复制</span>
-        </li>
-        <li class="col_mid">
-          <span class="ft_mid">创建时间：{{time}}</span>
-        </li>
-      </ul>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">配送方式</div>
       <ul class="mothed bg_wh">
         <li @click="changeMothed(0)">
@@ -95,30 +106,31 @@
           </div>
         </li>
       </ul>
-      <div class="tit bg_wh ft_mid pad mg_top mg_bot d_flex" @click="changej(1)">
-        <span>支付方式</span>
+      <div class="tit bg_wh ft_mid pad mg_top mg_bot" @click="changej(1)">
         <div class="d_flex">
-          <span>微信支付</span>
-          <i class="more_j"></i>
+          <span>支付方式</span>
+          <div class="d_flex">
+            <span>{{payMothed[radioPay-1]}}</span>
+            <i class="more_j"></i>
+          </div>
+          <!-- <div class="pay_icon">
+              <span></span>
+          </div>-->
         </div>
       </div>
 
-      <!-- 层高度 -->
-      <div class="no_more bg_wh mg_top"></div>
-
-      <!-- 底部 -->
-      <!-- <div class="end bg_wh" v-if="direct==1">
-        <btn :come="num"></btn>
-      </div>-->
+    
       <div class="end bg_wh">
         <div class="ok bo_top ft_max">
           <span class="bg_g col_wh ft_mid sub" @click="SubOrder">提交订单</span>
           <span class="col_mix lin_h">
             实付:
-            <i class="col_max">￥{{total}}</i>
+            <i class="col_max">￥{{MinTotalPrice}}</i>
           </span>
         </div>
       </div>
+        <!-- 层高度 -->
+      <div class="no_more bg_wh mg_top"></div>
       <!-- 优惠卷 -->
       <van-popup
         v-model="show_juan"
@@ -130,24 +142,19 @@
         <van-radio-group v-model="radioYouhui" v-if="direct==0">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
-            <van-cell
-              clickable
-              @click="radioYouhui = '1'"
-              v-for="(item,index) in CanuseCard"
-              :key="index"
-            >
-                满{{item.couponPrice}}元减 {{item.couponAmount}}
-              <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
+            <van-cell clickable v-for="(item,index) in CanuseCard" :key="index" @click="onClick" style="z-index:99;">
+              满{{item.couponPrice}} 减{{item.couponAmount}}元
+              <van-radio slot="right-icon" :name="index+1" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-radio-group v-model="radioPay" v-else>
+        <van-radio-group v-model="radioPay" v-else >
           <van-cell title="请选择支付方式"></van-cell>
           <van-cell-group>
-            <van-cell title="微信支付" clickable @click="radioPay = '1'">
+            <van-cell title="微信支付" clickable >
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
             </van-cell>
-            <van-cell title="充值卡支付" clickable @click="radioPay = '2'">
+            <van-cell title="充值卡支付" clickable>
               <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
@@ -165,23 +172,20 @@
 import deZhi from "./adderss";
 import Info from "./orderInfo";
 import btn from "./../order/child/btn";
-
+import { pathway } from "@/mixins/img";
 export default {
   data() {
     return {
-      no_use_dizhi: false,
-      isaddress: true,
+      imgurl: pathway.imgurl,
+      payMothed: ["微信支付", "充值卡支付"],
       // 禁止点击遮罩层
       jin: false,
       direct: 0,
       radioYouhui: 1,
       radioPay: 1,
-      num: "0",
       show_juan: false,
       goHome: false,
       goCrd: true,
-      //订单编号
-      orderid:'',
       //配送费
       Freight: 10,
       uid: "",
@@ -189,7 +193,8 @@ export default {
       productSkuid: {},
       // 可用优惠券
       CanuseCard: [],
-      time: ''
+      productList: [],
+      choseCard:''
     };
   },
   //监听属性 类似于data概念
@@ -197,41 +202,30 @@ export default {
     store() {
       return this.$store.state;
     },
-    total() {
-      let price = parseInt(this.productSkuid.shop.skuPrice);
-      let num = parseInt(this.productSkuid.conut);
-      let fight=parseInt(this.Freight);
-      let allprice=price * num+fight;
-      //  if(allprice>this.CanuseCard[this.radioYouhui].couponPrice){
-      //    return allprice-this.CanuseCard[this.radioYouhui].couponPrice
-      //  }else{
-          return allprice;
-      //  }
-      
+    shoptotal() {
+      let num = 0;
+      this.productList.forEach(item => {
+        num += item.skuPrice * item.count;
+      });
+      return num;
     },
-    //  isYouhui(){
-    //   let price = parseInt(this.productSkuid.shop.skuPrice);
-    //   let num = parseInt(this.productSkuid.conut);
-    //   let fight=parseInt(this.Freight);
-    //   let allprice=price * num+fight;
-    //    if(allprice>this.CanuseCard[this.radioYouhui].couponPrice){
-    //      return true
-    //    }else{
-    //       return false;
-    //    }
-    //  },
-     shoptotal() {
-
-      let price = parseInt(this.productSkuid.shop.skuPrice);
-      let num = parseInt(this.productSkuid.conut);
-      let allprice =price * num;
+    totalcount() {
+      let num = 0;
+      this.productList.forEach(item => {
+        num += item.count;
+      });
+      return num;
+    },
+    MinTotalPrice() {
+      if(this.CanuseCard!=""){
+              if(this.choseCard!=""&&this.CanuseCard[this.radioYouhui-1].couponPrice<this.shoptotal){
+          return this.shoptotal-this.CanuseCard[this.radioYouhui-1].couponAmount;
+      }
+      }
      
-
-      return (price * num);
-    },
-    Check() {
-      return index + 1;
+      
     }
+  
   },
   //监控data中的数据变化
   watch: {},
@@ -244,29 +238,22 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid = "1";
+    this.productList.push(JSON.parse(this.$route.query.shop));
+    // this.uid=this.$store.state.Use.uid;
     this.productObject = this.store.Shop;
     this.productSkuid = this.store.Buy;
-    console.log( this.productSkuid);
-  
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
-      // console.log(res);
       this.Freight = res.data.amount;
     });
-      let parmas2 = { cmd: "myCouponList", uid: "1" };
-      this.postRequest(parmas2).then(res => {
-        console.log(res);
-        this.CanuseCard = res.data.dataList;
-      });
+    let parmas2 = { cmd: "myCouponList", uid: "1" };
+    this.postRequest(parmas2).then(res => {
+      console.log(res)
+      this.CanuseCard = res.data.dataList;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.orderid=new Date().getTime()+ parseInt(Math.random()*1000);
-    this.time=  this.formtime();
-  },
-  filters:{
-   
-  },
+  mounted() {},
   //方法集合
   methods: {
     changej(num) {
@@ -275,7 +262,6 @@ export default {
         case 0:
           //可用优惠券
           this.direct = 0;
-          this.GetMyCard();
           break;
         case 1:
           this.direct = 1;
@@ -295,30 +281,31 @@ export default {
     goto() {
       this.$router.push("/editaddress");
     },
-    GetMyCard() {
-    
+    onClick(event) {
+      console.log(this.radioYouhui);
+      this.choseCard=this.CanuseCard[this.radioYouhui-1].couponAmount;
+      
     },
-     formtime(){
-       let val=new Date();
-        let Y=val.getFullYear();
-        let M=val.getMonth()+1;
-        let D=val.getDate();
-        let HH=val.getHours();
-        let MM=val.getMinutes();
-        let SS=val.getSeconds();
-        M<10?M="0"+M:M;
-        D<10?D="0"+D:D;
-        HH<10?HH="0"+HH:HH;
-        MM<10?MM="0"+MM:MM;
-        SS<10?SS="0"+SS:SS;
-      return Y+'-'+M+'-'+D+'  '+HH+':'+MM+':'+SS
-        
+    formtime() {
+      let val = new Date();
+      let Y = val.getFullYear();
+      let M = val.getMonth() + 1;
+      let D = val.getDate();
+      let HH = val.getHours();
+      let MM = val.getMinutes();
+      let SS = val.getSeconds();
+      M < 10 ? (M = "0" + M) : M;
+      D < 10 ? (D = "0" + D) : D;
+      HH < 10 ? (HH = "0" + HH) : HH;
+      MM < 10 ? (MM = "0" + MM) : MM;
+      SS < 10 ? (SS = "0" + SS) : SS;
+      return Y + "-" + M + "-" + D + "  " + HH + ":" + MM + ":" + SS;
     },
-    SubOrder(){
-      if(this.store.useAddres.name==''){
-        this.$toast('请添加收货地址');
+    SubOrder() {
+      if (this.store.useAddres.name == "") {
+        this.$toast("请添加收货地址");
       }
-    }
+    },
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -440,6 +427,69 @@ export default {
       }
       .sub {
         padding: 0.17rem 0.23rem;
+      }
+    }
+  }
+}
+.order_info {
+  padding: 0.15rem 0.1rem;
+  li {
+    margin-bottom: 0.15rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .tui {
+      padding: 0 0.15rem;
+      overflow: hidden;
+      span {
+        display: block;
+        width: 0.9rem;
+        height: 0.3rem;
+        border-radius: 0.05rem;
+        border: 0.01rem solid #999999;
+        color: #999999;
+        font-size: 0.14rem;
+        text-align: center;
+        line-height: 0.3rem;
+        float: right;
+      }
+    }
+    a {
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        width: 0.85rem;
+        height: 0.85rem;
+        margin-right: 0.15rem;
+      }
+      .info_name {
+        display: flex;
+        flex: 3;
+        flex-direction: column;
+        text-align: left;
+        .info_top {
+          font-size: 0.14rem;
+          color: #333333;
+        }
+        .info_bot {
+          font-size: 0.12rem;
+          color: #999999;
+          margin-top: 0.06rem;
+        }
+      }
+      .info_price {
+        margin-left: 0.2rem;
+        display: flex;
+        flex-direction: column;
+        font-size: 0.12rem;
+        color: #333333;
+        p {
+          &:last-child {
+            text-align: right;
+            margin-top: 0.34rem;
+          }
+        }
       }
     }
   }

@@ -37,6 +37,15 @@ export default {
       // }
      
   },
+  created(){
+  //  window.addEventListener('beforeUpdate',()=> {
+  //     window.localStorage.setItem('store',JSON.stringify(this.$store.state));
+  //  });
+  //  let  data=JSON.parse(localStorage.getItem('store'));
+  //  if(data){
+  //     this.$store.commit('SaveData',data);
+  //  }
+  },
   mounted() {
     window.onload = window.onresize = set.setrem;
   },

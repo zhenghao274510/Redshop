@@ -56,27 +56,20 @@ export default {
         console.log(this.dataList);
         this.dataList.forEach(item=>{
           let _this=this;
-          let e=parseInt(item.status);
-             switch(e){
-               case 1:
-               _this.waitePay.push(item);
-               break;
-               case 2:
-               _this.waiteSong.push(item);
-               break;
-                 case 3:
-               _this.peingSing.push(item);
-               break;
-               case 4:
-               _this.waitePing.push(item);
-               break;
-                 case 5:
-               _this.tuiH.push(item);
-               break;
-             }
-             
+          let e=item.status;
+          let p=item.isComment;
+          if(e==3&&p==0){
+              _this.waitePing.push(item);
+          }else if(e==0){
+             _this.waitePay.push(item);
+          }else if(e==1){
+             _this.waiteSong.push(item);
+          }else if(e==4){
+            _this.tuiH.push(item);
+          }else{
+             _this.peingSing.push(item);
+          }
         })
-         console.log(this.waitePay)
       }
      
     });

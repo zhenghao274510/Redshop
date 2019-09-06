@@ -23,9 +23,14 @@ const store = new Vuex.Store({
     ShopPingJia:[],
     gifCradInfo:{},
     gifCradDetails:[],
-    isLoading:true
+    isLoading:true,
+    SearchList:[]
   },
   mutations: {
+    // 刷新保存state数据
+    SaveData(state,val){
+       state=val;
+    },
     //修改tarba
     ChangeTabar(state, val) {
       state.home.TB = val;
@@ -35,7 +40,7 @@ const store = new Vuex.Store({
     },
     //  立即购买
     BuyShop(state, val) {
-      state.Buy = val;
+      state.Buy=val;
     },
     AddAdress(state, val) {
       state.useAddres = val;
@@ -54,6 +59,12 @@ const store = new Vuex.Store({
     },
     LookGifcardDetails(state,val){
       state.gifCradDetails=val;
+    },
+    DelCar(state,val){
+      state.carinfo.splice(val,1);
+    },
+    SearStar(state,val){
+      state.SearchList=val;
     }
   },
   getters() {

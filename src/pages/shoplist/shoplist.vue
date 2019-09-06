@@ -4,7 +4,8 @@
       <sear @SearStar="SearResult"></sear>
 
      
-        <Shop-L :list="ProductList"></Shop-L>
+        <Shop-L :list="$store.state.SearchList" v-if="$store.state.SearchList.length!=0"></Shop-L>
+        <Shop-L :list="ProductList" v-else></Shop-L>
      
     </van-pull-refresh>
   </div>

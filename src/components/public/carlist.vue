@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- <van-cell :border="false"> -->
-    <ul>
+    <ul v-if="store.length!=0">
       <li v-for="(item,index) in store" :key="index" class="carlist">
         <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
           <div class="carlist_info" :class="{'bg':ishow}">
@@ -10,7 +10,7 @@
               <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
             </div>
             <div class="car_img">
-              <img :src="item.image" />
+              <img :src="imgurl+item.image" />
             </div>
             <div class="car_info">
               <p class="car_con"  @click="GetOrderDetails(item)">{{item.productName}}</p>
@@ -35,7 +35,7 @@
 
     <!-- </van-cell> -->
     <!-- 底部显示 -->
-    <div  class="nothing">购物车还是空的哟！</div>
+    <div  class="nothing" v-else>购物车还是空的哟！</div>
     <div class="all_chose">
       <div class="all_left">
         <div class="all_s" @click="choseall">
@@ -62,11 +62,13 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import {pathway} from '@/mixins/img'
 import { Dialog } from "vant";
 export default {
   props: ["ishow", "list"],
   data() {
     return {
+      imgurl:pathway.imgurl,
       AllLen: 0,
       length: 0,
       LftW: 0,
@@ -77,7 +79,8 @@ export default {
       totalPrice: 0,
       allchecked: true,
       arry: this.store,
-      carid:''
+      carid:'',
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -93,24 +96,22 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   
+  //  this.uid=this.$store.state.Use.uid;
+   this.uid="1";
    
     console.log(this.store);
     this.AllLen = this.store.length;
-    setTimeout(()=>{
        this.value = [];
         this.check=[];
       this.store.forEach(item => {
       this.check.push(true);
       this.value.push(item.count);
     });
-    console.log(this.value, "value");
-    // console.log(this.check, "check");
-    },100)
-   
+    console.log(this.value, "value");   
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+  },
   //方法集合
   methods: {
     changech(ind) {
@@ -140,14 +141,15 @@ export default {
           break;
         case "right":
           Dialog.confirm({
-            message: "确定删除吗？"
+            
+            message: "确定删除吗？删除后无法无法恢复"
           }).then(() => {
             console.log(name.name);
           
-            let parmas = { cmd: "delCart", uid: this.uid, cartid: this.list[name.name].cartid };
+            let parmas = { cmd: "delCart", uid: this.uid, cartid: this.store[name.name].cartid };
             this.postRequest(parmas).then(res=>{
               if(res.data.result==0)
-              this.list.splice(name.name);
+              this.$store.commit('DelCar',name.name);
               this.$toast(res.data.resultNote);
             })
           });
@@ -177,10 +179,13 @@ export default {
       this.sub();
     },
     gotopay() {
-       this.check.forEach(item,index=>{
-         if(!item){
-         }
-       })
+     console.log(this.check)
+      for(let i in this.check){
+        if(!this.check[i]){
+           console.log(this.store[i])
+        }
+      }
+     
       // this.$router.push("/success");
       let parmas = {
         cmd: "addCartOrder",
@@ -197,7 +202,7 @@ export default {
       });
     },
     GetOrderDetails(item) {
-      this.$store.commit("Shop", item);
+           this.$store.commit("Shop", item);
       console.log(item);
       this.$router.push("/shopdetails");
     }

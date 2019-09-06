@@ -55,7 +55,7 @@ export default {
        
         this.dataList.forEach(item=>{
           let e=parseInt(item.status);
-            if(e==5){
+            if(e==4){
                this.arry.push(item);
             }
         })

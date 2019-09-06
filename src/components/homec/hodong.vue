@@ -17,8 +17,8 @@
               <div class="hd_img_con">
                 <img :src="imgurl+item.logo" />
               </div>
-              <div class="hd_info one-txt-cut">
-                <p class="ft_mid col_mix" style="font-weight:bold">{{item.title}}</p>
+              <div class="hd_info">
+                <p class="ft_mid col_mix one-txt-cut" style="font-weight:bold">{{item.title}}</p>
                 <p class="ft_mid">
                   <span class="col_max">￥{{item.price}}</span>
                   <i class="col_mid">￥{{item.oldPrice}}</i>
@@ -67,28 +67,17 @@ export default {
     let parmas = { cmd: "activityArea" };
     this.postRequest(parmas).then(res => {
       if (res.data.result == 0) {
-        // console.log(res);
         this.ProductList = res.data.dataList;
-        //  this.ProductList=res.data.dataList.slice(1,1);
-        //  this.ProductLast=res.data.dataList.slice(-1,1);
-        //  this.MiddleProductList=res.data.dataList.slice(1,1).pop;
-
         this.ProductObject = res.data;
       }
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    
-  },
+  mounted() {},
   //方法集合
   methods: {
-    GetshopDetails(e){
-      this.$store.commit('ChooseShop',e);
-      // console.log(e);
-         this.$router.push('/shopdetails');
-
-     
+    GetshopDetails(e) {
+      this.$router.push({path:"/shopdetails",query:{productid:e.productid}});
     }
   },
   //生命周期 - 创建之前
@@ -124,26 +113,29 @@ export default {
       width: 100%;
       padding: 0 0.15rem;
       margin: 0.1rem 0;
-      li {
-        padding: 0.15rem;
-        box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
-        &:nth-child(1) {
-          width: 100%;
-        }
-        a {
-          flex: 1;
-
-          height: 4rem;
-
-          .hd_img_con {
-            height: 3.2rem;
+      ul {
+        width: 100%;
+        li {
+          padding: 0.15rem;
+          box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
+          &:nth-child(1) {
+            width: 100%;
           }
-          .hd_info {
-            p {
-              line-height: 0.2rem;
-              i {
-                text-decoration: line-through;
-                margin-left: 0.1rem;
+          a {
+            flex: 1;
+
+            height: 4rem;
+
+            .hd_img_con {
+              height: 3.2rem;
+            }
+            .hd_info {
+              p {
+                line-height: 0.2rem;
+                i {
+                  text-decoration: line-through;
+                  margin-left: 0.1rem;
+                }
               }
             }
           }

@@ -5,7 +5,7 @@
         <img :src="imgurl+item.logo" alt />
       </div>
       <div class="shop_info">
-        <p class="shop_name">{{item.title}}</p>
+        <p class="shop_name one-txt-cut">{{item.title}}</p>
         <div class="shop_pir">
           <span>
             ￥
@@ -44,8 +44,8 @@ export default {
   methods: {
     goto(ind,e) {
        console.log(e);
-      this.$store.commit('ChooseShop',e);
-      this.$router.push({path:'/shopdetails'});
+      // this.$store.commit('ChooseShop',e);
+      this.$router.push({path:'/shopdetails',query:{productid:e.productid}});
     },
     addcar(ind) {
       let productId=this.list[ind].productid;

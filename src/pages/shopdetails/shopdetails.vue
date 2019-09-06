@@ -99,14 +99,14 @@
     <!-- 加入购物车 -->
     <div class="buy">
       <div class="buy_left">
-        <router-link to @click="Route">
+        <div to @click="Route" class="gotocar">
           <span class="icon_car"></span>
           <p>购物车</p>
-        </router-link>
+        </div>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/shangpinxiangqing-shoucang.png" v-if="!addshou" />
-            <img src="/static/icon/wodeshoucang.png" v-else />
+            <img src="/static/icon/wodeshoucang.png" v-show="addshou==true" />
+            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="addshou==false" />
           </div>
           <p>收藏</p>
         </div>
@@ -136,12 +136,12 @@ export default {
       jin: false,
       value: 5,
       show: false,
-      addshou: true,
+      addshou: false,
       add_car: false,
       see_gu: false,
       see_card: false,
       isLoading: false,
-      id: "",
+      productid: "",
       buy: false,
       //
       dataObject: {},
@@ -171,13 +171,13 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // 商品id
-    this.id = this.store.Shop.productid;
+   this.productid=this.$route.query.productid;
     // this.uid = this.$store.state.Use.uid;
     this.uid = "1";
-    console.log(this.id);
+    console.log(this.productid);
     let parmas1 = {
       cmd: "productDetail",
-      productid: this.id,
+      productid: this.productid,
       uid: this.uid
     };
     this.postRequest(parmas1).then(res => {
@@ -194,7 +194,7 @@ export default {
     //   评价
     let parmas2 = {
       cmd: "productCommentList",
-      productid: this.id,
+      productid: this.productid,
       nowPage: "1",
       pageCount: "10"
     };
@@ -249,12 +249,12 @@ export default {
     GetInShou() {
       let parmas = {
         cmd: "collectProduct",
-        productid: this.id,
+        productid: this.productid,
         uid: this.uid
       };
       this.postRequest(parmas).then(res => {
         console.log(res);
-        if (res.data.result == 0) {
+        if (res.data.result ==0) {
           this.$toast(res.data.resultNote);
           this.addshou = !this.addshou;
         }
@@ -282,7 +282,10 @@ export default {
     Route() {
       console.log(1);
       this.$store.commit("ChangeTabar", 2);
-      this.$router.push("/shopcar");
+      setTimeout(()=>{
+        this.$router.push("shopcar");
+      },100);
+      
     }
     // GtoBuy(){
     //   this.$store.commit('ChooseBuy',)
@@ -499,7 +502,7 @@ em {
       height: 0.5rem;
       display: flex;
       align-items: center;
-      a {
+      .gotocar {
         display: flex;
         flex-direction: column;
         align-items: center;

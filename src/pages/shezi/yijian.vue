@@ -2,9 +2,9 @@
   <div class="yj_box">
     <div class="yj_cont">
       <div class="yj_tit">您的建议（必填）</div>
-      <textarea name="use_con" id="use"></textarea>
+      <textarea name="use_con" id="use" v-model="content"></textarea>
       <div class="yj_tit">联系方式</div>
-      <input type="text" placeholder="您的手机号"  />
+      <input type="text" placeholder="您的手机号" v-model="phone" />
     </div>
     <div class="yj_sub" @click="sub_yj">提交</div>
   </div>
@@ -14,23 +14,47 @@
 //import 《组件名称》 from '《组件路径》';
 export default {
   data() {
-    return {};
+    return {
+      content: "",
+      phone: "",
+      uid: ""
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    sub_yj(){
-      
+    sub_yj() {
+      // this.uid = this.$store.Use.uid;
+      this.uid = "1";
+      var reg = new RegExp(/^[1][3456789]\d{9}$/);
+      if (reg.test(this.phone) && this.content != "") {
+        let parmas = {
+          cmd: "feedBack",
+          uid: this.uid,
+          content: this.content,
+          phone: this.phone
+        };
+        this.postRequest(parmas).then(res => {
+          if (res.data.result == 0) {
+            this.$toast("感谢你的及时反馈!我们会做的更好!");
+            this.phone = "";
+            this.content = "";
+          }
+        });
+      } else if (!reg.test(this.phone)) {
+        this.$toast("请输入正确的手机号!");
+      } else {
+        this.$toast("信息不能为空!请重新填写!");
+      }
     }
   },
   //生命周期 - 创建之前
@@ -70,7 +94,7 @@ export default {
       background-color: #f6f6f6;
       font-size: 0.16rem;
       border: none;
-      padding: .1rem;
+      padding: 0.1rem;
     }
     input {
       width: 100%;
@@ -86,18 +110,17 @@ export default {
       text-indent: 0.05rem;
     }
   }
-  .yj_sub{
+  .yj_sub {
     width: 3.45rem;
     margin: 0 auto;
-    margin-top: .61rem;
-    height: .44rem;
-    line-height: .44rem;
+    margin-top: 0.61rem;
+    height: 0.44rem;
+    line-height: 0.44rem;
     text-align: center;
-    color: #FFF;
-    font-size: .18rem;
-    background-color: #72BB29;
-    border-radius: .05rem;
+    color: #fff;
+    font-size: 0.18rem;
+    background-color: #72bb29;
+    border-radius: 0.05rem;
   }
-
 }
 </style>

@@ -16,8 +16,8 @@
           <i class="icon_back"></i>
         </div>
         <ul class="cf_right_list">
-          <li v-for="(item,index) in ProductList[num]" :key="index">
-            <router-link to="/shoplist">
+          <li v-for="(item,index) in ProductList[num]" :key="index" @click="GoTodetails(item)">
+            <router-link to="">
               <img :src="item.childCategoryImage" />
               <p>{{item.childCategoryName}}</p>
             </router-link>
@@ -70,6 +70,10 @@ export default {
   methods: {
     changleft(ind) {
       this.num = ind;
+    },
+    GoTodetails(e){
+      console.log(e)
+      // this.$router.push({path:"/shopdetails",query:{productid:e.productid}});
     }
   },
   //生命周期 - 创建之前

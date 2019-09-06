@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="shop_info">
-      <img src="/static/test/bg.png" alt />
+      <img :src="imgurl+store.Shop.logo" alt />
       <div>
         <p>
           ￥
@@ -32,11 +32,12 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
+import {pathway} from '@/mixins/img'
 export default {
   props: ["list", "isbuy"],
   data() {
     return {
+      imgurl:pathway.imgurl,
       value: [],
       num: 0,
       skuId: "",
@@ -93,10 +94,15 @@ export default {
           }
         });
       } else {
-        console.log(1);
-        let obj={conut:this.value[this.num],shop:this.list[this.num]};
-        this.$store.commit("BuyShop", obj);
-        this.$router.push({ path: "/finishOrder" });
+        this.list[this.num].count=this.value[this.num];
+        this.list[this.num].productid=this.store.Shop.productid;
+        this.list[this.num].logo=this.store.Shop.logo;
+        this.list[this.num].title=this.store.Shop.title;
+        console.log(this.list[this.num])
+        setTimeout(()=>{
+           this.$router.push({ path: "/finishOrder",query:{shop:JSON.stringify(this.list[this.num])}});
+        },100)
+        
       }
     }
   },
@@ -117,6 +123,7 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
+.box{width: 100%;height:100%;background-color: #FFF;}
 .shop_info {
   position: relative;
   padding: 0.15rem;

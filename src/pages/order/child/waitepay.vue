@@ -1,18 +1,20 @@
 <template>
   <div class="order_mo">
-    <div class="order_con" v-for="(item,index) in arry" :key="index" >
+    <div class="order_con" v-for="(item,index) in arry" :key="index">
       <div @click="LookDetails(item)">
-           <div class="order_tit" >
-        <span>
-          订单编号：
-          <i>{{item.orderid}}</i>
-        </span>
-        <em>待付款</em>
+        <div class="order_tit">
+          <span>
+            订单编号：
+            <i>{{item.orderid}}</i>
+          </span>
+          <em>待付款</em>
+        </div>
+        <Info :list="item.orderItem"></Info>
       </div>
-      <Info :list="item.orderItem"></Info>
-      </div>
-     
-      <div class="order_tot">共{{item.orderItem.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
+
+      <div
+        class="order_tot"
+      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="one" @click="delOrder">取消订单</span>
         <span class="two">去支付</span>
@@ -27,26 +29,24 @@
 import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
-    props:['list'],
-    //   props:{
-    //   list:{
-    //      type:Array,
-    //      default:[]
-    //   }
-    // },
+  props: ["list"],
+  //   props:{
+  //   list:{
+  //      type:Array,
+  //      default:[]
+  //   }
+  // },
   data() {
     return {
       show: false,
-      dataList:[],
-      arry:this.list
+      dataList: [],
+      arry: this.list
     };
   },
   //监听属性 类似于data概念
-  computed: {
-  },
+  computed: {},
   //监控data中的数据变化
-  watch: {
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
     Info
@@ -54,23 +54,22 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
- mounted() {
-         this.arry=[];
-     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
-    this.postRequest(params).then(res => {     
+  mounted() {
+    this.arry = [];
+    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+    this.postRequest(params).then(res => {
       if (res.data.result == 0) {
         this.dataList = res.data.dataList;
-        console.log(this.dataList,typeof this.list);
-       
-        this.dataList.forEach(item=>{
-          let e=parseInt(item.status);
-            if(e==1){
-               this.arry.push(item);
-            }
-        })
-         console.log(this.arry)
+        console.log(this.dataList, typeof this.list);
+
+        this.dataList.forEach(item => {
+          let e = parseInt(item.status);
+          if (e == 0) {
+            this.arry.push(item);
+          }
+        });
+        console.log(this.arry);
       }
-     
     });
   },
   //方法集合
@@ -80,16 +79,17 @@ export default {
         title: "取消订单",
         message: "请联系客服!"
       })
-        .then(() => {
-        })
+        .then(() => {})
         .catch(() => {
           // on cancel
         });
     },
-      LookDetails(e){
-        console.log(e);
-      this.$store.commit('orderDetails',e);
-      this.$router.push('/orderdetails');
+    LookDetails(e) {
+      console.log(e);
+      this.$router.push({
+        path: "/orderdetails",
+        query: { orderid: e.orderid}
+      });
     }
   },
   //生命周期 - 创建之前
@@ -112,9 +112,10 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
- margin-top: .1rem;
+  margin-bottom: 0.1rem;
+  margin-top: .5rem;
   .order_con {
-    margin-bottom: .1rem;
+    margin-bottom: 0.1rem;
     // font-size: 0;
     background-color: #ffffff;
     border-radius: 0.1rem;
