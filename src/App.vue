@@ -3,7 +3,7 @@
     <Top :title="$route.name"></Top>
     
     <tar v-if="$route.meta.showtabar"></tar>
-    <is-load v-if="$store.state.isLoading"></is-load>
+    <!-- <is-load v-if="isLoading"></is-load> -->
     <!-- <transition :name="transitionName" mode="out-in"> -->
       <router-view />
       <!-- </transition> -->
@@ -21,33 +21,27 @@ export default {
   name: "App",
   data() {
     return {
-      transitionName:''
+      transitionName:'',
+      isLoading:true
     };
   },
   watch:{
- // 使用watch 监听$router的变化
-      // $route (to, from) {
-      //   // 如果to索引大于from索引,判断为前进状态,反之则为后退状态
-      //   if (to.meta.index > from.meta.index){
-      //     // 设置动画名称
-      //     this.transitionName = 'slide-right';
-      //   } else{
-      //     this.transitionName = 'slide-left';
-      //   }
-      // }
+//  使用watch 监听$router的变化
+      $route (to, from) {
+        // 如果to索引大于from索引,判断为前进状态,反之则为后退状态
+        if (to.meta.index > from.meta.index){
+          // 设置动画名称
+          this.transitionName = 'slide-right';
+        } else{
+          this.transitionName = 'slide-left';
+        }
+      }
      
   },
   created(){
-  //  window.addEventListener('beforeUpdate',()=> {
-  //     window.localStorage.setItem('store',JSON.stringify(this.$store.state));
-  //  });
-  //  let  data=JSON.parse(localStorage.getItem('store'));
-  //  if(data){
-  //     this.$store.commit('SaveData',data);
-  //  }
   },
   mounted() {
-    window.onload = window.onresize = set.setrem;
+    window.onload =set.setrem;
   },
   components: {
     tar,

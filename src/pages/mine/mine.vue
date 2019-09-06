@@ -130,7 +130,9 @@ export default {
     })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.$root.isLoading=false;
+  },
   //方法集合
   methods: {
     gotomine(){

@@ -104,9 +104,12 @@ export default {
     // this.id =this.$route.query.id;
     //  主页 部分
     let params1 = { cmd: "firstPage" };
+    console.log(this.$root.isLoading)
     this.postRequest(params1).then(res => {
       console.log(res);
       this.firstpath = res.data.dataObject;
+      this.$root.isLoading=false;
+      
     });
     //  优惠卷
     let parmas2 = { cmd: "newCoupon" };

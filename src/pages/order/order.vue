@@ -8,7 +8,8 @@
       </li>
     </ul>
    
-    <router-view></router-view>
+      <router-view />
+
 
   </div>
 </template>
@@ -34,7 +35,8 @@ export default {
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+  },
   //import引入的组件需要注入到对象中才能使用
   components: {
   },

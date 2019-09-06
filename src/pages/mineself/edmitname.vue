@@ -47,6 +47,7 @@ export default {
       this.postRequest(params).then(res => {
         console.log(res);
         this.$toast(res.data.resultNote);
+        this.$root.isLoading=false;
       });
     }
   },
