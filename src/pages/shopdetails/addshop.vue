@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="shop_info">
-      <img :src="imgurl+store.Shop.logo" alt />
+      <img :src="obj.productImages[0]" alt />
       <div>
         <p>
           ￥
@@ -32,12 +32,10 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
 export default {
-  props: ["list", "isbuy"],
+  props: ["list", "isbuy",'obj'],
   data() {
     return {
-      imgurl:pathway.imgurl,
       value: [],
       num: 0,
       skuId: "",
@@ -47,9 +45,6 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    store() {
-      return this.$store.state;
-    }
   },
   //监控data中的数据变化
   watch: {},
@@ -77,7 +72,7 @@ export default {
     //  添加购物车
     GetInCar() {
       if (!this.isbuy) {
-        this.productid = this.store.Shop.productid;
+        this.productid = this.obj.productid;
         // this.uid =this.store.Use.uid;
         this.uid = "1";
         let parmas = {
@@ -95,9 +90,9 @@ export default {
         });
       } else {
         this.list[this.num].count=this.value[this.num];
-        this.list[this.num].productid=this.store.Shop.productid;
-        this.list[this.num].logo=this.store.Shop.logo;
-        this.list[this.num].title=this.store.Shop.title;
+        this.list[this.num].productid=this.obj.productid;
+        this.list[this.num].image=this.obj.productImages[0];
+        this.list[this.num].productName=this.obj.productName;
         console.log(this.list[this.num])
         setTimeout(()=>{
            this.$router.push({ path: "/finishOrder",query:{shop:JSON.stringify(this.list[this.num])}});

@@ -20,7 +20,8 @@ export default {
     return {
       isLoading: false,
       ProductObject:{},
-      ProductList:[]
+      ProductList:[],
+      childCategoryId:''
       
     };
   },
@@ -35,8 +36,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    
-      let parmas = { cmd: "productList",childCategoryId:3, nowPage: "1", pageCount: "10" };
+      this.childCategoryId=this.$route.query.childCategoryId;
+      let parmas = { cmd: "productList",childCategoryId:this.childCategoryId, nowPage: "1", pageCount: "10" };
     this.postRequest(parmas).then(res => {
       if (res.data.result == 0) {
         console.log(res);

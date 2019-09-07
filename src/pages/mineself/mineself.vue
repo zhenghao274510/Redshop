@@ -2,11 +2,14 @@
   <div class>
     <ul>
       <li>
-        <router-link to="/bindTel">
+        <router-link to="">
           <span>头像</span>
-          <img src="/static/test/qiandao.png" alt />
+          <img :src="useicon" alt />
           <i></i>
+          <!-- <input type="file"  /> -->
+           <input type="file" class="input" @change="Upfiles" />
         </router-link>
+        
       </li>
        <li>
         <router-link to="/edmitname">
@@ -36,7 +39,9 @@
 //import 《组件名称》 from '《组件路径》';
 export default {
   data() {
-    return {};
+    return {
+      useicon:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -48,6 +53,8 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.$root.isLoading=false;
+    //  用户头像
+    this.useicon=this.$route.query.img;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -55,6 +62,9 @@ export default {
   methods: {
     GotoEad(){
       this.$router.push({path:'/myaddress',query:{id:0}});
+    },
+    Upfiles(){
+
     }
   },
   //生命周期 - 创建之前
@@ -89,6 +99,15 @@ ul {
       position: relative;
       font-size: 0.14rem;
       color: #333333;
+      input{
+        position: absolute;
+        top:0;
+        right:.15rem;
+        width:1rem;
+        height:.5rem;
+        opacity:0;
+        z-index:999;
+      }
       i {
         position: absolute;
         top: 50%;

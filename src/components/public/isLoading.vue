@@ -17,10 +17,10 @@ export default {
 <style scoped lang = "less">
 .islonding{
  width: 100%;
- height:107.4% ;
- background-color: rgba(250, 247, 247, 1);
+ height:100% ;
+ background-color: rgba(3, 3, 3, 0.8);
  position: absolute;
- top:-.5rem;
+ top:0;
  z-index:99999;
  .van-loading--vertical{
     position: absolute;

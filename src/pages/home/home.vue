@@ -25,7 +25,7 @@
             <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item)">
               <router-link to>
                 <div class="list_img">
-                  <img :src="imgurl+item.logo" alt />
+                  <img :src="item.logo" alt />
                 </div>
                 <div class="list_info">
                   <p class="list_name">{{item.title}}</p>
@@ -56,7 +56,7 @@
       <div class="first_con" v-else style="padding:0 .39rem;">
         <div class="first_info">
           <p class="col_max ft_lg">恭喜您领取成功</p>
-          <p class="ft_mid col_mid">有效期至2019-02-01</p>
+          <p class="ft_mid col_mid" style="margin-top:.1rem;">有效期至{{dataObject.endtime}}</p>
         </div>
         <div class="getJ ft_mid" @click="First=false">确定</div>
       </div>
@@ -76,7 +76,7 @@ export default {
       imgurl: pathway.imgurl,
       isLoading: false,
       activ: { tit: "为您推荐", type: 1 },
-      First: true,
+      First: false,
       isGet: true,
       id: "",
       loading: false,
@@ -102,29 +102,38 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // this.id =this.$route.query.id;
+    this.uid = "1";
+    // 是否首次登录
+    let firstLogin = { cmd: "userInfo", uid: this.uid };
+    this.postRequest(firstLogin).then(res => {
+      // console.log(res.data.dataObject);
+      let useinfo = res.data.dataObject;
+      localStorage.setItem("useinfo", JSON.stringify(useinfo));
+      //   存在新人优惠券
+      if (useinfo.newCoupon == 0&&useinfo.isNew==0) {
+        this.First = true;
+        //  优惠卷
+        let parmas2 = { cmd: "newCoupon" };
+        this.postRequest(parmas2).then(res => {
+          console.log(res);
+          if (res.data.result == 0) {
+            this.dataObject = res.data.dataObject;
+          }
+        });
+      }else{
+         this.First = false;
+      }
+    });
+
     //  主页 部分
     let params1 = { cmd: "firstPage" };
-    console.log(this.$root.isLoading)
+    console.log(this.$root.isLoading);
     this.postRequest(params1).then(res => {
-      console.log(res);
+      // console.log(res);
       this.firstpath = res.data.dataObject;
-      this.$root.isLoading=false;
-      
+      this.$root.isLoading = false;
     });
-    //  优惠卷
-    let parmas2 = { cmd: "newCoupon" };
-    if (localStorage.getItem("first")) {
-      this.First = false;
-    } else {
-      this.postRequest(parmas2).then(res => {
-        if (res.data.result == 0) {
-          // console.log(res);
-          this.dataObject = res.data.dataObject;
-        } else {
-          this.First = false;
-        }
-      });
-    }
+    
 
     // 为你推荐
     let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
@@ -173,7 +182,7 @@ export default {
       //  获取优惠券
       // this.uid=this.$store.state.Use.uid;
       this.uid = "1";
-      this.$toast("获取中");
+     
       let parmas = {
         cmd: "newCoupon",
         uid: this.uid,
@@ -181,8 +190,10 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {
+          // console.log(res.data.resultNote)
+           this.$toast(res.data.resultNote);
           this.isGet = false;
-          localStorage.setItem("first", "");
+          // this.First=false;
         }
       });
     },
@@ -266,7 +277,9 @@ export default {
         .list_img {
           width: 1.38rem;
           height: 0.93rem;
-          overflow: hidden;
+          img {
+            height: 0.93rem;
+          }
         }
         .list_info {
           margin-left: 0.1rem;
@@ -338,5 +351,8 @@ export default {
       line-height: 0.3rem;
     }
   }
+}
+.first_info{
+  margin-top: .1rem;
 }
 </style>

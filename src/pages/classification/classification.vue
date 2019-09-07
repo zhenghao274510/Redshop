@@ -30,12 +30,10 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
 import sear from "./../../components/public/search";
 export default {
   data() {
     return {
-       imgurl:pathway.imgurl,
       num: 0,
       left: [],
       ProductList: [],
@@ -73,7 +71,7 @@ export default {
     },
     GoTodetails(e){
       console.log(e)
-      // this.$router.push({path:"/shopdetails",query:{productid:e.productid}});
+      this.$router.push({path:"/shoplist",query:{childCategoryId:e.childCategoryId}});
     }
   },
   //生命周期 - 创建之前
@@ -102,7 +100,9 @@ export default {
     height: 100%;
     padding: 0 0.15rem;
     display: flex;
+    position: relative;
     .cf_left {
+      // position: absolute;
       width: 0.94rem;
       height: 100%;
       overflow: hidden;
@@ -122,7 +122,9 @@ export default {
     }
     .cf_right {
       padding-left: 0.19rem;
+      height: 3000px;
       flex: 1;
+      overflow-y: auto;
       .cf_right_tit {
         display: flex;
         height: 0.41rem;

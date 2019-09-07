@@ -3,9 +3,9 @@
     <div class="cont">
         <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="store.address">
-          <p class="ft_mid">收货人：{{store.name}}&nbsp; &nbsp; &nbsp;{{store.phone}}</p>
-          <p class="ft_mix">收货地址：{{store.address}}{{store.detail}}</p>
+        <div class="info col_mix no_use" v-if="dataObject.receiver.name">
+          <p class="ft_mid">收货人：{{dataObject.receiver.name}}&nbsp; &nbsp; &nbsp;{{dataObject.receiver.phone}}</p>
+          <p class="ft_mix">收货地址：{{dataObject.receiver.address}}{{dataObject.receiver.detail}}</p>
         </div>
         <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
         <i class="back"></i>
@@ -45,6 +45,7 @@ export default {
     return {
       id: 1,
       productList:[],
+      dataObject:{},
       remark: "",
       cardnum:'',
       pwd:'',
@@ -55,9 +56,6 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    store(){
-      return this.$store.state.useAddres;
-    }
   },
   //监控data中的数据变化
   watch: {},
@@ -70,15 +68,14 @@ export default {
   created() {
     // this.uid=this.$store.state.Use.uid;
     this.uid="1";
-    this.cardnum=this.$store.state.gifCradInfo.cardnum;
-    this.pwd=this.$store.state.gifCradInfo.pwd;
-    console.log(this.$store.state.useAddres)
+     console.log()
+    this.cardnum= JSON.parse(this.$route.query.gift).cardnum;
+    this.pwd= JSON.parse(this.$route.query.gift).pwd;
     let parmas={cmd:"findGiftCard",uid:this.uid,cardnum:this.cardnum,pwd:this.pwd};
     this.postRequest(parmas).then(res=>{
-      //  console.log(res)
+       console.log(res)
        this.productList=res.data.dataObject.orderItem;
-       this.$store.commit('LookGifcardDetails',this.productList);
-      //  console.log(this.productList)
+       this.dataObject=res.data.dataObject
     })
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -87,10 +84,8 @@ export default {
   methods: {
     getmsg() {
       // this.uid=this.$store.state.Use.uid;
-       this.giftcardId=this.$store.state.gifCradInfo.cardid;
-       this.addressId=this.$store.state.useAddres
-      this.uid = "1";
-
+       this.giftcardId=this.dataObject.cardid;
+       this.addressId=this.dataObject.receiver.useAddres
       let parmas = {
         cmd: "giftCardDelivery",
         uid: this.uid,
@@ -98,6 +93,9 @@ export default {
         addressId: this.addressId,
         remark: this.remark
       };
+      this.postRequest(parmas).then(res=>{
+        console.log(res)
+      })
     },
     goto(){
       this.$router.push('/editaddress');

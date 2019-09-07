@@ -5,7 +5,7 @@
       <li v-for="(item,index) in dataList" :key="index">
         <div class="ev_info">
           <div class="ev_name">
-            <img :src="imgurl+item.userIcon" alt />
+            <img :src="item.userIcon" alt />
             <div class="ev_star">
               <p>{{item.userName}}</p>
               <van-rate v-model="item.commentScore" />
@@ -15,7 +15,7 @@
         </div>
         <p class="ev_main">{{item.commentContent}}</p>
         <ul class="show_img" v-if="item.commentImages">
-           <li v-for="i in item.commentImages" :key="i"><img :src="imgurl+i" alt=""></li>
+           <li v-for="i in item.commentImages" :key="i"><img :src="i" alt=""></li>
         </ul>
       </li>
     </ul>
@@ -43,7 +43,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-      this.productid =this.$store.state.Shop.productid;
+      this.productid =this.$route.query.productid;
      let parmas={cmd:"productCommentList",nowPage:'1',pageCount:'10',productid:this.productid};
        this.postRequest(parmas).then(res=>{
          console.log(res);

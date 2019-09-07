@@ -2,7 +2,7 @@
   <ul class="shop_o">
     <li class="shop_de" v-for="(item,index) in list" :key="index">
       <div class="shop_img" @click.prevent="goto(index,item)">
-        <img :src="imgurl+item.logo" alt />
+        <img :src="item.logo" alt />
       </div>
       <div class="shop_info">
         <p class="shop_name one-txt-cut">{{item.title}}</p>

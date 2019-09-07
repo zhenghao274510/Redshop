@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="mine_conent">
     <!-- 用户信息 -->
     <div class="mi_info" @click="gotomine">
       <div class="us_info">
@@ -8,7 +8,8 @@
             <img :src="useInfo.icon" />
             <div class="us_con">
               <p class="us_name">{{useInfo.name}}</p>
-              <p class="us_self">{{}}</p>
+              <p class="us_self">{{useInfo.sign}}</p>
+              <p class="us_self">请设置你的个性签名</p>
             </div>
           </div>
         </div>
@@ -21,31 +22,15 @@
         <div class="mi_order">
           <div class="mi_order_tit">
             <span>我的订单</span>
-            <router-link to="/order">
+            <router-link to="/order/all">
               查询全部订单
               <i></i>
             </router-link>
           </div>
-          <div class="mi_order_list">
-            <router-link to="/order/waitepay">
-              <span class="one"></span>
-              <p>待付款</p>
-            </router-link>
-            <router-link to="/order/waitesong">
-              <span class="two"></span>
-              <p>待配送</p>
-            </router-link>
-            <router-link to="/order/peing">
-              <span class="three"></span>
-              <p>配送中</p>
-            </router-link>
-            <router-link to="/order/waiteping">
-              <span class="four"></span>
-              <p>待评价</p>
-            </router-link>
-            <router-link to="/order/tui">
-              <span class="five"></span>
-              <p>退款售后</p>
+          <div class="mi_order_list"  >
+            <router-link to v-for="(item,index) in ordericon" :key="index"  @click="GoToOrder(index)">
+              <span :class="item.class" ></span>
+              <p>{{item.tit}}</p>
             </router-link>
           </div>
         </div>
@@ -103,12 +88,18 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-
 export default {
   data() {
     return {
       uid:'',
-      useInfo:''
+      useInfo:'',
+      ordericon:[
+        { tit: "待付款",url:'/order/waitepay',class:'one'},
+        { tit: "待配送" ,url:'/order/waitesong',class:'two'},
+        { tit: "配送中" ,url:'/order/peing',class:'three'},
+        { tit: "待评价" ,url:'/order/waiteping',class:'four'},
+        { tit: "退款售后",url:'/order/tui',class:'five'}
+      ]
     };
   },
   //监听属性 类似于data概念
@@ -125,7 +116,7 @@ export default {
      this.uid="1";
     let params={cmd:'userInfo',uid:this.uid};
     this.postRequest(params).then(res=>{
-         console.log(res)
+        //  console.log(res)
          this.useInfo=res.data.dataObject;
     })
   },
@@ -136,7 +127,13 @@ export default {
   //方法集合
   methods: {
     gotomine(){
-      this.$router.push('/mineself');
+      this.$router.push({path:'/mineself',query:{img:this.useInfo.icon}});
+    },
+    GoToOrder(index){
+
+      let num=index+1;
+      console.log(index);
+      this.$router.push({path:this.ordericon[index],query:{ind:num}});
     }
   },
   //生命周期 - 创建之前
@@ -156,9 +153,9 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.box {
+.mine_conent {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   overflow: hidden;
   margin-top: .5rem;
   // 用户信息
@@ -214,7 +211,7 @@ export default {
   .mi_padd {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 4.19rem;
     background: #eeeeee;
     .mi_end {
       position: absolute;

@@ -63,19 +63,14 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
    this.arry=[];
-     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10",status:'2' };
     this.postRequest(params).then(res => {     
       if (res.data.result == 0) {
-        this.dataList = res.data.dataList;
+        this.arry = res.data.dataList;
         // console.log(this.dataList,typeof this.list);
        
-        this.dataList.forEach(item=>{
-          let e=parseInt(item.status);
-            if(e==1){
-               this.arry.push(item);
-            }
-        })
-         console.log(this.arry)
+     
+
       }
      
     });

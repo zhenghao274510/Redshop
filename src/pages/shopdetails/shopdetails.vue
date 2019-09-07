@@ -47,8 +47,8 @@
         <div class="shop_info_use">
           <div class="use_tit">
             <div>用户评价</div>
-            <div>
-              <router-link to="/evaluation">更多评价</router-link>
+            <div @click="LookP">
+              <router-link to="">更多评价</router-link>
               <em></em>
             </div>
           </div>
@@ -81,7 +81,11 @@
           <div class="shop_img"></div>
         </div>
       </div>
-      <iframe :src="dataObject.url" frameborder="0" class="shopendmore" scrolling="no"></iframe>
+      <!--  -->
+      <!-- <iframe :src="dataObject.url" frameborder="0"  scrolling="no"></iframe> -->
+      <iframe marginwidth="0" :src="dataObject.url" marginheight="0" width="100%" name="i" id="urlIframe" frameborder="0" scrolling="no" height="100%" vspace="-150">
+</iframe>
+
     </van-pull-refresh>
     <van-popup
       v-model="show"
@@ -90,7 +94,7 @@
       :style="{ height: '70%' }"
       :close-on-click-overlay="jin"
     >
-      <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy"></Addshop>
+      <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy" :obj="dataObject"></Addshop>
       <Youcard @closec="FUC" v-if="see_card" :list="YuhuiCar"></Youcard>
       <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
     </van-popup>
@@ -122,7 +126,6 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import { pathway } from "@/mixins/img";
 // import De from "./../../components/public/banner";
 import Addshop from "./addshop";
 import Youcard from "./youhuicard";
@@ -132,7 +135,6 @@ export default {
     return {
       length:0,
        current:0,
-      imgurl: pathway.imgurl,
       jin: false,
       value: 5,
       show: false,
@@ -156,9 +158,6 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    store() {
-      return this.$store.state;
-    }
   },
   //监控data中的数据变化
   watch: {},
@@ -174,7 +173,6 @@ export default {
    this.productid=this.$route.query.productid;
     // this.uid = this.$store.state.Use.uid;
     this.uid = "1";
-    console.log(this.productid);
     let parmas1 = {
       cmd: "productDetail",
       productid: this.productid,
@@ -184,6 +182,7 @@ export default {
       if (res.data.result == 0) {
         console.log(res);
         this.dataObject = res.data.dataObject;
+        this.dataObject.productid=this.productid;
         this.length=res.data.dataObject.productImages.length;
         // 规格
         this.productParam = res.data.productParam;
@@ -204,6 +203,7 @@ export default {
         this.productCommentList = res.data.dataList[0];
       }
     });
+    //  优惠券列表
     let parmas3 = {
       cmd: "couponList"
     };
@@ -286,6 +286,9 @@ export default {
         this.$router.push("shopcar");
       },100);
       
+    },
+    LookP(){
+      this.$router.push({path:'/evaluation',query:{productid:this.productid}})
     }
     // GtoBuy(){
     //   this.$store.commit('ChooseBuy',)

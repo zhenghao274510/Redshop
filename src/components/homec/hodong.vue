@@ -3,7 +3,7 @@
     <!-- 大图 -->
     <div class="banner">
       <a :href="list.url">
-        <img :src="imgurl+list.image1" />
+        <img :src="list.image1" />
       </a>
     </div>
     <!-- 活动专区 -->
@@ -15,7 +15,7 @@
           <li v-for="(item,index) in ProductList" :key="index" @click="GetshopDetails(item)">
             <router-link to>
               <div class="hd_img_con">
-                <img :src="imgurl+item.logo" />
+                <img :src="item.logo" />
               </div>
               <div class="hd_info">
                 <p class="ft_mid col_mix one-txt-cut" style="font-weight:bold">{{item.title}}</p>
@@ -30,8 +30,8 @@
       </div>
       <!-- <Shop-L ></Shop-L> -->
     </div>
-    <router-link to class="banner">
-      <img :src="imgurl+list.image2" />
+    <router-link to class="banner" style="height:1.25rem;">
+      <img :src="list.image2" />
     </router-link>
   </div>
 </template>
@@ -102,6 +102,7 @@ export default {
   .banner {
     width: 100%;
     display: flex;
+   
     a {
       flex: 1;
     }

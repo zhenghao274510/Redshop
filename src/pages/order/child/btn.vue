@@ -42,7 +42,8 @@ export default {
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push("/addpingjia");
+          this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
+          // this.$router.push("/addpingjia");
         })
         .catch(() => {
           // on cancel

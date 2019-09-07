@@ -42,9 +42,16 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+ 
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+      console.log(this.$route.query.id);
+     if(this.$route.query.id){
+       this.num=this.$route.query.id;
+     }else{
+       this.num=0;
+     }
   },
   //方法集合
   methods: {

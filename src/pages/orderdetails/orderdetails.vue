@@ -159,18 +159,26 @@ export default {
      goto() {
       this.$router.push({path:"/addpingjia",query:{orderid:this.orderid}});
     },
-    shou_huo() {
-      Dialog.confirm({
+    shou_huo(e) {
+       let parmas={cmd:'finishOrder',uid:this.uid,orderid:this.orderid};
+          this.poatRequest(parmas).then(res=>{
+              if(res.data.result==0){
+              console.log('成功');
+                    Dialog.confirm({
         title: "确认收货成功",
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push("/addpingjia");
+            this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
         })
         .catch(() => {
           // on cancel
         });
-    }
+              }
+          })
+        
+    
+    },
   },
   //生命周期 - 创建之前
   beforeCreate() {},

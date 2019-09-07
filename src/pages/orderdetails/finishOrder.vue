@@ -2,7 +2,7 @@
   <div class="order_de bg_c">
     <div class="order_de_info">
       <div class="tit bg_wh ft_mid pad mg_bot">等待买家付款</div>
-      <div class="de_zhi pad bg_wh">
+      <div class="de_zhi pad bg_wh" @click="goto">
         <span class="pos"></span>
         <div class="info col_mix no_use" v-if="store.useAddres.name">
           <p
@@ -10,7 +10,7 @@
           >收货人：{{store.useAddres.name}}&nbsp; &nbsp; &nbsp;{{store.useAddres.phone}}</p>
           <p class="ft_mix">收货地址：{{store.useAddres.address}}{{store.useAddres.detail}}</p>
         </div>
-        <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
+        <div class="col_mix ft_mid no_use" v-else >请选择你的收货地址</div>
         <i class="back"></i>
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
@@ -18,9 +18,9 @@
       <ul class="order_info bg_wh">
         <li v-for="(item,index) in productList" :key="index">
           <router-link to>
-            <img :src="imgurl+item.logo" alt />
+            <img :src="item.image" alt />
             <div class="info_name">
-              <p class="info_top txt-cut">{{item.title}}</p>
+              <p class="info_top txt-cut">{{item.productName}}</p>
               <p class="info_bot txt-cut">{{item.skuName}}</p>
             </div>
             <div class="info_price">
@@ -189,8 +189,6 @@ export default {
       //配送费
       Freight: 10,
       uid: "",
-      productObject: {},
-      productSkuid: {},
       // 可用优惠券
       CanuseCard: [],
       productList: [],
@@ -212,17 +210,20 @@ export default {
     totalcount() {
       let num = 0;
       this.productList.forEach(item => {
-        num += item.count;
+        num +=parseInt(item.count);
       });
       return num;
     },
     MinTotalPrice() {
+       
       if(this.CanuseCard!=""){
               if(this.choseCard!=""&&this.CanuseCard[this.radioYouhui-1].couponPrice<this.shoptotal){
           return this.shoptotal-this.CanuseCard[this.radioYouhui-1].couponAmount;
-      }
+      }else{
+        return   parseInt(this.shoptotal)+parseInt(this.Freight);
       }
      
+      }
       
     }
   
@@ -238,17 +239,26 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid = "1";
-    this.productList.push(JSON.parse(this.$route.query.shop));
+    console.log(typeof this.$route.query.shop)
+      if(typeof this.$route.query.shop=='string'){
+          this.productList.push(JSON.parse(this.$route.query.shop));
+      }else{
+        //  this.productList=this.$route.query.shop;
+         this.productList=JSON.parse(localStorage.getItem('shop'));
+      }
+    //  con()
+   console.log(this.productList)
+    
     // this.uid=this.$store.state.Use.uid;
-    this.productObject = this.store.Shop;
-    this.productSkuid = this.store.Buy;
+    //   配送费
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
       this.Freight = res.data.amount;
     });
-    let parmas2 = { cmd: "myCouponList", uid: "1" };
+    //  可用优惠卷  我的优惠券
+    let parmas2 = { cmd: "myCouponList", uid: this.uid };
     this.postRequest(parmas2).then(res => {
-      console.log(res)
+      // console.log(res)
       this.CanuseCard = res.data.dataList;
     });
   },
@@ -284,8 +294,16 @@ export default {
       this.$router.push("/editaddress");
     },
     onClick(event) {
+      this.choseCard='';
       console.log(this.radioYouhui);
-      this.choseCard=this.CanuseCard[this.radioYouhui-1].couponAmount;
+      let JuanNum=parseInt(this.CanuseCard[this.radioYouhui-1].couponPrice);
+      console.log(this.shoptotal)
+      if(JuanNum>this.shoptotal){
+        this.$toast('次劵未满额,不能使用');
+      }else{
+
+        this.choseCard=this.CanuseCard[this.radioYouhui-1].couponAmount;
+      }
       
     },
     formtime() {
@@ -408,7 +426,7 @@ export default {
   }
 
   .no_more {
-    height: 0.2rem;
+    height: 0.7rem;
   }
   .end {
     position: fixed;

@@ -1,7 +1,10 @@
 <template>
 
     <div class="tit">
-        <my-address :list="dataList"></my-address>       
+        <my-address :list="dataList"></my-address> 
+        <div class="add_address">
+          <div class="btn">添加</div>
+          </div>      
     </div>
      
 
@@ -63,5 +66,19 @@ export default {
   margin-top: .5rem;
   height: 100%;
   background-color: #EEEEEE;
+  .add_address{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    .btn{
+      width: 100%;
+      height: .44rem;
+      background: #72BB29;
+      color: #FFF;
+      font-size: .14rem;
+      text-align: center;
+      line-height: .44rem;
+    }
+  }
 }
 </style>

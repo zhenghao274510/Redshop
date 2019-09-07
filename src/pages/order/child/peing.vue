@@ -55,35 +55,43 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10",status:'3'};
     this.postRequest(params).then(res => {
       if (res.data.result == 0) {
-        this.dataList = res.data.dataList;
+        this.arry = res.data.dataList;
         // console.log(this.dataList,typeof this.list);
 
-        this.dataList.forEach(item => {
-          let e = parseInt(item.status);
-          if (e == 3) {
-            this.arry.push(item);
-          }
-        });
-        console.log(this.arry);
+        // this.dataList.forEach(item => {
+        //   let e = parseInt(item.status);
+        //   if (e == 3) {
+        //     this.arry.push(item);
+        //   }
+        // });
+        // console.log(this.arry);
       }
     });
   },
   //方法集合
   methods: {
     shou_huo(e) {
-      Dialog.confirm({
+       let parmas={cmd:'finishOrder',uid:this.uid,orderid:this.orderid};
+          this.poatRequest(parmas).then(res=>{
+              if(res.data.result==0){
+              console.log('成功');
+                    Dialog.confirm({
         title: "确认收货成功",
         message: "赶快去评论一下~"
       })
         .then(() => {
-          this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
+            this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
         })
         .catch(() => {
           // on cancel
         });
+              }
+          })
+        
+    
     },
     LookDetails(e) {
       console.log(e);

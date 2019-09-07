@@ -6,13 +6,13 @@
       </div>
         <div class="li_card">
     <ul>
-      <li v-for="(item,index) in dataList" :key="index" >
-        <router-link to="">
-          <div class="gif_card_tit"  @click.prevent="GoToGif(item)">
+      <li v-for="(item,index) in dataList" :key="index" @click.prevent="GoToGif(item)">
+        <router-link to >
+          <div class="gif_card_tit"  >
             <div class="gif_name">和天下酒业礼品卡</div>
             <div class="gif_name_icon">
-              <i @click.prevent.self="Goto"></i>
-              <span @click.prevent.self="GetMsg(index)"></span>
+              <i @click.prevent.self="Goto" style="z-index:99;"></i>
+              <span @click.prevent.self="GetMsg(index)" style="z-index:99;"></span>
             </div>
           </div>
           <div class="gif_card_hao">
@@ -121,9 +121,10 @@ export default {
       }
     },
     GoToGif(e){
-     console.log(e),
-     this.$store.commit('LookGifcard',e)
-     this.$router.push('/giftcardetails');
+     console.log(e);
+    //  this.$store.commit('LookGifcard',e)
+     this.$router.push({path:'/giftcardetails',query:{gift:JSON.stringify(e)}});
+    //  this.$router.push('/giftcardetails');
     }
 
   },

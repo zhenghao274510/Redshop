@@ -3,7 +3,7 @@
     <!-- 订单详情购物车信息 -->
     <li v-for="(item,index) in list" :key="index">
       <router-link to="">
-        <img :src="imgurl+item.productImage" alt />
+        <img :src="item.productImage" alt />
         <div class="info_name">
           <p class="info_top txt-cut">{{item.productName}}</p>
           <p class="info_bot txt-cut">{{item.productSkuName}}</p>
@@ -19,9 +19,9 @@
           </p>
         </div>
       </router-link>
-      <!-- <div class="tui" v-if="num=='1'" @click="Shentui">
+      <div class="tui"  @click="Shentui">
               <span>申请退换</span>
-      </div> -->
+      </div>
     </li>
    
   </ul>

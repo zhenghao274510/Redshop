@@ -77,7 +77,7 @@ export default {
       }
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
       let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
-      // if (Reg.test(this.phone) && regname.test(this.name)) {
+      if (Reg.test(this.phone) && regname.test(this.name)) {
         let parmas = {
           cmd: "addAddress",
           uid: this.uid,
@@ -96,23 +96,28 @@ export default {
              this.$router.back(-1);
            }
         });
-      // }
+      }else{
+        this.$toast('信息有误请重新填写!');
+      }
     },
-    getCurrentPosition() {
-      this.GetCurrentCity();
-      setTimeout(() => {
-        let FMadd = JSON.parse(localStorage.getItem("address"));
-        console.log(FMadd);
-        if (FMadd) {
-          this.address =
-            FMadd.regeocode.addressComponent.province +
-            FMadd.regeocode.addressComponent.city +
-            FMadd.regeocode.addressComponent.district;
-          this.detail = FMadd.regeocode.formattedAddress.slice(this.address.length);
-          this.addressId = FMadd.regeocode.addressComponent.citycode;
-        }
-      }, 5000);
+    getCurrentPosition(){
+      this.$router.push('/positions');
     }
+    // getCurrentPosition() {
+    //   this.GetCurrentCity();
+    //   setTimeout(() => {
+    //     let FMadd = JSON.parse(localStorage.getItem("address"));
+    //     console.log(FMadd);
+    //     if (FMadd) {
+    //       this.address =
+    //         FMadd.regeocode.addressComponent.province +
+    //         FMadd.regeocode.addressComponent.city +
+    //         FMadd.regeocode.addressComponent.district;
+    //       this.detail = FMadd.regeocode.formattedAddress.slice(this.address.length);
+    //       this.addressId = FMadd.regeocode.addressComponent.citycode;
+    //     }
+    //   }, 5000);
+    // }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

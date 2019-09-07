@@ -1,25 +1,25 @@
 <template>
   <div class="container">
     <!-- <van-cell :border="false"> -->
-    <ul v-if="store.length!=0">
-      <li v-for="(item,index) in store" :key="index" class="carlist">
+    <ul v-if="productList.length!=0">
+      <li v-for="(item,index) in productList" :key="index" class="carlist">
         <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
           <div class="carlist_info" :class="{'bg':ishow}">
-            <div class="car_s" @click="changech(index)" v-show="ishow">
+            <div class="car_s" @click="changech(index)">
               <img src="/static/icon/gouwuche-weixuanzhong.png" v-if="check[index]" />
               <img src="/static/icon/gouwuche-xuanzhong.png" v-else />
             </div>
             <div class="car_img">
-              <img :src="imgurl+item.image" />
+              <img :src="item.image" />
             </div>
             <div class="car_info">
-              <p class="car_con"  @click="GetOrderDetails(item)">{{item.productName}}</p>
+              <p class="car_con" @click="GetOrderDetails(item)">{{item.productName}}</p>
               <div class="sum_tot">
                 <span class="price">
                   ￥
                   <i>{{item.price}}</i>
                 </span>
-                <div class="total" v-show="ishow" @click="sub">
+                <div class="total" @click="sub(index)">
                   <van-stepper v-model="value[index]" integer />
                 </div>
               </div>
@@ -35,7 +35,7 @@
 
     <!-- </van-cell> -->
     <!-- 底部显示 -->
-    <div  class="nothing" v-else>购物车还是空的哟！</div>
+    <!-- <div class="nothing" v-else>购物车还是空的哟！</div> -->
     <div class="all_chose">
       <div class="all_left">
         <div class="all_s" @click="choseall">
@@ -62,14 +62,13 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
+// import { pathway } from "@/mixins/img";
 import { Dialog } from "vant";
 export default {
-  props: ["ishow", "list"],
+  // props: ["ishow"],
   data() {
     return {
-      imgurl:pathway.imgurl,
-      AllLen: 0,
+      ishow: false,
       length: 0,
       LftW: 0,
       check: [],
@@ -78,40 +77,39 @@ export default {
       RightW: 58,
       totalPrice: 0,
       allchecked: true,
-      arry: this.store,
-      carid:'',
-      uid:''
+      carId: "",
+      uid: "",
+      productList: []
     };
   },
   //监听属性 类似于data概念
-  computed: {
-    store() {
-      return this.$store.state.carinfo;
-    }
-  },
+  computed: {},
   //监控data中的数据变化
-  watch: {
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-  //  this.uid=this.$store.state.Use.uid;
-   this.uid="1";
-   
-    console.log(this.store);
-    this.AllLen = this.store.length;
-       this.value = [];
-        this.check=[];
-      this.store.forEach(item => {
-      this.check.push(true);
-      this.value.push(item.count);
+    //  this.uid=this.$productList.state.Use.uid;
+    this.uid = "1";
+    let parmas = {
+      cmd: "getCartList",
+      uid: this.uid,
+      nowPage: "1",
+      pageCount: "10"
+    };
+    this.postRequest(parmas).then(res => {
+      console.log(res);
+      this.productList = res.data.dataList;
+      for (let i in this.productList) {
+        this.check[i] = true;
+        this.value[i] = this.productList[i].count;
+      }
     });
-    console.log(this.value, "value");   
+    console.log(this.value, "value");
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-  },
+  mounted() {},
   //方法集合
   methods: {
     changech(ind) {
@@ -120,7 +118,7 @@ export default {
       this.check.push(0), this.check.pop();
       console.log(this.check[ind]);
       this.check[ind] = !this.check[ind];
-      this.sub();
+      this.SubTotal();
       if (!this.check[ind]) {
         this.length += 1;
         if (this.check.indexOf(true) == -1) {
@@ -132,7 +130,7 @@ export default {
       }
     },
 
-    onClose(clickPosition, instance,name) {
+    onClose(clickPosition, instance, name) {
       switch (clickPosition) {
         case "left":
         case "cell":
@@ -141,27 +139,52 @@ export default {
           break;
         case "right":
           Dialog.confirm({
-            
             message: "确定删除吗？删除后无法无法恢复"
           }).then(() => {
             console.log(name.name);
-          
-            let parmas = { cmd: "delCart", uid: this.uid, cartid: this.store[name.name].cartid };
-            this.postRequest(parmas).then(res=>{
-              if(res.data.result==0)
-              this.$store.commit('DelCar',name.name);
-              this.$toast(res.data.resultNote);
-            })
+            let arry = [];
+            arry[0] = this.productList[name.name].cartId;
+            let parmas = {
+              cmd: "delCart",
+              uid: this.uid,
+              cartid: arry
+            };
+            this.postRequest(parmas).then(res => {
+              console.log(res);
+              if (res.data.result == 0) {
+                this.productList.splice(name.name, 1);
+                this.$toast(res.data.resultNote);
+              }
+            });
           });
           break;
       }
     },
-    sub() {
+    sub(ind) {
+      console.log(ind);
+      this.carId = this.productList[ind].cartId;
+      // console.log(this.productList[ind])
+      console.log(this.carId);
+      let count = this.value[ind];
+      let parmas = {
+        cmd: "updateCart",
+        uid: this.uid,
+        cartid: this.carId,
+        count: count
+      };
+      this.postRequest(parmas).then(res => {
+        if (res.data.result == 0) {
+          this.SubTotal()
+        }
+        console.log(res);
+      });
+    },
+    SubTotal() {
       this.totalPrice = 0;
-      if (this.AllLen!= 0) {
-        for (let i = 0; i < this.AllLen; i++) {
+      if (this.productList.length != 0) {
+        for (let i = 0; i < this.productList.length; i++) {
           if (!this.check[i]) {
-            this.totalPrice += this.value[i] * this.store[i].price;
+            this.totalPrice += this.value[i] * this.productList[i].price;
           }
         }
       }
@@ -170,41 +193,38 @@ export default {
       this.check = [];
       this.length = 0;
       this.allchecked = !this.allchecked;
-      for (let i = 0; i < this.AllLen; i++) {
+      for (let i = 0; i < this.productList.length; i++) {
         this.check.push(this.allchecked);
         if (!this.allchecked) {
           this.length += 1;
         }
       }
-      this.sub();
+      this.SubTotal();
     },
     gotopay() {
-     console.log(this.check)
-      for(let i in this.check){
-        if(!this.check[i]){
-           console.log(this.store[i])
+      console.log(this.check);
+      let arry = [];
+
+      if (this.check.indexOf(false) == -1) {
+        this.$toast("请选择要结算商品!");
+      } else {
+        for (let i in this.check) {
+          if (!this.check[i]) {
+            this.productList[i].skuPrice = this.productList[i].price;
+            console.log(this.productList[i]);
+            arry.push(this.productList[i]);
+            localStorage.setItem("shop", JSON.stringify(arry));
+            this.$router.push("/finishOrder");
+          }
         }
       }
-     
-      // this.$router.push("/success");
-      let parmas = {
-        cmd: "addCartOrder",
-        nowPage: "1",
-        cartid: "",
-        couponId: "",
-        remark: "",
-        amount: "",
-        uid: "1",
-        pageCount: "10"
-      };
-      this.postRequest(parmas).then(res => {
-        console.log(res);
-      });
     },
-    GetOrderDetails(item) {
-           this.$store.commit("Shop", item);
-      console.log(item);
-      this.$router.push("/shopdetails");
+    GetOrderDetails(e) {
+      console.log(e);
+      this.$router.push({
+        path: "/shopdetails",
+        query: { productid: e.productId }
+      });
     }
   },
   //生命周期 - 创建之前

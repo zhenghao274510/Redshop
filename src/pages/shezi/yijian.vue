@@ -48,6 +48,7 @@ export default {
             this.$toast("感谢你的及时反馈!我们会做的更好!");
             this.phone = "";
             this.content = "";
+            // this.$router.back(-1);
           }
         });
       } else if (!reg.test(this.phone)) {

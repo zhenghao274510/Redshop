@@ -53,7 +53,6 @@ export default new Router({
     // 我的订单
     {
       path: '/order',
-      
       component: resolve => require(['./../pages/order/order.vue'], resolve),
       meta:{
         requireAuth: true,

@@ -136,13 +136,14 @@ export default {
       var file = event.target.files[0];
       var img = new FormData();
       img.append("file", file);
-      console.log(file);
+      // console.log(file);
       let reg = /(png|jpg|jpeg|gif)$/; // 上传图片类型
-      console.log(reg.test(file.name));
+      // console.log(reg.test(file.name));
       if (reg.test(file.name)) {
         Up.postFile("api/uploadFile", img).then(res => {
+          console.log(res);
           if (res.data.result == 0) {
-            this.$toast("上传成功!");
+            // this.$toast("上传成功!");
             this.imgs.push(res.data.filepath);
           }
         });

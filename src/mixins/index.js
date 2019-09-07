@@ -53,7 +53,7 @@ export default {
     // },
     //  数据请求
     postRequest(data = {}, method = 'post') {
-      store.state.isLoading=true;
+         this.$root.isLoading=true;
       // Toast.loading({
       //   mask: true,
       //   message: '加载中...'
@@ -68,7 +68,7 @@ export default {
 
           })
           .then(res => {
-            store.state.isLoading=false;
+            this.$root.isLoading=true;
             // Toast.clear();
             //成功
             if (res.data.result == '0') {

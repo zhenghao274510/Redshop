@@ -2,11 +2,11 @@
   <div id="app">
     <Top :title="$route.name"></Top>
     
-    <tar v-if="$route.meta.showtabar"></tar>
-    <!-- <is-load v-if="isLoading"></is-load> -->
-    <!-- <transition :name="transitionName" mode="out-in"> -->
+    <transition :name="transitionName" mode="out-in">
       <router-view />
-      <!-- </transition> -->
+      </transition>
+    <tar v-if="$route.meta.showtabar"></tar>
+    <is-load v-if="isLoading"></is-load>
  
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       transitionName:'',
-      isLoading:true
+      isLoading:false
     };
   },
   watch:{
@@ -41,7 +41,7 @@ export default {
   created(){
   },
   mounted() {
-    window.onload =set.setrem;
+    window.onload =window.onresize=set.setrem;
   },
   components: {
     tar,
@@ -63,10 +63,7 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100%;
-  background: #fff;
 }
 </style>
