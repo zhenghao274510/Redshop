@@ -1,6 +1,10 @@
 <template>
-  <div class='box'>
-     修改
+  <div class='changpsw'>
+     <ul>
+       <li><input type="password" v-model="oldPsw" placeholder="请输入原密码"></li>
+       <li><input type="password" v-model="newPsw"  placeholder="请输入新密码"></li>
+       <li><input type="password" v-model="repeatPsw"  placeholder="再次输入新密码"></li>
+     </ul>
   </div>
 </template>
 
@@ -10,7 +14,9 @@
 export default {
   data() {
     return {
-
+      oldPsw:'',
+      newPsw:'',
+      repeatPsw:''
     };
   },
   //监听属性 类似于data概念
@@ -49,6 +55,21 @@ export default {
   activated() {},
 }
 </script>
-<style scoped>
+<style scoped lang="less">
+.changpsw{
+  margin-top: .5rem;
+  ul{
+    padding:.15rem;
+    li{
+      height: .44rem;
+      line-height: .44rem;
+      border-bottom: .01rem solid #e5e5e5;
+      font-size: .16rem;
+      input{
+        flex: 1;
+      }
+    }
 
+  }
+}
 </style>

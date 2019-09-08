@@ -243,10 +243,8 @@ export default {
       if(typeof this.$route.query.shop=='string'){
           this.productList.push(JSON.parse(this.$route.query.shop));
       }else{
-        //  this.productList=this.$route.query.shop;
          this.productList=JSON.parse(localStorage.getItem('shop'));
       }
-    //  con()
    console.log(this.productList)
     
     // this.uid=this.$store.state.Use.uid;

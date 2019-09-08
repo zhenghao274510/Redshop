@@ -8,8 +8,8 @@
             <img :src="useInfo.icon" />
             <div class="us_con">
               <p class="us_name">{{useInfo.name}}</p>
-              <p class="us_self">{{useInfo.sign}}</p>
-              <p class="us_self">请设置你的个性签名</p>
+              <p class="us_self" v-if="useInfo.sign!=''">{{useInfo.sign}}</p>
+              <p class="us_self" v-else>请设置你的个性签名</p>
             </div>
           </div>
         </div>
@@ -22,16 +22,16 @@
         <div class="mi_order">
           <div class="mi_order_tit">
             <span>我的订单</span>
-            <router-link to="/order/all">
+            <div class="all_order" @click="GoToOrder(0)">
               查询全部订单
               <i></i>
-            </router-link>
+            </div>
           </div>
-          <div class="mi_order_list"  >
-            <router-link to v-for="(item,index) in ordericon" :key="index"  @click="GoToOrder(index)">
-              <span :class="item.class" ></span>
+          <div class="mi_order_list">
+            <div v-for="(item,index) in ordericon" :key="index" @click="GoToOrder(index+1)">
+              <span :class="item.class"></span>
               <p>{{item.tit}}</p>
-            </router-link>
+            </div>
           </div>
         </div>
         <!-- 充值卡 -->
@@ -56,14 +56,14 @@
         <!-- 收藏 -->
         <div class="mi_his">
           <div class="mi_card_info bord">
-            <router-link to='/shoucang'>
+            <router-link to="/shoucang">
               <div>
                 <span class="threecard"></span> 我的收藏
               </div>
               <i></i>
             </router-link>
           </div>
-           <div class="mi_card_info bord">
+          <div class="mi_card_info bord">
             <router-link to="/shezi">
               <div>
                 <span class="fourcard"></span> 设置
@@ -71,8 +71,8 @@
               <i></i>
             </router-link>
           </div>
-           <div class="mi_card_info">
-            <router-link to="/service">
+          <div class="mi_card_info">
+            <router-link to="/amap">
               <div>
                 <span class="fivecard"></span> 在线客服
               </div>
@@ -91,14 +91,14 @@
 export default {
   data() {
     return {
-      uid:'',
-      useInfo:'',
-      ordericon:[
-        { tit: "待付款",url:'/order/waitepay',class:'one'},
-        { tit: "待配送" ,url:'/order/waitesong',class:'two'},
-        { tit: "配送中" ,url:'/order/peing',class:'three'},
-        { tit: "待评价" ,url:'/order/waiteping',class:'four'},
-        { tit: "退款售后",url:'/order/tui',class:'five'}
+      uid: "",
+      useInfo: "",
+      ordericon: [
+        { tit: "待付款", url: "/order/waitepay", class: "one" },
+        { tit: "待配送", url: "/order/waitesong", class: "two" },
+        { tit: "配送中", url: "/order/peing", class: "three" },
+        { tit: "待评价", url: "/order/waiteping", class: "four" },
+        { tit: "退款售后", url: "/order/tui", class: "five" }
       ]
     };
   },
@@ -107,33 +107,37 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //  this.uid=this.$store.state.Use.uid;
-     this.uid="1";
-    let params={cmd:'userInfo',uid:this.uid};
-    this.postRequest(params).then(res=>{
-        //  console.log(res)
-         this.useInfo=res.data.dataObject;
-    })
+    this.uid = "1";
+    let params = { cmd: "userInfo", uid: this.uid };
+    this.postRequest(params).then(res => {
+      //  console.log(res)
+      this.useInfo = res.data.dataObject;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.$root.isLoading=false;
-  },
+  mounted() {},
   //方法集合
   methods: {
-    gotomine(){
-      this.$router.push({path:'/mineself',query:{img:this.useInfo.icon}});
+    gotomine() {
+      this.$router.push({
+        path: "/mineself",
+        query: { img: this.useInfo.icon }
+      });
     },
-    GoToOrder(index){
+    GoToOrder(ind) {
+      if (this.ordericon[ind - 1]) {
+       let url = this.ordericon[ind - 1].url;
+          this.$router.push({ path: url });
+      } else {
+          this.$router.push("/order/all");
+      }
+      sessionStorage.setItem("key", ind);
 
-      let num=index+1;
-      console.log(index);
-      this.$router.push({path:this.ordericon[index],query:{ind:num}});
+    
     }
   },
   //生命周期 - 创建之前
@@ -155,9 +159,10 @@ export default {
 <style scoped lang='less' rel='stylesheet/stylus'>
 .mine_conent {
   width: 100%;
-  // height: 100%;
+  height: calc(100% - 0.5rem);
+  background: #eeeeee;
+
   overflow: hidden;
-  margin-top: .5rem;
   // 用户信息
   .mi_info {
     width: 100%;
@@ -166,7 +171,7 @@ export default {
     padding: 0.15rem;
     display: flex;
     justify-content: space-between;
-
+    margin-top: 0.5rem;
     .us_info {
       font-size: 0;
       display: flex;
@@ -210,12 +215,11 @@ export default {
   }
   .mi_padd {
     position: relative;
+    margin-top: -0.46rem;
     width: 100%;
-    height: 4.19rem;
-    background: #eeeeee;
     .mi_end {
       position: absolute;
-      top: -0.46rem;
+      top: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
@@ -241,7 +245,7 @@ export default {
           span {
             font-size: 0.15rem;
           }
-          a {
+          .all_order {
             display: flex;
             align-items: center;
             height: 0.44rem;
@@ -262,7 +266,7 @@ export default {
           height: 0.88rem;
           justify-content: space-between;
           align-items: center;
-          a {
+          div {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -350,7 +354,7 @@ export default {
                 background: url("/static/icon/shezhi.png") no-repeat;
                 background-size: 100% 100%;
               }
-              .fivecard{
+              .fivecard {
                 background: url("/static/icon/kefu.png") no-repeat;
                 background-size: 100% 100%;
               }

@@ -42,16 +42,15 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
- 
+    if(sessionStorage.getItem('key')){
+           this.num=sessionStorage.getItem('key');
+    }
+    
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-      console.log(this.$route.query.id);
-     if(this.$route.query.id){
-       this.num=this.$route.query.id;
-     }else{
-       this.num=0;
-     }
+    
+    
   },
   //方法集合
   methods: {
@@ -83,10 +82,11 @@ export default {
   height: 100%;
   background-color: #eee;
   overflow-y: auto;
+  position: relative;
 }
 .order_nav {
-  position: fixed;
-  top: 0.5rem;
+  position: absolute;
+  top:0;
   width: 100%;
   background-color: #fff;
   display: flex;

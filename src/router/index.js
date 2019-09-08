@@ -267,6 +267,12 @@ export default new Router({
       name:"支付成功",
       component: resolve => require(['./../components/public/success.vue'], resolve)
     },
+      // 支付成功
+      {
+        path: '/allcard',
+        name:"充值卡",
+        component: resolve => require(['./../pages/chongzhi/allcard.vue'], resolve)
+      },
     // 编辑地址
     {
       path: '/editaddress',

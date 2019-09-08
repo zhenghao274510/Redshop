@@ -1,10 +1,10 @@
 <template>
-  <div class="box">
+  <div class="foot">
     <ul >
       <li v-for="(item,index) in icon" :key="index" @click="changeta(index)">
-        <router-link  :to="item.url" :class="{'active':get.TB==index}">
+        <router-link  :to="item.url" :class="{'active':num==index}">
           <div>
-            <img :src="item.normal" v-if='get.TB!=index' />
+            <img :src="item.normal" v-if='num!=index' />
             <img :src="item.actived" v-else/>
           </div>
           <p>{{item.tit}}</p>
@@ -20,6 +20,7 @@
 export default {
   data() {
     return {
+      num:0,
       icon:[{
         url:'/home',
         normal:'/static/icon/tab-shouye-weixuanzhong.png',
@@ -58,15 +59,22 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    if( sessionStorage.getItem('home')){
+       this.num=sessionStorage.getItem('home');
+    }else{
+      this.num=0;
+    }
+    
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    console.log(this.$store.state.home.TB)
   },
   //方法集合
   methods: {
     changeta(ind) {
-    this.$store.commit("ChangeTabar",ind);
+      this.num=ind;
+   sessionStorage.setItem('home',ind);
     }
   },
   //生命周期 - 创建之前
@@ -78,7 +86,9 @@ export default {
   //生命周期 - 更新之后
   updated() {},
   //生命周期 - 销毁之前
-  beforeDestroy() {},
+  beforeDestroy(){
+    
+  },
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
@@ -86,7 +96,7 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.box {
+.foot {
   position: fixed;
   bottom: 0;
   width: 100%;

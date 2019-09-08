@@ -5,7 +5,7 @@
       <div class="sear">
         <div>
           <span></span>
-          <input type="text" placeholder="输入关键词搜索" name="search" ref="input" />
+          <input type="text" placeholder="输入关键词搜索" name="search" ref="input" @click="focus" />
         </div>
         <span class="btn">搜索</span>
       </div>
@@ -70,6 +70,7 @@ import { pathway } from "@/mixins/img";
 import Top from "@/components/public/heade";
 import Zq from "@/components/homec/hodong";
 import Tit from "@/components/homec/title";
+
 export default {
   data() {
     return {
@@ -131,7 +132,6 @@ export default {
     this.postRequest(params1).then(res => {
       // console.log(res);
       this.firstpath = res.data.dataObject;
-      this.$root.isLoading = false;
     });
     
 
@@ -190,19 +190,15 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {
-          // console.log(res.data.resultNote)
            this.$toast(res.data.resultNote);
           this.isGet = false;
-          // this.First=false;
         }
       });
     },
     //  首页 获取焦点 跳转
     focus() {
       console.log(111);
-      this.$refs.input.addEventListener("focus", () => {
         this.$router.push("/shoplist");
-      });
     },
     GoTO(e) {
       this.$router.push({

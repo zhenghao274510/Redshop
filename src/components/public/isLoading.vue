@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.isLoading" class="islonding">
+  <div class="islonding">
     <van-loading size="24px" type="spinner" vertical color="#000000">加载中...</van-loading>
   </div>
 </template>
@@ -7,10 +7,12 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   methods: {},
-  moutend() {}
+  moutend() {},
+
 };
 </script>
  

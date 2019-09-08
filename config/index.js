@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {},
 
     // Various Dev Server settings
-    host: '192.168.3.230', // can be overwritten by process.env.HOST
+    host: '192.168.0.130', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -48,8 +48,8 @@ module.exports = {
     /**
      * Source Maps
      */
-
-    productionSourceMap: true,
+    //  修改
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

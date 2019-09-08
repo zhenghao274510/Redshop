@@ -6,7 +6,7 @@
       <router-view />
       </transition>
     <tar v-if="$route.meta.showtabar"></tar>
-    <is-load v-if="isLoading"></is-load>
+ <!-- <is-load :isLoading='$store.state.isload'></is-load> -->
  
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       transitionName:'',
-      isLoading:false
+      // isload:false
     };
   },
   watch:{
@@ -41,7 +41,7 @@ export default {
   created(){
   },
   mounted() {
-    window.onload =window.onresize=set.setrem;
+    window.onload=window.onresize=set.setrem;
   },
   components: {
     tar,
@@ -52,7 +52,9 @@ export default {
   methods: {
   },
   computed:{
-  }
+  },
+ 
+ 
 };
 </script>
 

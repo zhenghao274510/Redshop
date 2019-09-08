@@ -15,7 +15,7 @@
       <Info :num="id" :list="productList"></Info>
       <div class="line"></div>
       <div class="tui">
-        <div class="changemi">
+        <div class="changemi" @click="GoTo">
           <span>修改密码</span>
           <van-icon name="records" size=".16rem" color="#999999" />
         </div>
@@ -39,7 +39,6 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import Info from "./../order/child/carIfo";
-// import myAddress from "./../orderdetails/adderss";
 export default {
   data() {
     return {
@@ -99,6 +98,9 @@ export default {
     },
     goto(){
       this.$router.push('/editaddress');
+    },
+    GoTo(){
+      this.$router.push('/changepswgiftcard');
     }
   },
   //生命周期 - 创建之前

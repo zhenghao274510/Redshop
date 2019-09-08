@@ -2,7 +2,7 @@
   <div class='ch_zh_card'>
       <ul class="ch_zi_con">
         <li><router-link to="/paymoney"><div class="one"></div><p>充值</p></router-link></li>
-        <li><router-link to=""><div class="two"></div><p>购卡记录</p></router-link></li>
+        <li><router-link to="/allcard"><div class="two"></div><p>购卡记录</p></router-link></li>
         <li><router-link to="/chaxun"><div class="three"></div><p>充值卡查询</p></router-link></li>
       </ul>
   </div>

@@ -14,6 +14,7 @@ import mixins from './mixins'
 Vue.mixin(mixins)
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import Toast from 'vant'
 Vue.use(Vant);
 
 import {
@@ -33,7 +34,7 @@ VueAMap.initAMapApiLoader({
   ],
   v: '1.4.4'
 })
-router.beforeEach((to, from, next) => {    
+router.beforeEach((to, from, next) => { 
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
     if (JSON.parse(localStorage.getItem("user"))) {
       next();
@@ -50,6 +51,8 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+
 // router.beforeEach((to, from, next) => {
 //   //   第一次进入项目
 //   let token = window.localStorage.getItem("user_token");

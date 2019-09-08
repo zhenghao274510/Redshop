@@ -29,22 +29,18 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
-// import btn from './btn'
 import { Dialog } from "vant";
 export default {
   props:['list'],
 
   data() {
     return {
-      imgurl:pathway.imgurl,
     };
   },
   //监听属性 类似于data概念
   computed: {
-    store(){
-      return this.$store.state.orderDetails.orderItem;
-    }
+  
+ 
   },
   //监控data中的数据变化
   watch: {},
@@ -53,8 +49,6 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   console.log(this.list)
-    // console.log(this.arry)
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

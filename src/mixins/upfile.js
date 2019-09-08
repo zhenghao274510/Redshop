@@ -2,6 +2,9 @@
  import axios from 'axios'
  export default {
    postFile: (url, data = {}, method = 'post')=> {
+    Toast.loading({
+      message: '上传中...'
+    });
      return new Promise((resolve, reject) => {
        axios({
            url: 'http://192.168.3.254:8099/wineshop/' + url,
