@@ -1,52 +1,61 @@
 <template>
-  <ul class="order_info bg_wh" >
-    <!-- 订单详情购物车信息 -->
-    <li v-for="(item,index) in list" :key="index" >
-      <router-link to="">
-        <img :src="item.productImage" alt />
-        <div class="info_name">
-          <p class="info_top">{{item.productName}}</p>
-          <p class="info_bot">{{item.productSkuName}}</p>
-        </div>
-        <div class="info_price">
-          <p>
-            ￥{{item.productPrice}}
-          </p>
-          <p>
-            ×
-            <span>{{item.productCount}}</span>
-          </p>
-        </div>
-      </router-link>
-      <!-- <div class="tui"  @click="Shentui">
-              <span>申请退换</span>
-      </div> -->
-    </li>
-   
-  </ul>
+  <div>
+    <ul class="order_info bg_wh">
+      <!-- 订单详情购物车信息 -->
+      <li v-for="(item,index) in list" :key="index">
+        <router-link to>
+          <img :src="item.productImage" alt style="width:.8rem;height:.8rem;" />
+          <div class="info_name">
+            <p class="info_top">{{item.productName}}</p>
+            <p class="info_bot">{{item.productSkuName}}</p>
+          </div>
+          <div class="info_price">
+            <p>￥{{item.productPrice}}</p>
+            <p>
+              ×
+              <span>{{item.productCount}}</span>
+            </p>
+          </div>
+        </router-link>
+      </li>
+    </ul>
+    <div class="order_tot">共{{totalnum}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{totalprice}}</div>
+  </div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
-// import btn from './btn'
 import { Dialog } from "vant";
 export default {
-  props:['list'],
+  props: ["list"],
 
   data() {
     return {
       // arry:this.list,
-      imgurl:pathway.imgurl
     };
   },
   //监听属性 类似于data概念
   computed: {
+       totalnum() {
+      let num=0
+      this.list.forEach(item=>{
+            num+= parseInt(item.productCount) ;
+      })
+      return num;
+    },
+    totalprice(){
+      let num=0;
+       this.list.forEach(item=>{
+           num+= parseInt(item.productPrice*100)*item.productCount/100;
+      })
+      return num;
+    }
   },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
+ 
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -54,9 +63,9 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    Shentui(){
-   Dialog.confirm({
-       title:'申请退卡',
+    Shentui() {
+      Dialog.confirm({
+        title: "申请退卡",
         message: "申请退换请联系客服~"
       })
         .then(() => {
@@ -67,7 +76,6 @@ export default {
           // on cancel
         });
     }
-  
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -86,69 +94,68 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
- .order_info {
-      padding: 0.15rem .1rem;
-      li {
-        margin-bottom: 0.15rem;
-        &:last-child {
-          margin-bottom: 0;
-        }
-        .tui{
-          padding: 0 .15rem;
-         overflow: hidden;
-          span{
-            display: block;
-            width: .9rem;
-            height: .3rem;
-            border-radius: .05rem;
-            border: .01rem solid #999999;
-            color: #999999;
-            font-size: .14rem;
-            text-align: center;
-            line-height: .3rem;
-            float: right;
-          }
-        }
-        a {
-          display: flex;
-          justify-content: space-between;
+.order_info {
+  padding: 0.15rem 0.1rem;
+  li {
+    margin-bottom: 0.15rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .tui {
+      padding: 0 0.15rem;
+      overflow: hidden;
+      span {
+        display: block;
+        width: 0.9rem;
+        height: 0.3rem;
+        border-radius: 0.05rem;
+        border: 0.01rem solid #999999;
+        color: #999999;
+        font-size: 0.14rem;
+        text-align: center;
+        line-height: 0.3rem;
+        float: right;
+      }
+    }
+    a {
+      display: flex;
+      justify-content: space-between;
 
-          img {
-            width: 0.85rem;
-            height: 0.85rem;
-            margin-right: 0.15rem;
-          }
-          .info_name {
-            display: flex;
-            // flex: 1;
-            flex-direction: column;
-            text-align: left;
-            .info_top {
-              font-size: 0.14rem;
-              color: #333333;
-              // width: 100%;
-              // flex: 1;
-            }
-            .info_bot {
-              font-size: 0.12rem;
-              color: #999999;
-              margin-top: .06rem;
-            }
-          }
-          .info_price {
-            margin-left: 0.2rem;
-            display: flex;
-            flex-direction: column;
-            font-size: 0.12rem;
-            color: #333333;
-            p {
-              &:last-child {
-                text-align: right;
-                margin-top: 0.34rem;
-              }
-            }
+      img {
+        margin-right: 0.15rem;
+      }
+      .info_name {
+        text-align: left;
+        .info_top {
+          font-size: 0.14rem;
+          color: #333333;
+        }
+        .info_bot {
+          font-size: 0.12rem;
+          color: #999999;
+          margin-top: 0.06rem;
+        }
+      }
+      .info_price {
+        margin-left: 0.2rem;
+        display: flex;
+        flex-direction: column;
+        font-size: 0.12rem;
+        color: #333333;
+        p {
+          &:last-child {
+            text-align: right;
+            margin-top: 0.34rem;
           }
         }
       }
     }
+  }
+}
+.order_tot {
+  padding: 0 0.15rem 0.15rem 0;
+  font-size: 0.14rem;
+  color: #333333;
+  text-align: right;
+}
 </style>

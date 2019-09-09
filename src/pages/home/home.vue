@@ -22,15 +22,15 @@
             @load="onLoad"
             :offset="10"
           >
-            <li v-for="(item,index) in ProductList" :key="index" @click="GoTO(item)">
+            <li v-for="(item,index) in ProductList" :key="index">
               <router-link to>
-                <div class="list_img">
-                  <img :src="item.logo" alt />
+                <div class="list_img"  @click="GoTO(item)">
+                  <img :src="item.logo" alt style="width:1.38rem;height:.93rem;" />
                 </div>
                 <div class="list_info">
-                  <p class="list_name">{{item.title}}</p>
+                  <p class="list_name"  @click="GoTO(item)">{{item.title}}</p>
                   <div class="list_icon">
-                    <p class="col_max ft_mid">￥{{item.price}}</p>
+                    <p class="col_max ft_mid"  @click="GoTO(item)">￥{{item.price}}</p>
                     <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
                   </div>
                 </div>
@@ -61,6 +61,7 @@
         <div class="getJ ft_mid" @click="First=false">确定</div>
       </div>
     </van-popup>
+    <!-- <Addcard v-show="chose"></Addcard> -->
   </div>
 </template>
 
@@ -70,6 +71,7 @@ import { pathway } from "@/mixins/img";
 import Top from "@/components/public/heade";
 import Zq from "@/components/homec/hodong";
 import Tit from "@/components/homec/title";
+// import Addcard from '@/pages/shopdetails/addshop'
 
 export default {
   data() {
@@ -87,7 +89,8 @@ export default {
       ProductList: [],
       ProductObject: {},
       firstpath: {},
-      uid: ""
+      uid: "",
+      chose:false
     };
   },
   //监听属性 类似于data概念
@@ -98,7 +101,8 @@ export default {
   components: {
     Top,
     Zq,
-    Tit
+    Tit,
+    // Addcard
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -128,7 +132,6 @@ export default {
 
     //  主页 部分
     let params1 = { cmd: "firstPage" };
-    console.log(this.$root.isLoading);
     this.postRequest(params1).then(res => {
       // console.log(res);
       this.firstpath = res.data.dataObject;
@@ -180,7 +183,7 @@ export default {
     },
     GetJuan() {
       //  获取优惠券
-      // this.uid=this.$store.state.Use.uid;
+      // this.uid= localStorage.getItem('uid');
       this.uid = "1";
      
       let parmas = {
@@ -201,10 +204,15 @@ export default {
         this.$router.push("/shoplist");
     },
     GoTO(e) {
+      // let obj={productid:e.productid}
       this.$router.push({
         path: "/shopdetails",
-        query: { productid: e.productid }
+        query: { productid:e.productid}
       });
+    },
+    Addcar(e){
+      console.log(e)
+        // this.chose=true;
     }
   },
   //生命周期 - 创建之前
@@ -216,7 +224,9 @@ export default {
   //生命周期 - 更新之后
   updated() {},
   //生命周期 - 销毁之前
-  beforeDestroy() {},
+  beforeDestroy() {
+    localStorage.setItem('uid',this.uid);
+  },
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
@@ -268,13 +278,15 @@ export default {
       margin-bottom: 0.15rem;
       a {
         display: flex;
+        height: 100%;
         padding: 0.1rem;
         justify-content: space-between;
         .list_img {
           width: 1.38rem;
           height: 0.93rem;
-          img {
-            height: 0.93rem;
+          font-size: 0;
+          img{
+            height: .93rem;
           }
         }
         .list_info {

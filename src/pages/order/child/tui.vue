@@ -9,9 +9,9 @@
         <em>退款中</em>
       </div>
       <Info :list="item.orderItem"></Info>
- 
-    <van-overlay :show="show" @click="show = false" />
-  </div>
+
+      <van-overlay :show="show" @click="show = false" />
+    </div>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 //import 《组件名称》 from '《组件路径》';
 import Info from "./carIfo";
 export default {
-    props:['list'],
+  props: ["list"],
   //  props:{
   //     list:{
   //        type:Array,
@@ -29,16 +29,14 @@ export default {
   data() {
     return {
       show: false,
-      dataList:[],
-      arry:this.list
+      dataList: [],
+      arry: this.list
     };
   },
   //监听属性 类似于data概念
-  computed: {
-  },
+  computed: {},
   //监控data中的数据变化
-  watch: {
-  },
+  watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {
     Info
@@ -47,26 +45,24 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.arry=[];
-     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
-    this.postRequest(params).then(res => {     
+    this.arry = [];
+    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
+    this.postRequest(params).then(res => {
       if (res.data.result == 0) {
         this.dataList = res.data.dataList;
-       
-        this.dataList.forEach(item=>{
-          let e=parseInt(item.status);
-            if(e==4){
-               this.arry.push(item);
-            }
-        })
-         console.log(this.arry)
+
+        this.dataList.forEach(item => {
+          let e = parseInt(item.status);
+          if (e == 4) {
+            this.arry.push(item);
+          }
+        });
+        console.log(this.arry);
       }
-     
     });
   },
   //方法集合
-  methods: {
-  },
+  methods: {},
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前
@@ -85,12 +81,13 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .order_mo {
-  padding: 0.15rem;
+  padding: .15rem;
   width: 100%;
- margin-top: .1rem;
+  margin-top: 0.9rem;
+
   .order_con {
-    margin-bottom: .1rem;
     // font-size: 0;
+    
     background-color: #ffffff;
     border-radius: 0.1rem;
     .order_tit {

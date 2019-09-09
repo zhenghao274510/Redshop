@@ -62,13 +62,13 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.uid= JSON.parse(localStorage.getItem('uid'));
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
     save() {
-      this.uid = "1";
       if (this.istrue) {
         this.isdefault = 1;
       } else {

@@ -33,8 +33,8 @@ methods: {},
 </script>
  
 <style scoped lang = "less">
-.box{margin-top:.5rem;padding:0 .15rem;}
- h4{line-height: .45rem;font-size: .17rem;color: #333333;}
+.box{padding:0 .15rem;}
+ h4{line-height: .45rem;font-size: .17rem;color: #333333;margin-top:.5rem;}
  ul{display: flex;flex-wrap: wrap;}
  ul li{width: 1.65rem;height: .85rem;border:.01rem solid #72BB29;margin:0 .15rem .15rem 0;display: flex;justify-content: center;align-items: center;color: #72BB29;font-size: .15rem;}
 li:nth-child(2n){margin-right: 0;}

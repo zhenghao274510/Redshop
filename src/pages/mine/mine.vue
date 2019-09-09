@@ -110,7 +110,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    //  this.uid=this.$store.state.Use.uid;
+    this.uid= JSON.parse(localStorage.getItem('uid'));
     this.uid = "1";
     let params = { cmd: "userInfo", uid: this.uid };
     this.postRequest(params).then(res => {

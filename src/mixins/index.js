@@ -53,9 +53,9 @@ export default {
     // },
     //  数据请求
     postRequest(data = {}, method = 'post') {
-      Toast.loading({
-        message: '加载中...'
-      });
+      // Toast.loading({
+      //   message: '加载中...'
+      // });
       return new Promise((resolve, reject) => {
         axios({
             url: encodeURI("http://192.168.3.254:8099/wineshop/api/service?json=" + JSON.stringify(data)),

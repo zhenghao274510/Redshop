@@ -55,7 +55,7 @@ export default new Router({
       path: '/order',
       component: resolve => require(['./../pages/order/order.vue'], resolve),
       meta:{
-        requireAuth: true,
+        requireAuth: true
       },
       children:[
         { path: '/',
@@ -95,7 +95,7 @@ export default new Router({
       // 扫一扫
       {
         path: '/ScanCod',
-        name:"扫一扫",
+        name:"酒商城",
         component: resolve => require(['./../pages/ScanCod.vue'], resolve)
       },
      // 修改昵称

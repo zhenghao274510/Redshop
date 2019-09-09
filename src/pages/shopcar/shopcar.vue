@@ -26,7 +26,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this.uid=this.$store.Use.uid;
+    this.uid= localStorage.getItem('uid');
     this.uid='1'
      let parmas = {
         cmd: "getCartList",

@@ -1,6 +1,6 @@
 <template>
-<!-- 评价 -->
-  <div class="box">
+  <!-- 评价 -->
+  <div class="el_box">
     <ul class="ev_cont">
       <li v-for="(item,index) in dataList" :key="index">
         <div class="ev_info">
@@ -15,7 +15,9 @@
         </div>
         <p class="ev_main">{{item.commentContent}}</p>
         <ul class="show_img" v-if="item.commentImages">
-           <li v-for="i in item.commentImages" :key="i"><img :src="i" alt=""></li>
+          <li v-for="i in item.commentImages" :key="i">
+            <img :src="i" alt />
+          </li>
         </ul>
       </li>
     </ul>
@@ -24,14 +26,12 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
-import {pathway} from '@/mixins/img'
 export default {
   data() {
     return {
-      imgurl:pathway.imgurl,
       value: 5,
-      dataList:[],
-      productid:''
+      dataList: [],
+      productid: ""
     };
   },
   //监听属性 类似于data概念
@@ -39,16 +39,20 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-      this.productid =this.$route.query.productid;
-     let parmas={cmd:"productCommentList",nowPage:'1',pageCount:'10',productid:this.productid};
-       this.postRequest(parmas).then(res=>{
-         console.log(res);
-         this.dataList=res.data.dataList;
-      })
+    this.productid = this.$route.query.productid;
+    let parmas = {
+      cmd: "productCommentList",
+      nowPage: "1",
+      pageCount: "10",
+      productid: this.productid
+    };
+    this.postRequest(parmas).then(res => {
+      console.log(res);
+      this.dataList = res.data.dataList;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -74,10 +78,10 @@ export default {
 /deep/ .van-rate__icon {
   font-size: 0.13rem;
 }
-.box {
+.el_box {
+  margin-top: 0.5rem;
+  font-size: 0;
   .ev_cont {
-    margin-top: 0.5rem;
-    font-size: 0;
     li {
       padding: 0.15rem;
       border-bottom: 0.01rem solid #e5e5e5;
@@ -107,21 +111,23 @@ export default {
           color: #999999;
         }
       }
-      .ev_main{
-        line-height: .2rem;
-        font-size: .13rem;
-        margin-top: .1rem;
+      .ev_main {
+        line-height: 0.2rem;
+        font-size: 0.13rem;
+        margin-top: 0.1rem;
       }
-      .show_img{
+      .show_img {
         display: flex;
         justify-content: space-between;
         flex-wrap: nowrap;
         align-items: center;
-        li{
-          margin-right: .11rem;
-          flex: 1;
+
+        li {
+          margin-right: 0.11rem;
+          width: 0.8rem;
+          height: 0.8rem;
           border: none;
-          &:last-child{
+          &:last-child {
             margin-right: 0;
           }
         }

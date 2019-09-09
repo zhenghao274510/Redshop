@@ -81,6 +81,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.orderid = this.$route.query.orderid;
+    this.uid= localStorage.getItem('uid');
     this.uid = "1";
     console.log(this.orderid);
     //  this.orderid = "xd2019083009500001";
@@ -128,6 +129,11 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         console.log(res);
+        this.$toast("评论成功!");
+        this.content="";
+      setTimeout(()=>{
+        this.$router.back(-1);
+      },1000)
       });
     },
     Upfiles() {
@@ -280,6 +286,7 @@ export default {
     background-color: #eeeeee;
     font-size: 0.14rem;
     border: none;
+    box-sizing: border-box;
   }
   .add_con {
     width: 100%;

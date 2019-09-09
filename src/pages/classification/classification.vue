@@ -1,6 +1,12 @@
 <template>
   <div class="classification">
-    <sear></sear>
+    <div class="sear">
+      <div>
+        <span></span>
+        <input type="text" placeholder="输入关键词搜索" name="search" @click="focus" />
+      </div>
+      <span class="btn" @click.prevent="star">搜索</span>
+    </div>
     <div class="cf_info">
       <ul class="cf_left">
         <li
@@ -17,7 +23,7 @@
         </div>
         <ul class="cf_right_list">
           <li v-for="(item,index) in ProductList[num]" :key="index" @click="GoTodetails(item)">
-            <router-link to="">
+            <router-link to>
               <img :src="item.childCategoryImage" />
               <p>{{item.childCategoryName}}</p>
             </router-link>
@@ -69,9 +75,15 @@ export default {
     changleft(ind) {
       this.num = ind;
     },
-    GoTodetails(e){
-      console.log(e)
-      this.$router.push({path:"/shoplist",query:{childCategoryId:e.childCategoryId}});
+    GoTodetails(e) {
+      console.log(e);
+      this.$router.push({
+        path: "/shoplist",
+        query: { childCategoryId: e.childCategoryId }
+      });
+    },
+    focus() {
+      this.$router.push("/shoplist");
     }
   },
   //生命周期 - 创建之前
@@ -160,6 +172,53 @@ export default {
         }
       }
     }
+  }
+}
+.sear {
+  width: 100%;
+  height: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.1rem 0.15rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  div {
+    width: 2.9rem;
+    height: 0.3rem;
+    border: 0.01rem solid #e5e5e5;
+    border-radius: 0.05rem;
+    position: relative;
+    font-size: 0;
+    overflow: hidden;
+    input {
+      width: 100%;
+      height: 100%;
+      padding-left: 0.36rem;
+      font-size: 0.13rem;
+    }
+    ::-webkit-input-placeholder {
+      color: #9c9fa4;
+    }
+    span {
+      position: absolute;
+      top: 0.07rem;
+      left: 0.13rem;
+      width: 0.16rem;
+      height: 0.16rem;
+      background: url("/static/icon/souuso.png") no-repeat;
+      background-size: 100% 100%;
+      display: block;
+    }
+  }
+  .btn {
+    width: 0.43rem;
+    height: 0.3rem;
+    border-radius: 0.05rem;
+    background-color: #72bb29;
+    color: #fff;
+    text-align: center;
+    font-size: 0.13rem;
+    line-height: 0.3rem;
   }
 }
 </style>

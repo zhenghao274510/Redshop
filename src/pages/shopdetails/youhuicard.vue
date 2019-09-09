@@ -30,6 +30,7 @@ export default {
   props:['list'],
   data() {
     return {
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -40,8 +41,8 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    //  商品优惠券
- 
+ this.uid= localStorage.getItem('uid');
+ this.uid="1";
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -56,7 +57,7 @@ export default {
       let parmas = {
         cmd: "addUserCoupon",
         couponId: couponId,
-        uid: "1"
+        uid: this.uid
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {

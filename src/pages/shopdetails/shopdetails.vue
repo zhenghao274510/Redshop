@@ -85,6 +85,8 @@
       <!-- <iframe :src="dataObject.url" frameborder="0"  scrolling="no"></iframe> -->
       <iframe marginwidth="0" :src="dataObject.url" marginheight="0" width="100%" name="i" id="urlIframe" frameborder="0" scrolling="no" height="100%" vspace="-150">
 </iframe>
+ <!-- 呈高度 -->
+<div class="no_con"></div>
 
     </van-pull-refresh>
     <van-popup
@@ -98,8 +100,8 @@
       <Youcard @closec="FUC" v-if="see_card" :list="YuhuiCar"></Youcard>
       <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
     </van-popup>
-    <!-- 呈高度 -->
-    <div class="no_con"></div>
+   
+    
     <!-- 加入购物车 -->
     <div class="buy">
       <div class="buy_left">
@@ -109,8 +111,8 @@
         </div>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/wodeshoucang.png" v-show="addshou==true" />
-            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="addshou==false" />
+            <img src="/static/icon/wodeshoucang.png" v-show="addshou==1" />
+            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="addshou==0" />
           </div>
           <p>收藏</p>
         </div>
@@ -171,7 +173,7 @@ export default {
   created() {
     // 商品id
    this.productid=this.$route.query.productid;
-    // this.uid = this.$store.state.Use.uid;
+  //  this.uid= localStorage.getItem('uid');
     this.uid = "1";
     let parmas1 = {
       cmd: "productDetail",
@@ -188,6 +190,7 @@ export default {
         this.productParam = res.data.productParam;
         //库存
         this.skuList = res.data.skuList;
+        this.addshou=res.data.dataObject.isCollectProduct;
       }
     });
     //   评价
@@ -287,8 +290,8 @@ export default {
       },100);
       
     },
-    LookP(){
-      this.$router.push({path:'/evaluation',query:{productid:this.productid}})
+    LookP(){      
+      this.$router.replace({path:'/evaluation',query:{productid:this.productid}});
     }
     // GtoBuy(){
     //   this.$store.commit('ChooseBuy',)

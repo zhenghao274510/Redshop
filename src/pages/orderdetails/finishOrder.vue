@@ -4,13 +4,11 @@
       <div class="tit bg_wh ft_mid pad mg_bot">等待买家付款</div>
       <div class="de_zhi pad bg_wh" @click="goto">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="store.useAddres.name">
-          <p
-            class="ft_mid"
-          >收货人：{{store.useAddres.name}}&nbsp; &nbsp; &nbsp;{{store.useAddres.phone}}</p>
-          <p class="ft_mix">收货地址：{{store.useAddres.address}}{{store.useAddres.detail}}</p>
+        <div class="info col_mix no_use" v-if="defaultAddress.isDefault==1">
+          <p class="ft_mid">收货人：{{defaultAddress.name}}&nbsp; &nbsp; &nbsp;{{defaultAddress.phone}}</p>
+          <p class="ft_mix">收货地址：{{defaultAddress.address}}{{defaultAddress.detail}}</p>
         </div>
-        <div class="col_mix ft_mid no_use" v-else >请选择你的收货地址</div>
+        <div class="col_mix ft_mid no_use" v-else>请选择你的收货地址</div>
         <i class="back"></i>
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
@@ -119,7 +117,6 @@
         </div>
       </div>
 
-    
       <div class="end bg_wh">
         <div class="ok bo_top ft_max">
           <span class="bg_g col_wh ft_mid sub" @click="SubOrder">提交订单</span>
@@ -129,7 +126,7 @@
           </span>
         </div>
       </div>
-        <!-- 层高度 -->
+      <!-- 层高度 -->
       <div class="no_more bg_wh mg_top"></div>
       <!-- 优惠卷 -->
       <van-popup
@@ -142,16 +139,22 @@
         <van-radio-group v-model="radioYouhui" v-if="direct==0">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
-            <van-cell clickable v-for="(item,index) in CanuseCard" :key="index" @click="onClick" style="z-index:99;">
+            <van-cell
+              clickable
+              v-for="(item,index) in CanuseCard"
+              :key="index"
+              @click="onClick"
+              style="z-index:99;"
+            >
               满{{item.couponPrice}} 减{{item.couponAmount}}元
               <van-radio slot="right-icon" :name="index+1" checked-color="#72BB29" />
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-radio-group v-model="radioPay" v-else >
+        <van-radio-group v-model="radioPay" v-else>
           <van-cell title="请选择支付方式"></van-cell>
           <van-cell-group>
-            <van-cell title="微信支付" clickable >
+            <van-cell title="微信支付" clickable>
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
             </van-cell>
             <van-cell title="充值卡支付" clickable>
@@ -172,11 +175,9 @@
 import deZhi from "./adderss";
 import Info from "./orderInfo";
 import btn from "./../order/child/btn";
-import { pathway } from "@/mixins/img";
 export default {
   data() {
     return {
-      imgurl: pathway.imgurl,
       payMothed: ["微信支付", "充值卡支付"],
       // 禁止点击遮罩层
       jin: false,
@@ -192,7 +193,9 @@ export default {
       // 可用优惠券
       CanuseCard: [],
       productList: [],
-      choseCard:''
+      choseCard: "",
+      addressList: [],
+      defaultAddress: {}
     };
   },
   //监听属性 类似于data概念
@@ -210,23 +213,24 @@ export default {
     totalcount() {
       let num = 0;
       this.productList.forEach(item => {
-        num +=parseInt(item.count);
+        num += parseInt(item.count);
       });
       return num;
     },
     MinTotalPrice() {
-       
-      if(this.CanuseCard!=""){
-              if(this.choseCard!=""&&this.CanuseCard[this.radioYouhui-1].couponPrice<this.shoptotal){
-          return this.shoptotal-this.CanuseCard[this.radioYouhui-1].couponAmount;
-      }else{
-        return   parseInt(this.shoptotal)+parseInt(this.Freight);
+      if (this.CanuseCard != "") {
+        if (
+          this.choseCard != "" &&
+          this.CanuseCard[this.radioYouhui - 1].couponPrice < this.shoptotal
+        ) {
+          return (
+            this.shoptotal - this.CanuseCard[this.radioYouhui - 1].couponAmount
+          );
+        } else {
+          return parseInt(this.shoptotal) + parseInt(this.Freight);
+        }
       }
-     
-      }
-      
     }
-  
   },
   //监控data中的数据变化
   watch: {},
@@ -238,15 +242,16 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+   this.uid= localStorage.getItem('uid');
     this.uid = "1";
-    console.log(typeof this.$route.query.shop)
-      if(typeof this.$route.query.shop=='string'){
-          this.productList.push(JSON.parse(this.$route.query.shop));
-      }else{
-         this.productList=JSON.parse(localStorage.getItem('shop'));
-      }
-   console.log(this.productList)
-    
+    console.log(typeof this.$route.query.shop);
+    if (typeof this.$route.query.shop == "string") {
+      this.productList.push(JSON.parse(this.$route.query.shop));     
+    } else {
+      this.productList = JSON.parse(localStorage.getItem("shop"));
+    }
+    console.log(this.productList);
+
     // this.uid=this.$store.state.Use.uid;
     //   配送费
     let parmas1 = { cmd: "getFreight" };
@@ -259,10 +264,31 @@ export default {
       // console.log(res)
       this.CanuseCard = res.data.dataList;
     });
+    //
+    // 我的收货地址
+    let parmas3 = {
+      cmd: "getAddressList",
+      uid: this.uid,
+      nowPage: "1",
+      pageCount: "10"
+    };
+    this.postRequest(parmas3).then(res => {
+      console.log(res);
+      this.addressList = res.data.dataList;
+      if (this.addressList != 0) {
+        this.addressList.forEach(item => {
+          if (item.isDefault == 1) {
+            this.defaultAddress = item;
+          } else {
+            this.defaultAddress = this.addressList[0];
+          }
+        });
+      }
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.$root.isLoading=false;
+    this.$root.isLoading = false;
   },
   //方法集合
   methods: {
@@ -292,17 +318,15 @@ export default {
       this.$router.push("/editaddress");
     },
     onClick(event) {
-      this.choseCard='';
+      this.choseCard = "";
       console.log(this.radioYouhui);
-      let JuanNum=parseInt(this.CanuseCard[this.radioYouhui-1].couponPrice);
-      console.log(this.shoptotal)
-      if(JuanNum>this.shoptotal){
-        this.$toast('次劵未满额,不能使用');
-      }else{
-
-        this.choseCard=this.CanuseCard[this.radioYouhui-1].couponAmount;
+      let JuanNum = parseInt(this.CanuseCard[this.radioYouhui - 1].couponPrice);
+      console.log(this.shoptotal);
+      if (JuanNum > this.shoptotal) {
+        this.$toast("次劵未满额,不能使用");
+      } else {
+        this.choseCard = this.CanuseCard[this.radioYouhui - 1].couponAmount;
       }
-      
     },
     formtime() {
       let val = new Date();
@@ -320,10 +344,12 @@ export default {
       return Y + "-" + M + "-" + D + "  " + HH + ":" + MM + ":" + SS;
     },
     SubOrder() {
-      if (this.store.useAddres.name == "") {
+      if (this.addressList.length == 0) {
         this.$toast("请添加收货地址");
+      }else{
+        let parmas={cmd:'payByWx',orderid:this.orderid};
       }
-    },
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -511,5 +537,8 @@ export default {
       }
     }
   }
+}
+.no_use {
+  flex: 1;
 }
 </style>

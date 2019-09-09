@@ -1,15 +1,16 @@
 <template>
   <div class="order_con">
+       <!-- 待评价 -->
+    <waite-ping v-if="waitePing.length!=0" :list="waitePing"></waite-ping>
     <!-- 退款 -->
-    <tui-h v-if="tuiH!=''" :list="tuiH"></tui-h>
+    <tui-h v-if="tuiH.length!=0" :list="tuiH"></tui-h>
     <!-- 配送中 -->
-    <peing-sing v-if="peingSing!=''" :list="peingSing"></peing-sing>
+    <peing-sing v-if="peingSing.length!=0" :list="peingSing"></peing-sing>
     <!-- 待配送 -->
-    <waite-song v-if="waiteSong!=''" :list="waiteSong"></waite-song>
-    <!-- 待评价 -->
-    <waite-ping v-if="waitePing!=''" :list="waitePing"></waite-ping>
+    <waite-song v-if="waiteSong.length!=0" :list="waiteSong"></waite-song>
+ 
     <!-- 待付款 -->
-    <waite-pay v-if="waitePay!=''" :list="waitePay"></waite-pay>
+    <waite-pay v-if="waitePay.length!=0" :list="waitePay"></waite-pay>
   </div>
 </template>
 
@@ -71,6 +72,7 @@ export default {
           }
         })
       }
+      console.log(this.tuiH.length)
      
     });
   },
@@ -97,5 +99,13 @@ export default {
 <style scoped lang='less' rel='stylesheet/stylus'>
 .order_con {
   padding: 0.1rem 0.15rem 0 0.15rem;
+  div{
+    &:nth-child(1){
+     margin-top: .9rem;
+    
+    }
+      margin-top:-.1rem;;
+  }
+
 }
 </style>

@@ -11,10 +11,6 @@
         </div>
         <Info :list="item.orderItem"></Info>
       </div>
-
-      <div
-        class="order_tot"
-      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="two" @click="shou_huo(item)">确认收货</span>
       </div>
@@ -29,12 +25,6 @@ import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
   props: ["list"],
-  // props:{
-  //   list:{
-  //      type:Array,
-  //      default:[]
-  //   }
-  // },
   data() {
     return {
       show: false,
@@ -51,9 +41,12 @@ export default {
     Info
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+    this.uid="1"
     this.arry = [];
     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10",status:'3'};
     this.postRequest(params).then(res => {
@@ -74,8 +67,8 @@ export default {
   //方法集合
   methods: {
     shou_huo(e) {
-       let parmas={cmd:'finishOrder',uid:this.uid,orderid:this.orderid};
-          this.poatRequest(parmas).then(res=>{
+       let parmas={cmd:'finishOrder',uid:this.uid,orderid:e.orderid};
+          this.postRequest(parmas).then(res=>{
               if(res.data.result==0){
               console.log('成功');
                     Dialog.confirm({
@@ -119,7 +112,7 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
-  margin-top: 0.1rem;
+  margin-top: 0.9rem;
   .order_con {
     margin-bottom: 0.1rem;
     // font-size: 0;

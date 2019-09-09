@@ -52,6 +52,8 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.uid= localStorage.getItem('uid');
+    this.uid="1";
     this.skuId = this.list[0].skuId;
     for (let i in this.list) {
       this.value.push(1);
@@ -73,8 +75,6 @@ export default {
     GetInCar() {
       if (!this.isbuy) {
         this.productid = this.obj.productid;
-        // this.uid =this.store.Use.uid;
-        this.uid = "1";
         let parmas = {
           cmd: "addCart",
           productid: this.productid,
@@ -86,6 +86,7 @@ export default {
           console.log(res);
           if (res.data.result == 0) {
             this.$toast(res.data.resultNote);
+            this.$emit('closec',2)
           }
         });
       } else {

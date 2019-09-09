@@ -1,32 +1,14 @@
 <template>
   <div class="adres_cont">
-    <div v-for="(item,index) in list" :key="index">
+    <div v-for="(item,index) in list" :key="index" class="address_info">
       <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="$store.state.Buy">
+        <div class="info col_mix no_use">
           <p class="ft_mid">收货人：{{item.name}}&nbsp; &nbsp; &nbsp;{{item.phone}}</p>
-          <p class="ft_mix">收货地址：{{item.address}}{{item.detail}}</p>
-        </div>
-        <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
-        <i class="back"></i>
-      </div>
-      <div class="change bo_top">
-        <div class="change_left" @click="edaitAddress(item)">
-          <van-icon name="checked" size=".18rem" color="#72BB29" v-if="item.isDefault==0" />
-          <van-icon name="circle" size=".18rem" color="##DCDCDC" v-if="item.isDefault==1" />
-          <span>默认地址</span>
-        </div>
-        <div class="change_right">
-          <div class="change_ac" @click="delAddress(item,index)">
-            <van-icon name="delete" size=".18rem" color="#999999" />
-            <span>删除</span>
-          </div>
-          <div class="change_ac" @click="GoToEmid">
-            <van-icon name="records" size=".18rem" color="#999999" />
-            <router-link to="/editaddress">编辑</router-link>
-          </div>
+          <p class="ft_mix one-txt-cut">收货地址：{{item.address}}{{item.detail}}</p>
         </div>
       </div>
+    
     </div>
   </div>
 </template>
@@ -38,7 +20,6 @@ export default {
   props: ["list"],
   data() {
     return {
-      no_use_dizhi: false,
       uid:'',
       id:''
     };
@@ -51,33 +32,23 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-      this.id = this.$route.query.id;
-    console.log(this.id);
-    if (this.id == 0) {
-      this.no_use_dizhi = true;
-    }
+    this.uid=localStorage.getItem('uid');
+    this.uid="1"
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    goto() {
-      if (!this.no_use_dizhi) {
-        this.$router.push("/positions");
-      }
-    },
+
     GoToEmid() {
       //  this.$router.push('/editaddress');
     },
     edaitAddress(e) {
        console.log(e)
-
-      this.uid="1"
-     
-      
       let parmas={cmd:'updateAddress',uid:this.uid,addressId:e.addressId,name:e.name,phone:e.phone,address:e.address,detail:e.detail,isDefault:e.isDefault};
       this.GetEdaitAddress(parmas);
       if (e.isDefault == 0) {
+
          e.isDefault = 1 ;
       }else{
          e.isDefault = 0;
@@ -87,6 +58,7 @@ export default {
        this.postRequest(data).then(res=>{
          console.log(res);
          this.$toast(res.data.resultNote);
+          let parmas1={}
 
        })
     },
@@ -115,6 +87,9 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .adres_cont {
+  .address_info{
+    margin-bottom: .1rem ;
+  }
   .de_zhi {
     display: flex;
     justify-content: space-between;

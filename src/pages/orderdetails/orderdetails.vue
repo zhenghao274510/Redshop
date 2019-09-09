@@ -62,7 +62,7 @@
       <ul class="de_info bg_wh">
         <li class="col_mid">
           <span class="ft_mid">订单编号：{{orderid}}</span>
-          <span class="ft_cmix">复制</span>
+          <span class="ft_cmix" @click="copy">复制</span>
         </li>
         <li class="col_mid">
           <span class="ft_mid">创建时间：{{productObject.createdDate}}</span>
@@ -130,6 +130,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.uid= localStorage.getItem('uid');
     this.uid = "1";
      this.orderid=this.$route.query.orderid;
     // this.orderid = "xd2019083009500001";
@@ -178,6 +179,18 @@ export default {
           })
         
     
+    },
+     copy() {
+        const input = document.createElement("input");
+        document.body.appendChild(input);
+        input.setAttribute("value", this.orderid);
+        input.select();
+        // input.setSelectionRange(0, 9999);
+        if (document.execCommand("copy")) {
+          document.execCommand("copy");
+          this.$toast("复制成功");
+        }
+        document.body.removeChild(input);
     },
   },
   //生命周期 - 创建之前

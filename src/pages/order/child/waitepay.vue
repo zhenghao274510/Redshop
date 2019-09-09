@@ -11,10 +11,6 @@
         </div>
         <Info :list="item.orderItem"></Info>
       </div>
-
-      <div
-        class="order_tot"
-      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="one" @click="delOrder">取消订单</span>
         <span class="two">去支付</span>
@@ -106,8 +102,8 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
-  margin-bottom: 0.1rem;
-  margin-top: .5rem;
+  // margin-bottom: 0.1rem;
+  margin-top: .9rem;
   .order_con {
     margin-bottom: 0.1rem;
     // font-size: 0;

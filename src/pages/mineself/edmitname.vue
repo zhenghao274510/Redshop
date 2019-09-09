@@ -41,7 +41,7 @@ export default {
   //方法集合
   methods: {
     changename() {
-      // this.uid=this.$store.state.Use.uid;
+      this.uid= localStorage.getItem('uid');
       this.uid="1";
       let params = { cmd: "updateUserName", uid: this.uid, name: this.name };
       this.postRequest(params).then(res => {

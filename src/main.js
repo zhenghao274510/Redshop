@@ -1,10 +1,10 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-// import wx from 'weixin-js-sdk';
-// import wechatAuth from './mixins/wechatAuth'//微信登录插件
+import wx from 'weixin-js-sdk';
+import wechatAuth from './mixins/wechatAuth'//微信登录插件
 // const qs= require('qs');
 
-// Vue.use(wechatAuth, {appid: XXXXXXXXX});
+Vue.use(wechatAuth, {appid: "wx3acdc40f0226199a"});
 import Vue from 'vue'
 import App from './App'
 import router from './router'

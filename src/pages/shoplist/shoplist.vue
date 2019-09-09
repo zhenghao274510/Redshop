@@ -3,10 +3,8 @@
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <sear @SearStar="SearResult"></sear>
 
-     
-        <Shop-L :list="$store.state.SearchList" v-if="$store.state.SearchList.length!=0"></Shop-L>
-        <Shop-L :list="ProductList" v-else></Shop-L>
-     
+      <Shop-L :list="$store.state.SearchList" v-if="$store.state.SearchList.length!=0"></Shop-L>
+      <Shop-L :list="ProductList" v-else></Shop-L>
     </van-pull-refresh>
   </div>
 </template>
@@ -19,10 +17,9 @@ export default {
   data() {
     return {
       isLoading: false,
-      ProductObject:{},
-      ProductList:[],
-      childCategoryId:''
-      
+      ProductObject: {},
+      ProductList: [],
+      childCategoryId: ""
     };
   },
   //监听属性 类似于data概念
@@ -36,15 +33,22 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-      this.childCategoryId=this.$route.query.childCategoryId;
-      let parmas = { cmd: "productList",childCategoryId:this.childCategoryId, nowPage: "1", pageCount: "10" };
-    this.postRequest(parmas).then(res => {
-      if (res.data.result == 0) {
-        console.log(res);
-        this.ProductObject = res.data;
-        this.ProductList=res.data.dataList;
-      }
-    });
+    if (this.$route.query.childCategoryId) {
+      this.childCategoryId = this.$route.query.childCategoryId;
+      let parmas = {
+        cmd: "productList",
+        childCategoryId: this.childCategoryId,
+        nowPage: "1",
+        pageCount: "10"
+      };
+      this.postRequest(parmas).then(res => {
+        if (res.data.result == 0) {
+          console.log(res);
+          this.ProductObject = res.data;
+          this.ProductList = res.data.dataList;
+        }
+      });
+    }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -56,8 +60,8 @@ export default {
         this.isLoading = false;
       }, 500);
     },
-    SearResult(e){
-    this.ProductList=e;
+    SearResult(e) {
+      this.ProductList = e;
     }
   },
   //生命周期 - 创建之前

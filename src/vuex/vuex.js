@@ -7,7 +7,7 @@ const store = new Vuex.Store({
 
   
     //  用户信息
-    Use: {
+    use: {
       uid: ''
     },
     

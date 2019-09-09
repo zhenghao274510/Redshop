@@ -53,6 +53,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //  用户头像
+    this.uid= localStorage.getItem('uid');
     this.useicon=this.$route.query.img;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -60,7 +61,7 @@ export default {
   //方法集合
   methods: {
     GotoEad(){
-      this.$router.push({path:'/myaddress',query:{id:0}});
+      this.$router.push({path:'/myaddress'});
     },
     Upfiles(){
 

@@ -10,7 +10,8 @@ import By from './shuolist'
 export default {
   data() {
     return {
-      dataList:[]
+      dataList:[],
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -23,10 +24,11 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.uid=localStorage.getItem('uid');
       let parmas = {
         cmd: "myCollectList",
         nowPage: "1",
-        uid: "1",
+        uid: this.uid,
         pageCount:"10"
       };
       this.postRequest(parmas).then(res => {

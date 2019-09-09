@@ -2,7 +2,7 @@
   <div class="foot">
     <ul >
       <li v-for="(item,index) in icon" :key="index" @click="changeta(index)">
-        <router-link  :to="item.url" :class="{'active':num==index}">
+        <router-link  to :class="{'active':num==index}">
           <div>
             <img :src="item.normal" v-if='num!=index' />
             <img :src="item.actived" v-else/>
@@ -74,6 +74,7 @@ export default {
   methods: {
     changeta(ind) {
       this.num=ind;
+      this.$router.replace({path:this.icon[ind].url});
    sessionStorage.setItem('home',ind);
     }
   },

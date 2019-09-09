@@ -29,11 +29,11 @@ module.exports = {
       '@': resolve('src'),
     },
     //  添加的
-    externals:{
-      'axios':'axios',      
-    'AMap': 'AMap',
-    'AMapUI': 'AMapUI'
-    }
+    // externals:{
+    //   'axios':'axios',      
+    // 'AMap': 'AMap',
+    // 'AMapUI': 'AMapUI'
+    // }
   },
   module: {
     rules: [

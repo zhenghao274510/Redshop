@@ -1,5 +1,5 @@
 <template>
-  <div class="order_box" style="margin-top:.5rem">
+  <div class="order_box">
     <ul class="order_nav">
       <li v-for="(item,index) in navinfo" :key="index" @click="changeta(index)">
         <router-link to>
@@ -82,11 +82,11 @@ export default {
   height: 100%;
   background-color: #eee;
   overflow-y: auto;
-  position: relative;
+
 }
 .order_nav {
-  position: absolute;
-  top:0;
+   position: fixed;
+  top: .5rem;
   width: 100%;
   background-color: #fff;
   display: flex;

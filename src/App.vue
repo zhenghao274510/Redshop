@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <Top :title="$route.name"></Top>
+      <tar v-if="$route.meta.showtabar"></tar>
     
     <transition :name="transitionName" mode="out-in">
-      <router-view />
+         <router-view />
+    
       </transition>
-    <tar v-if="$route.meta.showtabar"></tar>
+  
  <!-- <is-load :isLoading='$store.state.isload'></is-load> -->
  
   </div>
@@ -67,5 +69,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 </style>

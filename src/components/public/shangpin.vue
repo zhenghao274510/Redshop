@@ -48,11 +48,11 @@ export default {
       this.$router.push({path:'/shopdetails',query:{productid:e.productid}});
     },
     addcar(ind) {
-      let productId=this.list[ind].productid;
-      let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:'1'};
-       this.postRequest(parmas).then(res=>{
-        //  console.log(res)
-      })
+      // let productId=this.list[ind].productid;
+      // let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:'1'};
+      //  this.postRequest(parmas).then(res=>{
+      //   //  console.log(res)
+      // })
     }
   },
   //生命周期 - 创建之前
@@ -91,7 +91,7 @@ export default {
       width: 1.65rem;
       height: 1.5rem;
       border-radius: 0.1rem 0.1rem 0 0;
-      padding: 0.23rem 0.29rem 0.06rem 0.18rem;
+      padding: 0.1rem 0.1rem;
       img {
       }
     }

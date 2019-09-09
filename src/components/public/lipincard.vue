@@ -1,7 +1,7 @@
 <template>
   <div class="li_card">
     <ul>
-      <li v-for="(item,index) in list" :key="index">
+      <li v-for="(item,index) in arry" :key="index">
         <router-link to="">
           <div class="gif_card_tit">
             <div class="gif_name">和天下酒业礼品卡</div>
@@ -38,6 +38,7 @@ export default {
   props: ["list"],
   data() {
     return {
+      arry:this.list
       //   短信分享
     };
   },
@@ -84,15 +85,17 @@ export default {
   padding: 0 0.15rem;
   ul {
     width: 100%;
+   
     li {
       width: 100%;
       height: 1.44rem;
       border-radius: 0.1rem;
       background-color: #72bb29;
+       margin-top: .15rem;
 
       a {
         display: flex;
-        height: 100%;
+        // height: 100%;
         flex-direction: column;
         color: #fff;
         z-index: 2;

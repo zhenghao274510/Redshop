@@ -11,10 +11,6 @@
       </div>
       <Info :list="item.orderItem"></Info>
       </div>
-     
-      <div
-        class="order_tot"
-      >共{{arry.length}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{item.orderAmount}}</div>
       <div class="order_zhuang">
         <span class="two" @click="goto(item)">去评价</span>
       </div>
@@ -104,10 +100,11 @@ export default {
 .order_mo {
   padding: 0.15rem;
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.9rem;
+    margin-bottom: 0.1rem;
   .order_con {
     // font-size: 0;
-    margin-bottom: 0.1rem;
+  
     background-color: #ffffff;
     border-radius: 0.1rem;
     .order_tit {

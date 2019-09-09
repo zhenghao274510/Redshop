@@ -96,6 +96,7 @@ export default {
       font-size: 0.16rem;
       border: none;
       padding: 0.1rem;
+      box-sizing: border-box;
     }
     input {
       width: 100%;

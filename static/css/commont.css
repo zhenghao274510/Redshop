@@ -1,4 +1,4 @@
-* { margin:0;padding:0;box-sizing: border-box;-webkit-box-sizing: border-box;}
+html,body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video{ margin:0;padding:0;box-sizing:border-box;-webkit-box-sizing: border-box;}
 
 ol,li,ul,dl,dt,dd{list-style:none;}
 .fl {float: left;}  
@@ -9,10 +9,12 @@ table{border-collapse:collapse;border-spacing:0}
 html,body {  
     -webkit-text-size-adjust: 100%;  
     -ms-text-size-adjust: 100%; 
-    /* 解决IOS默认滑动很卡的情况 */  
     height: 100%;
+    /* 解决IOS默认滑动很卡的情况 */  
     -webkit-overflow-scrolling : touch;  
-}  
+    zoom:1;
+
+} 
   
 /* 禁止缩放表单 */  
 input[type="submit"], input[type="reset"], input[type="button"], input {  
@@ -30,7 +32,8 @@ body, div, ul, li, ol, h1, h2, h3, h4, h5, h6, input, textarea, select, p, dl, d
 /* 设置HTML5元素为块 */  
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {  
     display: block;  
-}  
+} 
+ 
   
 /* 图片自适应 */  
 img {  

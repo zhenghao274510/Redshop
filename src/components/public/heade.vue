@@ -1,5 +1,5 @@
 <template>
-  <div class="head">
+  <div class="top">
     <div>
       <span class="back" @click="back" v-if="!$route.meta.showtabar"></span>
       <p>{{title}}</p>
@@ -52,33 +52,35 @@ export default {
 };
 </script>
 <style scoped lang='less'>
-.head {
-  width: 100%;
-  height: 0.5rem;
-  // border-bottom: .01rem solid #878787;
-  background: #e5e5e5;
-  position: fixed;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 0.15rem;
-  z-index: 999;
-  div {
+
+  .top {
+    width: 100%;
+    height: 0.5rem;
+    // border-bottom: .01rem solid #878787;
+    background: #e5e5e5;
+    position: fixed;
+    // top: 0 !important;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    .back {
-      width: 0.09rem;
-      height: 0.17rem;
-      background: url("/static/icon/daohanglan-fanhuijian.png") no-repeat;
-      background-size: 100% 100%;
-      display: block;
-      margin-right: 0.15rem;
+    padding: 0 0.15rem;
+    z-index: 999;
+    div {
+      display: flex;
+      align-items: center;
+      .back {
+        width: 0.09rem;
+        height: 0.17rem;
+        background: url("/static/icon/daohanglan-fanhuijian.png") no-repeat;
+        background-size: 100% 100%;
+        display: block;
+        margin-right: 0.15rem;
+      }
+      p {
+        font-size: 0.17rem;
+        line-height: 0.5rem;
+      }
     }
-    p {
-      font-size: 0.17rem;
-      line-height: 0.5rem;
-    }
-  }
+
 }
 </style>
