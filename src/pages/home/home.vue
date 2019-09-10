@@ -23,18 +23,18 @@
             :offset="10"
           >
             <li v-for="(item,index) in ProductList" :key="index">
-              <router-link to>
-                <div class="list_img"  @click="GoTO(item)">
+              <div class="listcon">
+                <div class="list_img" @click="GoTO(item)">
                   <img :src="item.logo" alt style="width:1.38rem;height:.93rem;" />
                 </div>
                 <div class="list_info">
-                  <p class="list_name"  @click="GoTO(item)">{{item.title}}</p>
+                  <p class="list_name" @click="GoTO(item)">{{item.title}}</p>
                   <div class="list_icon">
-                    <p class="col_max ft_mid"  @click="GoTO(item)">￥{{item.price}}</p>
+                    <p class="col_max ft_mid">￥{{item.price}}</p>
                     <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
                   </div>
                 </div>
-              </router-link>
+              </div>
             </li>
           </van-list>
         </ul>
@@ -90,7 +90,7 @@ export default {
       ProductObject: {},
       firstpath: {},
       uid: "",
-      chose:false
+      chose: false
     };
   },
   //监听属性 类似于data概念
@@ -101,13 +101,25 @@ export default {
   components: {
     Top,
     Zq,
-    Tit,
+    Tit
     // Addcard
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this.id =this.$route.query.id;
-    this.uid = "1";
+    //  获取路径信息
+    let url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] =strs[i].split("=")[1] ;
+      }
+    }
+    this.uid = theRequest.uid;
+    // localStorage.setItem("uid", theRequest.uid);
+    localStorage.setItem("uid", '1');
+    // this.uid = "1";
     // 是否首次登录
     let firstLogin = { cmd: "userInfo", uid: this.uid };
     this.postRequest(firstLogin).then(res => {
@@ -115,7 +127,7 @@ export default {
       let useinfo = res.data.dataObject;
       localStorage.setItem("useinfo", JSON.stringify(useinfo));
       //   存在新人优惠券
-      if (useinfo.newCoupon == 0&&useinfo.isNew==0) {
+      if (useinfo.newCoupon == 0 && useinfo.isNew == 0) {
         this.First = true;
         //  优惠卷
         let parmas2 = { cmd: "newCoupon" };
@@ -125,8 +137,8 @@ export default {
             this.dataObject = res.data.dataObject;
           }
         });
-      }else{
-         this.First = false;
+      } else {
+        this.First = false;
       }
     });
 
@@ -136,7 +148,6 @@ export default {
       // console.log(res);
       this.firstpath = res.data.dataObject;
     });
-    
 
     // 为你推荐
     let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
@@ -184,8 +195,8 @@ export default {
     GetJuan() {
       //  获取优惠券
       // this.uid= localStorage.getItem('uid');
-      this.uid = "1";
-     
+      // this.uid = "1";
+
       let parmas = {
         cmd: "newCoupon",
         uid: this.uid,
@@ -193,7 +204,7 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {
-           this.$toast(res.data.resultNote);
+          this.$toast(res.data.resultNote);
           this.isGet = false;
         }
       });
@@ -201,18 +212,18 @@ export default {
     //  首页 获取焦点 跳转
     focus() {
       console.log(111);
-        this.$router.push("/shoplist");
+      this.$router.push("/shoplist");
     },
     GoTO(e) {
       // let obj={productid:e.productid}
       this.$router.push({
         path: "/shopdetails",
-        query: { productid:e.productid}
+        query: { productid: e.productid }
       });
     },
-    Addcar(e){
-      console.log(e)
-        // this.chose=true;
+    Addcar(e) {
+      console.log(e);
+      // this.chose=true;
     }
   },
   //生命周期 - 创建之前
@@ -225,7 +236,7 @@ export default {
   updated() {},
   //生命周期 - 销毁之前
   beforeDestroy() {
-    localStorage.setItem('uid',this.uid);
+    localStorage.setItem("uid", this.uid);
   },
   //生命周期 - 销毁完成
   destroyed() {},
@@ -276,7 +287,7 @@ export default {
       border-radius: 0.1rem;
       box-shadow: 0 0 0.04rem 0 #33222222;
       margin-bottom: 0.15rem;
-      a {
+      .listcon {
         display: flex;
         height: 100%;
         padding: 0.1rem;
@@ -285,8 +296,8 @@ export default {
           width: 1.38rem;
           height: 0.93rem;
           font-size: 0;
-          img{
-            height: .93rem;
+          img {
+            height: 0.93rem;
           }
         }
         .list_info {
@@ -360,7 +371,7 @@ export default {
     }
   }
 }
-.first_info{
-  margin-top: .1rem;
+.first_info {
+  margin-top: 0.1rem;
 }
 </style>

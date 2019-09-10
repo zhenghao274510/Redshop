@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="add_address">
+    <div class="add_address" @click="Goto">
       <div class="btn">添加</div>
     </div>
   </div>
@@ -54,8 +54,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    //  this.uid= localStorage.getItem('uid');
-    this.uid = "1";
+     this.uid= localStorage.getItem('uid');
+    // this.uid = "1";
     let parmas = {
       cmd: "getAddressList",
       uid: this.uid,
@@ -95,13 +95,16 @@ export default {
     },
     GetEdaitAddress(data) {},
     delAddress(e, ind) {
-      this.uid = "1";
+
       let parmas = { cmd: "delAddress", uid: this.uid, addressId: e.addressId };
       this.postRequest(data).then(res => {
         console.log(res);
         this.$toast(res.data.resultNote);
         this.dataList.splice(ind, 1);
       });
+    },
+    Goto(){
+      this.$router.push('/editaddress');
     }
   },
   //生命周期 - 创建之前

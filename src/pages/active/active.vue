@@ -69,7 +69,7 @@ export default {
     loadMore() {
       // let self=this;
       let parmas = { cmd: "moreActivity", nowPage: this.num, pageCount: "10" };
-      this.postRequest(parmas).then(res => {
+      this.http(parmas).then(res => {
         if (res.data.result == 0) {
           console.log(res);
           this.ProductList.push(res.data.dataList);

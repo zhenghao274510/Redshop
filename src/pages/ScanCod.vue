@@ -1,8 +1,12 @@
 <template>
-  <div class></div>
+  <div class>
+     <button @click="sys_click">点击</button>
+  </div>
 </template>
  
 <script>
+import axios from 'axios';
+import wx from 'weixin-js-sdk';
 export default {
   data() {
     return {
@@ -10,9 +14,9 @@ export default {
     };
   },
   methods: {
-    sys_click: function() {
+    sys_click(){
       //这里【url参数一定是去参的本网址】
-      $.get("获取微信认证参数的地址?url=去参的本网页地址", function(data) {
+      axios("http://hetianxia.lixinapp.com", function(data) {
         var jsondata = $.parseJSON(data);
         wx.config({
           // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -53,9 +57,9 @@ export default {
   },
 
   moutend() {
-    this.$nextTick(() => {
-      this.sys_click();
-    });
+    // this.$nextTick(() => {
+    //   this.sys_click();
+    // });
   }
 };
 </script>

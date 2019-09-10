@@ -72,7 +72,7 @@
             </router-link>
           </div>
           <div class="mi_card_info">
-            <router-link to="/amap">
+            <router-link to="/service">
               <div>
                 <span class="fivecard"></span> 在线客服
               </div>
@@ -110,11 +110,11 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= JSON.parse(localStorage.getItem('uid'));
-    this.uid = "1";
+    this.uid=localStorage.getItem('uid');
+    // this.uid = "1";
     let params = { cmd: "userInfo", uid: this.uid };
     this.postRequest(params).then(res => {
-      //  console.log(res)
+       console.log(res)
       this.useInfo = res.data.dataObject;
     });
   },

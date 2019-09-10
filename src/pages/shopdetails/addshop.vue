@@ -53,7 +53,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid= localStorage.getItem('uid');
-    this.uid="1";
+    // this.uid="1";
     this.skuId = this.list[0].skuId;
     for (let i in this.list) {
       this.value.push(1);
@@ -155,7 +155,6 @@ export default {
 .shop_can {
   border-top: 0.01rem solid #eeeeee;
   border-bottom: 0.01rem solid #eeeeee;
-  height: 1.9rem;
   padding: 0.15rem;
   font-size: 0;
   display: flex;

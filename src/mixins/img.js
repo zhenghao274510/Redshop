@@ -1,5 +1,5 @@
 const configurl={
-    imgurl:'http://192.168.3.254:8099'
+    imgurl:'http://121.40.142.78'
 }
 export const pathway={
     imgurl:configurl.imgurl

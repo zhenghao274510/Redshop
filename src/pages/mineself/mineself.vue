@@ -2,31 +2,30 @@
   <div class>
     <ul>
       <li>
-        <router-link to="">
+        <div>
           <span>头像</span>
-          <img :src="useicon" alt />
+          <img :src="useInfo.icon" alt />
           <i></i>
           <!-- <input type="file"  /> -->
-           <input type="file" class="input" @change="Upfiles" />
-        </router-link>
-        
+          <input type="file" class="input" @change="Upfiles" />
+        </div>
       </li>
-       <li>
+      <li>
         <router-link to="/edmitname">
           <span>昵称</span>
-            <p>昵称</p>
+          <p>{{useInfo.name}}</p>
           <i></i>
         </router-link>
       </li>
-       <li>
+      <li>
         <router-link to="/edmitself">
           <span>个性签名</span>
-            <p>Lorem IpsumLorem Ipsum</p>
+          <p>{{useInfo.sign}}</p>
           <i></i>
         </router-link>
       </li>
-       <li  @click="GotoEad">
-        <router-link to="">
+      <li @click="GotoEad">
+        <router-link to >
           <span>我的地址</span>
           <i></i>
         </router-link>
@@ -37,10 +36,13 @@
 
 <script>
 //import 《组件名称》 from '《组件路径》';
+import Up from "@/mixins/upfile";
+import { pathway } from "@/mixins/img";
 export default {
   data() {
     return {
-      useicon:''
+      useInfo: "",
+      imgurl: pathway.imgurl
     };
   },
   //监听属性 类似于data概念
@@ -48,23 +50,49 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //  用户头像
     this.uid= localStorage.getItem('uid');
-    this.useicon=this.$route.query.img;
+    // this.uid = "1";
+    let params = { cmd: "userInfo", uid: this.uid };
+    this.postRequest(params).then(res => {
+      console.log(res);
+      this.useInfo = res.data.dataObject;
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    GotoEad(){
-      this.$router.push({path:'/myaddress'});
+    GotoEad() {
+      this.$router.push({ path: "/myaddress" });
     },
-    Upfiles(){
-
+    Upfiles() {
+      var _this = this;
+      var event = event || window.event;
+      var file = event.target.files[0];
+      var img = new FormData();
+      img.append("file", file);
+      // console.log(file);
+      let reg = /(png|jpg|jpeg|gif)$/; // 上传图片类型
+      // console.log(reg.test(file.name));
+      if (reg.test(file.name)) {
+        Up.postFile("api/uploadFile", img).then(res => {
+          if (res.data.result == 0) {
+            this.useInfo.icon = this.imgurl + res.data.filepath;
+            let parmas = {
+              cmd: "updateIcon",
+              uid: this.uid,
+              icon: res.data.filepath
+            };
+            this.http(parmas).then(res => {
+              this.$toast(res.data.resultNote);
+            });
+          }
+        });
+      }
     }
   },
   //生命周期 - 创建之前
@@ -89,24 +117,25 @@ ul {
   li {
     padding: 0 0.15rem;
     border-bottom: 0.01rem solid #e5e5e5;
-     &:not(:first-child){
-       height: .6rem;
-     }
-    a {
+    &:not(:first-child) {
+      height: 0.6rem;
+    }
+    a,
+    div {
       display: flex;
-      line-height: .6rem;
+      line-height: 0.6rem;
       justify-content: space-between;
       position: relative;
       font-size: 0.14rem;
       color: #333333;
-      input{
+      input {
         position: absolute;
-        top:0;
-        right:.15rem;
-        width:1rem;
-        height:.5rem;
-        opacity:0;
-        z-index:999;
+        top: 0;
+        right: 0.15rem;
+        width: 1rem;
+        height: 0.5rem;
+        opacity: 0;
+        z-index: 999;
       }
       i {
         position: absolute;

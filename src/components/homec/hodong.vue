@@ -108,6 +108,7 @@ export default {
     }
   }
   .hd_zuan {
+    margin-top: 0.1rem;
     .hd_list {
       display: flex;
       flex-wrap: wrap;
@@ -128,7 +129,7 @@ export default {
             height: 4rem;
 
             .hd_img_con {
-              height: 3.2rem;
+              // height: 3.2rem;
             }
             .hd_info {
               p {

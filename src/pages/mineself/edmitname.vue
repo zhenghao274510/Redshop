@@ -42,9 +42,9 @@ export default {
   methods: {
     changename() {
       this.uid= localStorage.getItem('uid');
-      this.uid="1";
+      // this.uid="1";
       let params = { cmd: "updateUserName", uid: this.uid, name: this.name };
-      this.postRequest(params).then(res => {
+      this.http(params).then(res => {
         console.log(res);
         this.$toast(res.data.resultNote);
       });

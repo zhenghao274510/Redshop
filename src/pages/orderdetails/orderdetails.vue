@@ -131,7 +131,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid= localStorage.getItem('uid');
-    this.uid = "1";
+    // this.uid = "1";
      this.orderid=this.$route.query.orderid;
     // this.orderid = "xd2019083009500001";
     console.log(this.orderid);

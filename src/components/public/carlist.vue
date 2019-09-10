@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- <van-cell :border="false"> -->
-    <ul v-if="productList.length!=0">
+    <ul v-if="uid!=''">
       <li v-for="(item,index) in productList" :key="index" class="carlist">
         <van-swipe-cell :left-width="LftW" :right-width="RightW" :on-close="onClose" :name="index">
           <div class="carlist_info" :class="{'bg':ishow}">
@@ -90,8 +90,8 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    //  this.uid=this.$productList.state.Use.uid;
-    this.uid = "1";
+     this.uid=localStorage.getItem('uid');
+    // this.uid = "1";
     let parmas = {
       cmd: "getCartList",
       uid: this.uid,

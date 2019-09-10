@@ -27,7 +27,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid= localStorage.getItem('uid');
-    this.uid='1'
+    // this.uid='1'
      let parmas = {
         cmd: "getCartList",
         nowPage: "1",
@@ -39,7 +39,6 @@ export default {
         if(res.data.result==0){
             this.dataList=res.data.dataList;
             this.dataObject=res.data;
-            this.$store.commit('LookCarinfo',this.dataList);
         }
         console.log(this.dataList);
       });

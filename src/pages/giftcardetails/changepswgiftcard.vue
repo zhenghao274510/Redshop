@@ -62,7 +62,7 @@ export default {
           newpwd: this.newpwd,
           uid: this.uid
         };
-        this.postRequest(parmas).then(res => {
+        this.http(parmas).then(res => {
           if (res.data.result == 0) {
             this.$toast(res.data.resultNote);
             setTimeout(() => {

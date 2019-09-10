@@ -62,7 +62,15 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= JSON.parse(localStorage.getItem('uid'));
+    this.uid= localStorage.getItem('uid');
+    if(sessionStorage.getItem('use')){
+      this.name=JSON.parse(sessionStorage.getItem('use')).name;
+      this.phone=JSON.parse(sessionStorage.getItem('use')).phone;
+    }
+    if(sessionStorage.getItem('useaddress')){
+      this.address=JSON.parse(sessionStorage.getItem('useaddress')).province+JSON.parse(sessionStorage.getItem('useaddress')).city;
+      this.detail=JSON.parse(sessionStorage.getItem('useaddress')).address;
+    }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -91,8 +99,12 @@ export default {
           console.log(res);
           this.$toast(res.data.resultNote);
            if(res.data.result==0){
-             this.$store.commit('AddAdress',parmas);
+             this.name="";
+             this.phone="";
+             this.address='';
+             this.detail='';
              this.$router.back(-1);
+             sessionStorage.removeItem("use");
            }
         });
       }else{
@@ -100,23 +112,17 @@ export default {
       }
     },
     getCurrentPosition(){
-      this.$router.push('/positions');
+      if(this.name!='' ||this.phone!=''){
+        let use={};
+        use.name=this.name;
+         use.phone=this.phone;
+         sessionStorage.setItem("use",JSON.stringify(use));
+      }
+      setTimeout(()=>{
+         
+        this.$router.push('/positions');
+      })
     }
-    // getCurrentPosition() {
-    //   this.GetCurrentCity();
-    //   setTimeout(() => {
-    //     let FMadd = JSON.parse(localStorage.getItem("address"));
-    //     console.log(FMadd);
-    //     if (FMadd) {
-    //       this.address =
-    //         FMadd.regeocode.addressComponent.province +
-    //         FMadd.regeocode.addressComponent.city +
-    //         FMadd.regeocode.addressComponent.district;
-    //       this.detail = FMadd.regeocode.formattedAddress.slice(this.address.length);
-    //       this.addressId = FMadd.regeocode.addressComponent.citycode;
-    //     }
-    //   }, 5000);
-    // }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

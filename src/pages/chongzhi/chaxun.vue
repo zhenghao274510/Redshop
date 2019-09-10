@@ -20,18 +20,22 @@ export default {
     return {
       cardnum: "",
       pwd: "",
-      dataObject: ""
+      dataObject: "",
+      uid:""
     };
+  },
+  created(){
+     this.uid=localStorage.getItem('uid');
   },
   methods: {
     getmsg() {
       let parmas = {
         cmd: "findRechargeCard",
-        uid: "1",
+        uid: this.uid,
         cardnum: this.cardnum,
         pwd: this.pwd
       };
-      this.postRequest(parmas).then(res => {
+      this.http(parmas).then(res => {
         if (res.data.result == 0) {
           console.log(res);
           this.dataObject = res.data.dataObject;
@@ -39,7 +43,9 @@ export default {
       });
     }
   },
-  moutend() {}
+  moutend() {
+   
+  }
 };
 </script>
  

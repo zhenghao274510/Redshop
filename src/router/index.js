@@ -17,11 +17,6 @@ export default new Router({
         showtabar: true
       }
     },
-     // 首页
-     {
-      path: '/author',
-      component: resolve => require(['./../pages/author.vue'], resolve),
-    },
     //  分类
     {
       path: '/classification',
@@ -47,7 +42,8 @@ export default new Router({
       name:"我的",
       component: resolve => require(['./../pages/mine/mine.vue'], resolve),
       meta: {
-        showtabar: true
+        showtabar: true,
+        requireAuth:true
       }
     },
     // 我的订单
@@ -138,13 +134,19 @@ export default new Router({
     {
       path: '/paymoney',
       name:"充值",
-      component: resolve => require(['./../pages/chongzhi/paymoney.vue'], resolve)
+      component: resolve => require(['./../pages/chongzhi/paymoney.vue'], resolve),
+      meta:{
+        requireAuth: true
+      }
     }, 
      // 查询
      {
       path: '/chaxun',
       name:"查询",
-      component: resolve => require(['./../pages/chongzhi/chaxun.vue'], resolve)
+      component: resolve => require(['./../pages/chongzhi/chaxun.vue'], resolve),
+      meta:{
+        requireAuth: true
+      }
     }, 
        // 配送成功
        {

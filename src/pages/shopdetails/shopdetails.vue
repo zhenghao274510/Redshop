@@ -111,8 +111,8 @@
         </div>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/wodeshoucang.png" v-show="addshou==1" />
-            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="addshou==0" />
+            <img src="/static/icon/wodeshoucang.png" v-show="addshou" />
+            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="!addshou" />
           </div>
           <p>收藏</p>
         </div>
@@ -190,7 +190,12 @@ export default {
         this.productParam = res.data.productParam;
         //库存
         this.skuList = res.data.skuList;
-        this.addshou=res.data.dataObject.isCollectProduct;
+        if(res.data.dataObject.isCollectProduct==0){
+              this.addshou=false;
+        }else{
+          this.addshou=true;
+        }
+
       }
     });
     //   评价

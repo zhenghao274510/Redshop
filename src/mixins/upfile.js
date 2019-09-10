@@ -1,5 +1,6 @@
  // 图片上传
  import axios from 'axios'
+ import {Toast} from 'vant'
  export default {
    postFile: (url, data = {}, method = 'post')=> {
     Toast.loading({
@@ -7,7 +8,7 @@
     });
      return new Promise((resolve, reject) => {
        axios({
-           url: 'http://192.168.3.254:8099/wineshop/' + url,
+           url: 'http://121.40.142.78/wineshop/' + url,
            method: method,
            data: data,
            headers: {

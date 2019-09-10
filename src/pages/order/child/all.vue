@@ -47,7 +47,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this.uid=this.$store.Use.uid;
+    this.uid=localStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10" };
     this.postRequest(params).then(res => {
       console.log(res);

@@ -27,8 +27,8 @@ methods: {},
      liPin
  },
  created(){
-  // this.uid=localStorage.getItem('uid');
-  this.uid="1";
+  this.uid=localStorage.getItem('uid');
+  // this.uid="1";
   //   已购买
    let parmas1={cmd:'rechargeCardList',uid:this.uid,type:'0',nowPage:'1',pageCount:'10'};
    this.postRequest(parmas1).then(res=>{

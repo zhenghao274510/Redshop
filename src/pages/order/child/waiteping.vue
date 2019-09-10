@@ -34,7 +34,8 @@ export default {
   data() {
     return {
       show: false,
-      arry:this.list
+      arry:this.list,
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -51,7 +52,8 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10",status:'4' };
+     this.uid=localStorage.getItem('uid');
+    let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'4' };
     this.postRequest(params).then(res => {
       console.log(res);
       if (res.data.result == 0) {

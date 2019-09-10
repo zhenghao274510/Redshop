@@ -76,7 +76,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid= localStorage.getItem('uid');
-    this.uid = "1";
+    // this.uid = "1";
     let parmas = {
       cmd: "giftCardList",
       uid: this.uid,
@@ -114,7 +114,7 @@ export default {
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
       let isRegExp = Reg.test(this.phone);
       if (isRegExp) {
-              this.postRequest(parmas).then(res=>{
+              this.http(parmas).then(res=>{
                   console.log(res);
                   this.$toast(res.data.resultNote);
                   this.MsgShare=false;

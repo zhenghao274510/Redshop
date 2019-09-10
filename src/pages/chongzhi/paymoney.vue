@@ -24,11 +24,15 @@ export default {
  data () {
  return {
      show:false,
+     uid:''
 
  }
  },
 methods: {},
- moutend () {}
+ moutend () {},
+ created(){
+      this.uid=localStorage.getItem('uid');
+ }
 }
 </script>
  

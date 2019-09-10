@@ -29,7 +29,8 @@ export default {
     return {
       show: false,
       dataList: [],
-      arry: this.list
+      arry: this.list,
+      uid:''
     };
   },
   //监听属性 类似于data概念
@@ -46,9 +47,10 @@ export default {
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.uid="1"
+    // this.uid="1"
     this.arry = [];
-    let params = { cmd: "myOrder", uid: "1", nowPage: "1", pageCount: "10",status:'3'};
+     this.uid=localStorage.getItem('uid');
+    let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'3'};
     this.postRequest(params).then(res => {
       if (res.data.result == 0) {
         this.arry = res.data.dataList;

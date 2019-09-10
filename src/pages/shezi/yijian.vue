@@ -34,16 +34,16 @@ export default {
   methods: {
     sub_yj() {
       // this.uid = this.$store.Use.uid;
-      this.uid = "1";
-      var reg = new RegExp(/^[1][3456789]\d{9}$/);
-      if (reg.test(this.phone) && this.content != "") {
+      this.uid=localStorage.getItem('uid');
+      // this.uid = "1";
+      if (this.content != "") {
         let parmas = {
           cmd: "feedBack",
           uid: this.uid,
           content: this.content,
           phone: this.phone
         };
-        this.postRequest(parmas).then(res => {
+        this.http(parmas).then(res => {
           if (res.data.result == 0) {
             this.$toast("感谢你的及时反馈!我们会做的更好!");
             this.phone = "";
@@ -51,10 +51,8 @@ export default {
             // this.$router.back(-1);
           }
         });
-      } else if (!reg.test(this.phone)) {
-        this.$toast("请输入正确的手机号!");
-      } else {
-        this.$toast("信息不能为空!请重新填写!");
+      } else{
+        this.$toast("内容不能为空!");
       }
     }
   },

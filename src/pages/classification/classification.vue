@@ -106,6 +106,7 @@ export default {
 .classification {
   width: 100%;
   height: 100%;
+  background: #fff;
   overflow-y: hidden;
   .cf_info {
     width: 100%;

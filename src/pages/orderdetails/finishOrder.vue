@@ -37,7 +37,7 @@
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
-        <span class="col_mid ft_mix fr">配送费￥{{Freight}}元</span>
+        <span class="col_mid ft_mix fr">配送费￥{{freight}}元</span>
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
@@ -64,7 +64,7 @@
           <span class="ft_mid">配送费</span>
           <span class="ft_cmix">
             ￥
-            <i>{{Freight}}</i>
+            <i>{{freight}}</i>
           </span>
         </li>
         <li class="col_mid">
@@ -78,6 +78,7 @@
           <span class="ft_mid">实际支付</span>
           <span class="ft_cmix col_max">
             ￥
+            <!--  -->
             <i>{{MinTotalPrice}}</i>
           </span>
         </li>
@@ -166,11 +167,29 @@
           <span class="btn bg_g col_wh ft_mid">确定</span>
         </van-cell>
       </van-popup>
+      <!-- 充值卡 支付  账号 密码 -->
+      <van-popup
+        v-model="showchongzhi"
+        round
+        position="bottom"
+        :style="{ height: '40%' }"
+        :close-on-click-overlay="jin"
+      >
+        <van-cell-group>
+          <van-cell title="微信支付" clickable>
+            <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
+          </van-cell>
+          <van-cell title="充值卡支付" clickable>
+            <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
+          </van-cell>
+        </van-cell-group>
+      </van-popup>
     </div>
   </div>
 </template>
 
 <script>
+import wx from "weixin-js-sdk";
 //import 《组件名称》 from '《组件路径》';
 import deZhi from "./adderss";
 import Info from "./orderInfo";
@@ -188,21 +207,27 @@ export default {
       goHome: false,
       goCrd: true,
       //配送费
-      Freight: 10,
+      freight: 10,
       uid: "",
       // 可用优惠券
       CanuseCard: [],
       productList: [],
       choseCard: "",
       addressList: [],
-      defaultAddress: {}
+      defaultAddress: {},
+      showchongzhi: false,
+      //  单商品
+      productId: "",
+      skuId: "",
+      count: "",
+      payType: "1",
+      buyType: "0",
+      addressId: "",
+      couponId: ""
     };
   },
   //监听属性 类似于data概念
   computed: {
-    store() {
-      return this.$store.state;
-    },
     shoptotal() {
       let num = 0;
       this.productList.forEach(item => {
@@ -227,7 +252,7 @@ export default {
             this.shoptotal - this.CanuseCard[this.radioYouhui - 1].couponAmount
           );
         } else {
-          return parseInt(this.shoptotal) + parseInt(this.Freight);
+          return parseInt(this.shoptotal) + parseInt(this.freight);
         }
       }
     }
@@ -242,21 +267,22 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   this.uid= localStorage.getItem('uid');
-    this.uid = "1";
-    console.log(typeof this.$route.query.shop);
+     this.uid= localStorage.getItem('uid');
     if (typeof this.$route.query.shop == "string") {
-      this.productList.push(JSON.parse(this.$route.query.shop));     
+      this.productList.push(JSON.parse(this.$route.query.shop));
+      this.productId = this.productList[0].productid;
+      this.skuId = this.productList[0].skuId;
+      this.count = this.productList[0].count;
     } else {
       this.productList = JSON.parse(localStorage.getItem("shop"));
     }
-    console.log(this.productList);
+    console.log(this.productList, this.productId, this.skuId, this.count);
 
     // this.uid=this.$store.state.Use.uid;
     //   配送费
     let parmas1 = { cmd: "getFreight" };
     this.postRequest(parmas1).then(res => {
-      this.Freight = res.data.amount;
+      this.freight = res.data.amount;
     });
     //  可用优惠卷  我的优惠券
     let parmas2 = { cmd: "myCouponList", uid: this.uid };
@@ -282,14 +308,13 @@ export default {
           } else {
             this.defaultAddress = this.addressList[0];
           }
+          this.addressId = this.defaultAddress.addressId;
         });
       }
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.$root.isLoading = false;
-  },
+  mounted() {},
   //方法集合
   methods: {
     changej(num) {
@@ -344,11 +369,98 @@ export default {
       return Y + "-" + M + "-" + D + "  " + HH + ":" + MM + ":" + SS;
     },
     SubOrder() {
+      //   支付方式
+      if (this.radioPay == 1) {
+        this.payType = 1;
+      } else {
+        this.payType = 0;
+      }
+      //   购买方式
+      if (this.goHome) {
+        this.buyType = 0;
+      } else {
+        this.buyType = 1;
+      }
+
       if (this.addressList.length == 0) {
         this.$toast("请添加收货地址");
-      }else{
-        let parmas={cmd:'payByWx',orderid:this.orderid};
+      } else {
+        if (this.productId != "") {
+          let parmas = {
+            cmd: "productBuy",
+            uid: this.uid,
+            productId: this.productId,
+            skuId: this.skuId,
+            freight: this.freight,
+            count: this.count,
+            remark: this.remark,
+            amount: this.MinTotalPrice,
+            couponId: this.couponId,
+            addressId: this.addressId,
+            payType: this.payType,
+            buyType: this.buyType
+          };
+          this.http(parmas).then(res => {
+            console.log(res);
+            if (res.data.result == 0) {
+              let orderId = res.data.orderId;
+              let parmas = { cmd: "payByWx", orderid: orderId };
+              this.http(parmas).then(res => {
+                let data = res.data.body;
+                console.log(data);
+                this.onBridgeReady(data);
+              });
+            }
+          });
+        } else {
+          let parmas = {
+            cmd: "addCartOrder",
+            uid: this.uid,
+            cartid: this.cartid,
+            skuId: this.skuId,
+            freight: this.freight,
+            count: this.count,
+            remark: this.remark,
+            amount: this.MinTotalPrice,
+            couponId: this.couponId,
+            addressId: this.addressId,
+            payType: this.payType,
+            buyType: this.buyType
+          };
+          this.http(parmas).then(res => {
+            console.log(res);
+            if (res.data.result == 0) {
+              let orderId = res.data.orderId;
+              let parmas = { cmd: "payByWx", orderid: orderId };
+              this.http(parmas).then(res => {
+                let data = res.data.body;
+                console.log(data);
+                this.onBridgeReady(data);
+              });
+            }
+          });
+        }
       }
+    },
+
+    onBridgeReady(data) {
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest",
+        {
+          appId: data.appId, //公众号名称，由商户传入
+          timeStamp: data.timeStamp, //时间戳，自1970年以来的秒数
+          nonceStr: data.nonceStr, //随机串
+          package: data.prepay,
+          signType: data.signType, //微信签名方式：
+          paySign: data.paySign //微信签名
+        },
+        function(res) {
+          if (res.err_msg == "get_brand_wcpay_request:ok") {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          }
+        }
+      );
     }
   },
   //生命周期 - 创建之前

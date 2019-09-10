@@ -30,13 +30,26 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= localStorage.getItem('uid');
+    this.uid = localStorage.getItem("uid");
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    SaveSelf() {}
+    SaveSelf() {
+      let parmas = { cmd: "updateSign", uid: this.uid, sign: this.selfname };
+      if (this.selfname != "") {
+        this.postRequest(parmas).then(res => {
+          console.log(res);
+           this.selfname="";
+          this.$router.go(-1);
+          this.$toast(res.data.resultNote);
+         
+        });
+      }else{
+        this.$toast('请输入你的个性签名');
+      }
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -65,6 +78,7 @@ export default {
       height: 1.82rem;
       width: 100%;
       padding: 0.1rem;
+      box-sizing: border-box;
     }
   }
 }

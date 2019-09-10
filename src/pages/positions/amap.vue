@@ -138,6 +138,8 @@
 export default {
   data() {
     return {
+      city:'',
+      province:'',
       num: 0,
       center: [], //经度+纬度
       search_key: "", //搜索值
@@ -162,6 +164,7 @@ export default {
         // center: this.center //设置地图中心点
         //resizeEnable: true,  //地图初始化加载定位到当前城市
       });
+       this.GetCurrentCity();
       //获取初始中心点并赋值
       var currentCenter = map.getCenter(); //此方法是获取当前地图的中心点
       this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
@@ -259,9 +262,15 @@ export default {
     },
     onAddressLi(e, ind) {
       this.num = ind;
-      console.log(e, ind);
-     
-      this.$router.back(-1);
+      console.log(e, ind);  
+         e.city=self.city;
+      e.province=self.province;
+      sessionStorage.setItem('useaddress',JSON.stringify(e));
+      setTimeout(()=>{
+
+        this.$router.back(-1);
+      })    
+   
       this.marker.setPosition([e.location.lng, e.location.lat]);
     },
     onSearchLi(e) {
@@ -273,6 +282,65 @@ export default {
       setTimeout(() => {
         this.adMap();
       }, 1000);
+    },
+     GetCurrentCity() {
+      // Toast('正在努力定位中');
+      const self = this
+      AMap.plugin('AMap.Geolocation', function () {
+        var geolocation = new AMap.Geolocation({
+          // 是否使用高精度定位，默认：true
+          enableHighAccuracy: true,
+          // 设置定位超时时间，默认：无穷大
+          timeout: 10000,
+        })
+
+        geolocation.getCurrentPosition()
+        AMap.event.addListener(geolocation, 'complete', onComplete);
+        AMap.event.addListener(geolocation, 'error', onError);
+
+        function onComplete(data) {
+          // data是具体的定位信息
+          console.log('定位成功信息：', data);
+          // localStorage.setItem('address', JSON.stringify(data));
+        }
+
+        function onError(data) {
+          // 定位出错
+          console.log('定位失败错误：', data);
+          // Toast('定位失败');
+          // 调用ip定位
+          self.getLngLatLocation();
+        }
+      })
+    },
+    getLngLatLocation() {
+      AMap.plugin('AMap.CitySearch', function () {
+        var citySearch = new AMap.CitySearch();
+        citySearch.getLocalCity(function (status, result) {
+          if (status === 'complete' && result.info === 'OK') {
+            // 查询成功，result即为当前所在城市信息
+            console.log('通过ip获取当前城市：', result)
+            self.city=result.city;
+            self.province=result.province;
+            console.log(self.city,self.province)
+            //逆向地理编码
+            AMap.plugin('AMap.Geocoder', function () {
+              var geocoder = new AMap.Geocoder({
+                // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+                city: result.adcode
+              })
+
+              var lnglat = result.rectangle.split(';')[0].split(',');
+              geocoder.getAddress(lnglat, function (status, data) {
+                if (status === 'complete' && data.info === 'OK') {
+                  // result为对应的地理位置详细信息
+                  // console.log(data);
+                }
+              })
+            })
+          }
+        })
+      })
     }
   },
   watch: {
