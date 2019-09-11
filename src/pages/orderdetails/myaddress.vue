@@ -6,7 +6,7 @@
           <span class="pos"></span>
           <div class="info col_mix no_use">
             <p class="ft_mid">收货人：{{item.name}}&nbsp; &nbsp; &nbsp;{{item.phone}}</p>
-            <p class="ft_mix one-txt-cut">收货地址：{{item.address}}{{item.detail}}</p>
+            <p class="ft_mix">收货地址：{{item.address}}{{item.detail}}</p>
           </div>
         </div>
         <div class="change bo_top">
@@ -54,7 +54,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     this.uid= localStorage.getItem('uid');
+    this.uid = localStorage.getItem("uid");
     // this.uid = "1";
     let parmas = {
       cmd: "getAddressList",
@@ -75,7 +75,12 @@ export default {
       //  this.$router.push('/editaddress');
     },
     edaitAddress(e) {
-      console.log(e);
+      if(e.isDefault==0){
+        e.isDefault=1;
+      }else{
+        e.isDefault=0;
+      }
+   
       let parmas = {
         cmd: "updateAddress",
         uid: this.uid,
@@ -86,25 +91,49 @@ export default {
         detail: e.detail,
         isDefault: e.isDefault
       };
-      this.GetEdaitAddress(parmas);
-      if (e.isDefault == 0) {
-        e.isDefault = 1;
+
+      this.http(parmas).then(res => {
+        console.log(res);
+        if (res.data.result == 0) {
+          this.$toast(res.data.resultNote);
+          this.GetEdaitAddress(e);
+        }
+      });
+     
+
+      // if (e.isDefault == 0) {
+      //   e.isDefault = 1;
+      // } else {
+      //   e.isDefault = 0;
+      // }
+    },
+     GetEdaitAddress(data){
+       this.dataList.forEach(item=>{
+         if(item.isDefault==1){
+           item.isDefault=0;
+           data.isDefault=1;
+         }
+       })
+     },
+
+    delAddress(e, ind) {
+      if (e.isDefault == 1) {
+        this.$toast("默认收货地址不能删除!");
       } else {
-        e.isDefault = 0;
+        let parmas = {
+          cmd: "delAddress",
+          uid: this.uid,
+          addressId: e.addressId
+        };
+        this.http(parmas).then(res => {
+          console.log(res);
+          this.$toast(res.data.resultNote);
+          this.dataList.splice(ind, 1);
+        });
       }
     },
-    GetEdaitAddress(data) {},
-    delAddress(e, ind) {
-
-      let parmas = { cmd: "delAddress", uid: this.uid, addressId: e.addressId };
-      this.postRequest(data).then(res => {
-        console.log(res);
-        this.$toast(res.data.resultNote);
-        this.dataList.splice(ind, 1);
-      });
-    },
-    Goto(){
-      this.$router.push('/editaddress');
+    Goto() {
+      this.$router.push("/editaddress");
     }
   },
   //生命周期 - 创建之前

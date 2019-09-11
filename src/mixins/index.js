@@ -68,6 +68,7 @@ export default {
           })
           .then(res => {
             //成功
+            Toast.clear();
             if (res.data.result == '0') {
               resolve(res)
             } else {
@@ -102,6 +103,7 @@ export default {
           })
           .then(res => {
             //成功
+            Toast.clear();
             if (res.data.result == '0') {
               resolve(res)
             } else {
@@ -121,27 +123,25 @@ export default {
           })
       })
     },
-
-
-
-
+    
+    //
    
-
+    GetQueryString(name) {
+      var url = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var newUrl = window.location.search.substr(1).match(url);
+      if (newUrl != null) {
+        return unescape(newUrl[2]);
+      } else {
+        return false;
+      }
+    }
+  
+  
 
   },
 
  
-  GetQueryString(name) {
-    var url = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var newUrl = window.location.search.substr(1).match(url);
-    if (newUrl != null) {
-      return unescape(newUrl[2]);
-    } else {
-      return false;
-    }
-  }
-
-
+  
 
 
 }

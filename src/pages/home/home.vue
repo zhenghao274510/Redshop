@@ -30,7 +30,7 @@
                 <div class="list_info">
                   <p class="list_name" @click="GoTO(item)">{{item.title}}</p>
                   <div class="list_icon">
-                    <p class="col_max ft_mid">￥{{item.price}}</p>
+                    <p class="col_max ft_mid" @click="GoTO(item)">￥{{item.price}}</p>
                     <van-icon name="cart-o" size=".16rem" color="#666666" @click="Addcar(item)" />
                   </div>
                 </div>
@@ -61,7 +61,15 @@
         <div class="getJ ft_mid" @click="First=false">确定</div>
       </div>
     </van-popup>
-    <!-- <Addcard v-show="chose"></Addcard> -->
+     <van-popup
+  v-model="itemshow"
+  round
+  position="bottom"
+  :style="{ height: '70%' }"
+> 
+<add-card :list='popupitem.skuList' :obj="itemobj"></add-card>
+
+</van-popup>
   </div>
 </template>
 
@@ -71,7 +79,7 @@ import { pathway } from "@/mixins/img";
 import Top from "@/components/public/heade";
 import Zq from "@/components/homec/hodong";
 import Tit from "@/components/homec/title";
-// import Addcard from '@/pages/shopdetails/addshop'
+import addCard from '@/pages/shopdetails/addshop'
 
 export default {
   data() {
@@ -90,7 +98,10 @@ export default {
       ProductObject: {},
       firstpath: {},
       uid: "",
-      chose: false
+      chose: false,
+      itemshow:false,
+      popupitem:{},
+      itemobj:{}
     };
   },
   //监听属性 类似于data概念
@@ -101,8 +112,8 @@ export default {
   components: {
     Top,
     Zq,
-    Tit
-    // Addcard
+    Tit,
+    addCard
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
@@ -117,8 +128,9 @@ export default {
       }
     }
     this.uid = theRequest.uid;
+    this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
     // localStorage.setItem("uid", theRequest.uid);
-    localStorage.setItem("uid", '1');
+    localStorage.setItem("uid", this.uid);
     // this.uid = "1";
     // 是否首次登录
     let firstLogin = { cmd: "userInfo", uid: this.uid };
@@ -193,10 +205,6 @@ export default {
       }
     },
     GetJuan() {
-      //  获取优惠券
-      // this.uid= localStorage.getItem('uid');
-      // this.uid = "1";
-
       let parmas = {
         cmd: "newCoupon",
         uid: this.uid,
@@ -223,7 +231,9 @@ export default {
     },
     Addcar(e) {
       console.log(e);
-      // this.chose=true;
+      this.itemshow=true;
+      // this.popupitem=e;
+      // this.itemobj={productImages:[e.logo]}
     }
   },
   //生命周期 - 创建之前
@@ -247,7 +257,6 @@ export default {
 <style scoped lang='less' rel='stylesheet/stylus'>
 /deep/.van-popup--center {
   width: 2.8rem;
-  // height: 2.57rem;
   padding: 0.19rem 0;
   .first_con {
     display: flex;

@@ -154,17 +154,18 @@ export default {
     setTimeout(() => {
       this.adMap();
     }, 1000);
+    this.GetCurrentCity();
   },
   methods: {
     adMap() {
       this.loading = true;
       //初始化地图
       var map = new AMap.Map("container", {
-        zoom: 14 //缩放级别
+        zoom: 14 ,//缩放级别
         // center: this.center //设置地图中心点
-        //resizeEnable: true,  //地图初始化加载定位到当前城市
+        resizeEnable: true,  //地图初始化加载定位到当前城市
       });
-       this.GetCurrentCity();
+      //  this.GetCurrentCity();
       //获取初始中心点并赋值
       var currentCenter = map.getCenter(); //此方法是获取当前地图的中心点
       this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
@@ -334,7 +335,7 @@ export default {
               geocoder.getAddress(lnglat, function (status, data) {
                 if (status === 'complete' && data.info === 'OK') {
                   // result为对应的地理位置详细信息
-                  // console.log(data);
+                  console.log(data);
                 }
               })
             })

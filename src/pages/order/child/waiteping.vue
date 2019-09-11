@@ -9,7 +9,7 @@
         </span>
         <em>待评价</em>
       </div>
-      <Info :list="item.orderItem"></Info>
+      <Info :list="item.orderItem" :totalprice="total"></Info>
       </div>
       <div class="order_zhuang">
         <span class="two" @click="goto(item)">去评价</span>
@@ -35,7 +35,8 @@ export default {
     return {
       show: false,
       arry:this.list,
-      uid:''
+      uid:'',
+      total:[]
     };
   },
   //监听属性 类似于data概念
@@ -54,10 +55,13 @@ export default {
     this.arry = [];
      this.uid=localStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'4' };
-    this.postRequest(params).then(res => {
+    this.http(params).then(res => {
       console.log(res);
       if (res.data.result == 0) {
         this.arry = res.data.dataList;
+         this.arry.forEach(item => {
+          this.total.push(item.orderAmount);
+        });
 
         // this.dataList.forEach(item => {
         //   let e = item.status;

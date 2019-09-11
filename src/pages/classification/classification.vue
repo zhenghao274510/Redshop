@@ -10,7 +10,7 @@
     <div class="cf_info">
       <ul class="cf_left">
         <li
-          :class="{'active':num==index}"
+          :class="{'active':store==index}"
           v-for="(item,index) in left"
           :key="index"
           @click="changleft(index)"
@@ -18,11 +18,11 @@
       </ul>
       <div class="cf_right">
         <div class="cf_right_tit">
-          <span>{{left[num]}}</span>
+          <span>{{left[store]}}</span>
           <i class="icon_back"></i>
         </div>
         <ul class="cf_right_list">
-          <li v-for="(item,index) in ProductList[num]" :key="index" @click="GoTodetails(item)">
+          <li v-for="(item,index) in ProductList[store]" :key="index" @click="GoTodetails(item)">
             <router-link to>
               <img :src="item.childCategoryImage" />
               <p>{{item.childCategoryName}}</p>
@@ -40,14 +40,17 @@ import sear from "./../../components/public/search";
 export default {
   data() {
     return {
-      num: 0,
       left: [],
       ProductList: [],
       ProductObject: {}
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+   return this.$store.state.Classtarta;
+    }
+  },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
@@ -73,7 +76,7 @@ export default {
   //方法集合
   methods: {
     changleft(ind) {
-      this.num = ind;
+      this.$store.commit('ChangeClassTatar',ind);
     },
     GoTodetails(e) {
       console.log(e);

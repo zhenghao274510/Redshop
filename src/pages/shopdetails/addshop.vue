@@ -33,7 +33,7 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 export default {
-  props: ["list", "isbuy",'obj'],
+  props: ["list","obj"],
   data() {
     return {
       value: [],
@@ -44,15 +44,14 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {
-  },
+  computed: {},
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= localStorage.getItem('uid');
+    this.uid = localStorage.getItem("uid");
     // this.uid="1";
     this.skuId = this.list[0].skuId;
     for (let i in this.list) {
@@ -73,7 +72,7 @@ export default {
 
     //  添加购物车
     GetInCar() {
-      if (!this.isbuy) {
+
         this.productid = this.obj.productid;
         let parmas = {
           cmd: "addCart",
@@ -86,20 +85,10 @@ export default {
           console.log(res);
           if (res.data.result == 0) {
             this.$toast(res.data.resultNote);
-            this.$emit('closec',2)
+            this.$emit("closec", 2);
           }
         });
-      } else {
-        this.list[this.num].count=this.value[this.num];
-        this.list[this.num].productid=this.obj.productid;
-        this.list[this.num].image=this.obj.productImages[0];
-        this.list[this.num].productName=this.obj.productName;
-        console.log(this.list[this.num])
-        setTimeout(()=>{
-           this.$router.push({ path: "/finishOrder",query:{shop:JSON.stringify(this.list[this.num])}});
-        },100)
-        
-      }
+     
     }
   },
   //生命周期 - 创建之前
@@ -119,82 +108,86 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.box{width: 100%;height:100%;background-color: #FFF;}
-.shop_info {
-  position: relative;
-  padding: 0.15rem;
-  display: flex;
-  img {
-    width: 1.2rem;
-    height: 1.2rem;
-    border-radius: 0.05rem;
-  }
-  div {
-    margin-left: 0.26rem;
-    p {
-      font-size: 0.14rem;
-      color: #666666;
-      margin-top: 0.18rem;
-      &:first-child {
-        color: #ed670d;
-        font-size: 0.25rem;
+.box {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  .shop_info {
+    position: relative;
+    padding: 0.15rem;
+    display: flex;
+    img {
+      width: 1.2rem;
+      height: 1.2rem;
+      border-radius: 0.05rem;
+    }
+    div {
+      margin-left: 0.26rem;
+      p {
+        font-size: 0.14rem;
+        color: #666666;
+        margin-top: 0.18rem;
+        &:first-child {
+          color: #ed670d;
+          font-size: 0.25rem;
+        }
       }
     }
+    i {
+      position: absolute;
+      right: 0.15rem;
+      width: 0.23rem;
+      height: 0.22rem;
+      background: url("/static/icon/bianjidizhi-quxiao.png") center center
+        no-repeat;
+      background-size: 100% 100%;
+      display: block;
+    }
   }
-  i {
-    position: absolute;
-    right: 0.15rem;
-    width: 0.23rem;
-    height: 0.22rem;
-    background: url("/static/icon/bianjidizhi-quxiao.png") center center
-      no-repeat;
-    background-size: 100% 100%;
-    display: block;
+  .shop_can {
+    border-top: 0.01rem solid #eeeeee;
+    border-bottom: 0.01rem solid #eeeeee;
+    padding: 0.15rem;
+    font-size: 0;
+    display: flex;
+    flex-direction: column;
+    .active {
+      border: 0.01rem solid #72bb29;
+    }
+    span {
+      padding: 0.1rem;
+      font-size: 0.13rem;
+      background-color: #eeeeee;
+      color: #333;
+      margin-bottom: 0.15rem;
+      border-radius: 0.05rem;
+    }
   }
-}
-.shop_can {
-  border-top: 0.01rem solid #eeeeee;
-  border-bottom: 0.01rem solid #eeeeee;
-  padding: 0.15rem;
-  font-size: 0;
-  display: flex;
-  flex-direction: column;
-  .active {
-    border: 0.01rem solid #72bb29;
-  }
-  span {
-    padding: 0.1rem;
-    font-size: 0.13rem;
-    background-color: #eeeeee;
-    color: #333;
-    margin-bottom: 0.15rem;
-    border-radius: 0.05rem;
-  }
-}
-.buy_num {
-  height: 0.44rem;
-  padding: 0 0.15rem;
-  border-bottom: 0.01rem solid #eeeeee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  span {
-    font-size: 0.14rem;
-    color: #333333;
-  }
-}
-.buy_or {
-  padding: 0 0.15rem;
-  .btn {
-    margin-top: 0.21rem;
-    display: block;
+  .buy_num {
     height: 0.44rem;
-    line-height: 0.44rem;
-    font-size: 0.17rem;
-    background-color: #72bb29;
-    border-radius: 0.05rem;
-    color: #fff;
-    text-align: center;
+    padding: 0 0.15rem;
+    border-bottom: 0.01rem solid #eeeeee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      font-size: 0.14rem;
+      color: #333333;
+    }
+  }
+  .buy_or {
+    padding: 0 0.15rem;
+    .btn {
+      margin-top: 0.21rem;
+      display: block;
+      height: 0.44rem;
+      line-height: 0.44rem;
+      font-size: 0.17rem;
+      background-color: #72bb29;
+      border-radius: 0.05rem;
+      color: #fff;
+      text-align: center;
+    }
   }
 }
 </style>

@@ -9,7 +9,7 @@
           </span>
           <em>配送中</em>
         </div>
-        <Info :list="item.orderItem"></Info>
+        <Info :list="item.orderItem" :totalprice="total"></Info>
       </div>
       <div class="order_zhuang">
         <span class="two" @click="shou_huo(item)">确认收货</span>
@@ -30,7 +30,8 @@ export default {
       show: false,
       dataList: [],
       arry: this.list,
-      uid:''
+      uid:'',
+      total:[]
     };
   },
   //监听属性 类似于data概念
@@ -51,18 +52,14 @@ export default {
     this.arry = [];
      this.uid=localStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'3'};
-    this.postRequest(params).then(res => {
+    this.http(params).then(res => {
       if (res.data.result == 0) {
         this.arry = res.data.dataList;
-        // console.log(this.dataList,typeof this.list);
-
-        // this.dataList.forEach(item => {
-        //   let e = parseInt(item.status);
-        //   if (e == 3) {
-        //     this.arry.push(item);
-        //   }
-        // });
-        // console.log(this.arry);
+          this.arry.forEach(item => {
+          this.total.push(item.orderAmount);
+        });
+        
+       
       }
     });
   },

@@ -19,7 +19,7 @@
           </p>
         </div>
       </router-link>
-      <div class="tui"  @click="Shentui">
+      <div class="tui"  @click="Shentui" v-if="show==1">
               <span>申请退换</span>
       </div>
     </li>
@@ -31,7 +31,7 @@
 //import 《组件名称》 from '《组件路径》';
 import { Dialog } from "vant";
 export default {
-  props:['list'],
+  props:['list','show'],
 
   data() {
     return {

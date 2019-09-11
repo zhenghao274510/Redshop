@@ -1,8 +1,8 @@
 <template>
   <div class="order_de bg_c">
     <div class="order_de_info">
-      <div class="tit bg_wh ft_mid pad mg_bot">等待买家付款</div>
-      <div class="de_zhi pad bg_wh" @click="goto">
+      <div class="tit bg_wh ft_mid pad mg_bot" v-if="!goHome">等待买家付款</div>
+      <div class="de_zhi pad bg_wh" @click="goto" v-if="!goHome">
         <span class="pos"></span>
         <div class="info col_mix no_use" v-if="defaultAddress.isDefault==1">
           <p class="ft_mid">收货人：{{defaultAddress.name}}&nbsp; &nbsp; &nbsp;{{defaultAddress.phone}}</p>
@@ -11,7 +11,7 @@
         <div class="col_mix ft_mid no_use" v-else>请选择你的收货地址</div>
         <i class="back"></i>
       </div>
-      <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
+      <div class="tit bg_wh ft_mid pad mg_top bo_bot" v-if="!goHome">购物清单</div>
       <!-- 订单详细信息 -->
       <ul class="order_info bg_wh">
         <li v-for="(item,index) in productList" :key="index">
@@ -67,7 +67,7 @@
             <i>{{freight}}</i>
           </span>
         </li>
-        <li class="col_mid">
+        <li class="col_mid" v-if="!goHome">
           <span class="ft_mid">优惠卷抵扣</span>
           <span class="ft_cmix" v-if="choseCard!=''">
             -￥
@@ -134,10 +134,10 @@
         v-model="show_juan"
         round
         position="bottom"
-        :style="{ height: '40%' }"
-        :close-on-click-overlay="jin"
+        :style="{ height:'50%'}"
+        class="hidden"
       >
-        <van-radio-group v-model="radioYouhui" v-if="direct==0">
+        <van-radio-group v-model="radioYouhui">
           <van-cell title="优惠"></van-cell>
           <van-cell-group>
             <van-cell
@@ -152,7 +152,14 @@
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-radio-group v-model="radioPay" v-else>
+
+        <van-cell @click="show_juan=false">
+          <span class="btn bg_g col_wh ft_mid">确定</span>
+        </van-cell>
+      </van-popup>
+      <!-- 充值卡 支付  账号 密码 -->
+      <van-popup v-model="paystyle" round position="bottom" :style="{ height:'50%'}" class="hidden">
+        <van-radio-group v-model="radioPay">
           <van-cell title="请选择支付方式"></van-cell>
           <van-cell-group>
             <van-cell title="微信支付" clickable>
@@ -163,26 +170,29 @@
             </van-cell>
           </van-cell-group>
         </van-radio-group>
-        <van-cell @click="show_juan=false">
+        <van-cell @click="payCard">
           <span class="btn bg_g col_wh ft_mid">确定</span>
         </van-cell>
       </van-popup>
-      <!-- 充值卡 支付  账号 密码 -->
       <van-popup
-        v-model="showchongzhi"
+        v-model="showcardnum"
         round
         position="bottom"
-        :style="{ height: '40%' }"
-        :close-on-click-overlay="jin"
+        :style="{ height:'50%'}"
+        class="hidden"
       >
-        <van-cell-group>
-          <van-cell title="微信支付" clickable>
-            <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
+        <van-cell-group style="font-size:.15rem;">
+          <van-cell style="text-align:center;">充值卡支付</van-cell>
+          <van-cell>
+            <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" />
           </van-cell>
-          <van-cell title="充值卡支付" clickable>
-            <van-radio slot="right-icon" name="2" checked-color="#72BB29" />
+          <van-cell>
+            <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" />
           </van-cell>
         </van-cell-group>
+        <van-cell @click="paybycard">
+          <span class="btn bg_g col_wh ft_mid">确定</span>
+        </van-cell>
       </van-popup>
     </div>
   </div>
@@ -198,9 +208,7 @@ export default {
   data() {
     return {
       payMothed: ["微信支付", "充值卡支付"],
-      // 禁止点击遮罩层
-      jin: false,
-      direct: 0,
+      paystyle: false,
       radioYouhui: 1,
       radioPay: 1,
       show_juan: false,
@@ -223,7 +231,14 @@ export default {
       payType: "1",
       buyType: "0",
       addressId: "",
-      couponId: ""
+      couponId: "",
+      cartid: [],
+      // 充值卡信息
+      cardnum: "",
+      pwd: "",
+      showcardnum: false,
+      newCard:'',
+      newPsw:''
     };
   },
   //监听属性 类似于data概念
@@ -231,7 +246,7 @@ export default {
     shoptotal() {
       let num = 0;
       this.productList.forEach(item => {
-        num += item.skuPrice * item.count;
+        num += (item.skuPrice * 100 * item.count) / 100;
       });
       return num;
     },
@@ -243,16 +258,21 @@ export default {
       return num;
     },
     MinTotalPrice() {
-      if (this.CanuseCard != "") {
-        if (
-          this.choseCard != "" &&
-          this.CanuseCard[this.radioYouhui - 1].couponPrice < this.shoptotal
-        ) {
-          return (
-            this.shoptotal - this.CanuseCard[this.radioYouhui - 1].couponAmount
-          );
-        } else {
-          return parseInt(this.shoptotal) + parseInt(this.freight);
+      if (this.goHome) {
+        return this.shoptotal + parseInt(this.freight);
+      } else {
+        if (this.CanuseCard != "") {
+          if (
+            this.choseCard != "" &&
+            this.CanuseCard[this.radioYouhui - 1].couponPrice < this.shoptotal
+          ) {
+            return (
+              this.shoptotal -
+              this.CanuseCard[this.radioYouhui - 1].couponAmount
+            );
+          } else {
+            return parseInt(this.shoptotal) + parseInt(this.freight);
+          }
         }
       }
     }
@@ -267,7 +287,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     this.uid= localStorage.getItem('uid');
+    this.uid = localStorage.getItem("uid");
     if (typeof this.$route.query.shop == "string") {
       this.productList.push(JSON.parse(this.$route.query.shop));
       this.productId = this.productList[0].productid;
@@ -275,6 +295,9 @@ export default {
       this.count = this.productList[0].count;
     } else {
       this.productList = JSON.parse(localStorage.getItem("shop"));
+      this.productList.forEach(item => {
+        this.cartid.push(item.cartId);
+      });
     }
     console.log(this.productList, this.productId, this.skuId, this.count);
 
@@ -317,15 +340,35 @@ export default {
   mounted() {},
   //方法集合
   methods: {
+    paybycard() {
+      let parmas = {
+        cmd: "payByRechargeCard",
+        orderid: this.orderid,
+        cardnun: this.cardnun,
+        pwd: this.pwd
+      };
+      this.http(parmas).then(res => {
+        console.log(res);
+        this.showcardnum=false;
+      });
+    },
+    payCard() {
+      if (this.radioPay == 2) {
+        this.showcardnum = true;
+        this.paystyle = false;
+      } else if(this.radioPay==1) {
+        // this.showcardnum = false;
+        this.paystyle = false;
+      }
+    },
     changej(num) {
-      this.show_juan = true;
       switch (num) {
         case 0:
           //可用优惠券
-          this.direct = 0;
+          this.show_juan = true;
           break;
         case 1:
-          this.direct = 1;
+          this.paystyle = true;
       }
     },
     changeMothed(num) {
@@ -340,7 +383,7 @@ export default {
       }
     },
     goto() {
-      this.$router.push("/editaddress");
+      this.$router.push("/myaddress");
     },
     onClick(event) {
       this.choseCard = "";
@@ -351,6 +394,7 @@ export default {
         this.$toast("次劵未满额,不能使用");
       } else {
         this.choseCard = this.CanuseCard[this.radioYouhui - 1].couponAmount;
+        this.couponId = this.CanuseCard[this.radioYouhui - 1].couponId;
       }
     },
     formtime() {
@@ -376,7 +420,7 @@ export default {
         this.payType = 0;
       }
       //   购买方式
-      if (this.goHome) {
+      if (!this.goHome) {
         this.buyType = 0;
       } else {
         this.buyType = 1;
@@ -385,7 +429,9 @@ export default {
       if (this.addressList.length == 0) {
         this.$toast("请添加收货地址");
       } else {
-        if (this.productId != "") {
+        console.log(1);
+        //  单产品  微信支付
+        if (this.productId != "" && this.payType == 1 && this.buyType == 0) {
           let parmas = {
             cmd: "productBuy",
             uid: this.uid,
@@ -412,14 +458,19 @@ export default {
               });
             }
           });
-        } else {
+        } else if (
+          this.cartid.length != 0 &&
+          this.payType == 1 &&
+          this.buyType == 0
+        ) {
+          console.log(3);
+          let cartid = this.cartid.join(",");
+
           let parmas = {
             cmd: "addCartOrder",
             uid: this.uid,
-            cartid: this.cartid,
-            skuId: this.skuId,
+            cartid: cartid,
             freight: this.freight,
-            count: this.count,
             remark: this.remark,
             amount: this.MinTotalPrice,
             couponId: this.couponId,
@@ -439,6 +490,29 @@ export default {
               });
             }
           });
+        } else if (this.buyType == 1) {
+          //  存为礼品卡
+          this.MinTotalPrice='0.01';
+          console.log("礼品卡");
+          let parmas = {
+            cmd: "createRechargeCard",
+            uid: this.uid,
+            amount:'0.01'
+          };
+          
+          this.http(parmas).then(res=>{
+             console.log(res);
+             this.newCard=res.data.dataObject.cardnum;
+             this.newPsw=res.data.dataObject.pwd;
+            let orderId =res.data.dataObject.orderid;
+                let parmas = { cmd: "payByWx", orderid: orderId };
+              this.http(parmas).then(res => {
+                let data = res.data.body;
+                console.log(data);
+                this.onBridgeReady(data);
+              });
+             
+          })
         }
       }
     },
@@ -458,6 +532,11 @@ export default {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+              if(!this.goHome){
+             this.$router.replace('/success');
+              }else{
+                this.$router.replace('/success');
+              }
           }
         }
       );
@@ -516,6 +595,11 @@ export default {
       margin-left: 0.15rem;
     }
   }
+  .hidden {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   .btn {
     height: 0.44rem;
     width: 3.45rem;
@@ -524,7 +608,6 @@ export default {
     text-align: center;
     line-height: 0.44rem;
     border-radius: 0.05rem;
-    margin-top: 0.63rem;
   }
   .mothed {
     padding: 0 0.15rem;
@@ -652,5 +735,11 @@ export default {
 }
 .no_use {
   flex: 1;
+}
+.inp {
+  border: 0.01rem solid #e5e5e5;
+  width: 100%;
+  height: 0.35rem;
+  padding-left: 0.15rem;
 }
 </style>

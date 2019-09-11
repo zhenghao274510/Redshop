@@ -1,14 +1,14 @@
 <template>
   <div class="shop_de">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <div class="banner">
-    <van-swipe :autoplay="3000"  @change="Onchange">
-      <van-swipe-item v-for="(item,index) in dataObject.productImages" :key="index">
-        <img :src="item" alt />
-      </van-swipe-item>
-      <div class="custom_indicator" slot="indicator">{{current+1}}/{{ length }}</div>
-    </van-swipe>
-  </div>
+      <div class="banner">
+        <van-swipe :autoplay="3000" @change="Onchange">
+          <van-swipe-item v-for="(item,index) in dataObject.productImages" :key="index">
+            <img :src="item" alt />
+          </van-swipe-item>
+          <div class="custom_indicator" slot="indicator">{{current+1}}/{{ length }}</div>
+        </van-swipe>
+      </div>
       <div class="shop_info">
         <div class="shop_info_tit">
           <p>{{dataObject.productName}}</p>
@@ -44,11 +44,11 @@
             <em></em>
           </div>
         </div>
-        <div class="shop_info_use">
+        <div class="shop_info_use" v-if="iscomput">
           <div class="use_tit">
             <div>用户评价</div>
             <div @click="LookP">
-              <router-link to="">更多评价</router-link>
+              <router-link to>更多评价</router-link>
               <em></em>
             </div>
           </div>
@@ -83,25 +83,39 @@
       </div>
       <!--  -->
       <!-- <iframe :src="dataObject.url" frameborder="0"  scrolling="no"></iframe> -->
-      <iframe marginwidth="0" :src="dataObject.url" marginheight="0" width="100%" name="i" id="urlIframe" frameborder="0" scrolling="no" height="100%" vspace="-150">
-</iframe>
- <!-- 呈高度 -->
-<div class="no_con"></div>
-
+      <iframe
+        marginwidth="0"
+        :src="dataObject.url"
+        marginheight="0"
+        width="100%"
+        name="i"
+        id="urlIframe"
+        frameborder="0"
+        scrolling="no"
+        height="100%"
+        seamless
+      ></iframe>
+      <!-- 呈高度 -->
+      <div class="no_con"></div>
     </van-pull-refresh>
-    <van-popup
-      v-model="show"
-      round
-      position="bottom"
-      :style="{ height: '70%' }"
-      :close-on-click-overlay="jin"
-    >
-      <Addshop @closec="FUC" v-if="add_car" :list="skuList" :isbuy="buy" :obj="dataObject"></Addshop>
-      <Youcard @closec="FUC" v-if="see_card" :list="YuhuiCar"></Youcard>
-      <Canshu @closec="FUC" v-if="see_gu" :list="productParam"></Canshu>
+    <!-- 优惠券 -->
+    <van-popup v-model="see_card" round position="bottom" :style="{ height: '70%' }">
+      <Youcard @closec="FUC" :list="YuhuiCar"></Youcard>
     </van-popup>
-   
-    
+    <!-- 加入 购物车 -->
+    <van-popup v-model="add_car" round position="bottom" :style="{ height: '70%' }">
+      <Addshop @closec="FUC" :list="skuList" :obj="dataObject"></Addshop>
+    </van-popup>
+    <!-- 规格 -->
+
+    <van-popup v-model="see_gu" round position="bottom" :style="{ height: '70%' }">
+      <Canshu @closec="FUC" :list="productParam"></Canshu>
+    </van-popup>
+    <!-- 立即购买 -->
+    <van-popup v-model="addbuy" round position="bottom" :style="{ height: '70%' }">
+      <add-buy @closec="FUC" :list="skuList" :obj="dataObject"></add-buy>
+    </van-popup>
+
     <!-- 加入购物车 -->
     <div class="buy">
       <div class="buy_left">
@@ -111,8 +125,8 @@
         </div>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/wodeshoucang.png" v-show="addshou" />
-            <img src="/static/icon/shangpinxiangqing-shoucang.png"  v-show="!addshou" />
+            <img src="/static/icon/wodeshoucang.png" v-if="isshoucang" />
+            <img src="/static/icon/shangpinxiangqing-shoucang.png" v-else />
           </div>
           <p>收藏</p>
         </div>
@@ -132,21 +146,21 @@
 import Addshop from "./addshop";
 import Youcard from "./youhuicard";
 import Canshu from "./canshu";
+import addBuy from "./addbuy";
 export default {
   data() {
     return {
-      length:0,
-       current:0,
-      jin: false,
+      length: 0,
+      current: 0,
       value: 5,
       show: false,
-      addshou: false,
+      addshou: 0,
       add_car: false,
       see_gu: false,
       see_card: false,
+      addbuy: false,
       isLoading: false,
       productid: "",
-      buy: false,
       //
       dataObject: {},
       productParam: {},
@@ -160,6 +174,20 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
+    iscomput(){
+      if(JSON.stringify(this.productCommentList).length!=0){
+        return false;
+      }else{
+        return true;
+      }
+    },
+    isshoucang(){
+      if(this.addshou==0){
+        return false;
+      }else{
+        return true;
+      }
+    }
   },
   //监控data中的数据变化
   watch: {},
@@ -167,14 +195,15 @@ export default {
   components: {
     Addshop,
     Youcard,
-    Canshu
+    Canshu,
+    addBuy
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     // 商品id
-   this.productid=this.$route.query.productid;
-  //  this.uid= localStorage.getItem('uid');
-    this.uid = "1";
+    this.productid = this.$route.query.productid;
+    this.uid = localStorage.getItem("uid");
+
     let parmas1 = {
       cmd: "productDetail",
       productid: this.productid,
@@ -182,20 +211,15 @@ export default {
     };
     this.postRequest(parmas1).then(res => {
       if (res.data.result == 0) {
-        console.log(res);
+        // console.log(res);
         this.dataObject = res.data.dataObject;
-        this.dataObject.productid=this.productid;
-        this.length=res.data.dataObject.productImages.length;
+        this.dataObject.productid = this.productid;
+        this.length = res.data.dataObject.productImages.length;
         // 规格
         this.productParam = res.data.productParam;
         //库存
         this.skuList = res.data.skuList;
-        if(res.data.dataObject.isCollectProduct==0){
-              this.addshou=false;
-        }else{
-          this.addshou=true;
-        }
-
+        this.addshou = res.data.dataObject.isCollectProduct;
       }
     });
     //   评价
@@ -207,8 +231,10 @@ export default {
     };
     this.postRequest(parmas2).then(res => {
       if (res.data.result == 0) {
-        // console.log(res);
-        this.productCommentList = res.data.dataList[0];
+        console.log(res);
+        if(res.data.dataList){
+          this.productCommentList = res.data.dataList[0];
+        }
       }
     });
     //  优惠券列表
@@ -227,8 +253,8 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-     Onchange(index){
-      this.current=index;
+    Onchange(index) {
+      this.current = index;
     },
     see(ind) {
       this.show = true;
@@ -244,12 +270,12 @@ export default {
         //   加入购物车
         case 2:
           this.add_car = true;
-          this.buy = false;
+
           break;
         // 立即购买
         case 3:
-          this.add_car = true;
-          this.buy = true;
+          this.addbuy = true;
+
           break;
       }
     },
@@ -260,9 +286,9 @@ export default {
         productid: this.productid,
         uid: this.uid
       };
-      this.postRequest(parmas).then(res => {
+      this.http(parmas).then(res => {
         console.log(res);
-        if (res.data.result ==0) {
+        if (res.data.result == 0) {
           this.$toast(res.data.resultNote);
           this.addshou = !this.addshou;
         }
@@ -279,6 +305,9 @@ export default {
         case 2:
           this.add_car = false;
           break;
+        case 3:
+          this.addbuy = false;
+          break;
       }
     },
     onRefresh() {
@@ -290,13 +319,15 @@ export default {
     Route() {
       console.log(1);
       this.$store.commit("ChangeTabar", 2);
-      setTimeout(()=>{
+      setTimeout(() => {
         this.$router.push("shopcar");
-      },100);
-      
+      }, 100);
     },
-    LookP(){      
-      this.$router.replace({path:'/evaluation',query:{productid:this.productid}});
+    LookP() {
+      this.$router.replace({
+        path: "/evaluation",
+        query: { productid: this.productid }
+      });
     }
     // GtoBuy(){
     //   this.$store.commit('ChooseBuy',)
@@ -325,18 +356,18 @@ export default {
 .banner {
   margin-top: 0.5rem;
   position: relative;
-  .custom_indicator{
+  .custom_indicator {
     position: absolute;
-    right: .15rem;
-    bottom: .07rem;
-    width: .5rem;
-    height: .21rem;
-    background: rgba(0, 0, 0, .3);
+    right: 0.15rem;
+    bottom: 0.07rem;
+    width: 0.5rem;
+    height: 0.21rem;
+    background: rgba(0, 0, 0, 0.3);
     color: #fff;
-    font-size: .15rem;
-    border-radius: .11rem;
+    font-size: 0.15rem;
+    border-radius: 0.11rem;
     text-align: center;
-    line-height: .21rem;
+    line-height: 0.21rem;
   }
 }
 .productimg {

@@ -9,7 +9,7 @@
           </span>
           <em>买家已付款</em>
         </div>
-        <Info :list="item.orderItem"></Info>
+        <Info :list="item.orderItem" :totalprice="total"></Info>
       </div>
 
       <!-- <div
@@ -34,7 +34,8 @@ export default {
       show: false,
       dataList: [],
       arry: [],
-      uid:''
+      uid:'',
+      total:[]
     };
   },
   //监听属性 类似于data概念
@@ -61,10 +62,13 @@ export default {
       pageCount: "10",
       status: "2"
     };
-    this.postRequest(params).then(res => {
+    this.http(params).then(res => {
       if (res.data.result == 0) {
         console.log(res);
         this.arry = res.data.dataList;
+         this.arry.forEach(item => {
+          this.total.push(item.orderAmount);
+        });
         // console.log(this.dataList,typeof this.list);
       }
     });

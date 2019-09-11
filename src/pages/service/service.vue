@@ -10,7 +10,7 @@
       </div>
       <ul class="kf_list">
         <li>
-          <a href="tel://18703858281"></a>
+          <a href="tel://1799272607"></a>
           <span class="one"></span>
           <p>1799272607</p>
           <i>拨打</i>
@@ -50,7 +50,13 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    let parmas={cmd:'aboutUs'};
+    this.postRequest(parmas).then(res=>{
+     console.log(res);
+      
+    })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

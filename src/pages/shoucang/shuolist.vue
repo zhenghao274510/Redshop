@@ -80,7 +80,7 @@ export default {
           }).then(() => {
              this.productid=this.list[name.name].productId;
              let parmas={cmd:'collectProduct',productid:this.productid,uid:this.uid,};
-             this.postRequest(parmas).then(res=>{
+             this.http(parmas).then(res=>{
                 if(res.data.result==0){
                   this.$toast('删除成功');
                   this.list.splice(name.name);

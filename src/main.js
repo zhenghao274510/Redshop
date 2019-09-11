@@ -28,7 +28,7 @@ Vue.use(Lazyload, {
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
-  key: 'a8e3f1d526511281bac2edf977a6ca03',
+  key: 'b27181d87b9be1fef09e09ea842b0a53',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','AMap.Geolocation', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType',
     'AMap.PolyEditor', 'AMap.CircleEditor'
   ],
@@ -38,24 +38,6 @@ VueAMap.initAMapApiLoader({
 
 
 
-// router.beforeEach((to, from, next) => {
-//   //   第一次进入项目
-//   let token =localStorage.getItem("uid");
-  
-//   if (!token) {
-//     window.localStorage.setItem("beforeLoginUrl", to.fullPath); // 保存用户进入的url
-//     return false;
-//   } else if (token) {
-//   //获取用户信息接口
-//   }
-//   next();
-// });
-
-Vue.directive('focus',{
-  inserted(el){
-      el.focus();
-  }
-  })
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

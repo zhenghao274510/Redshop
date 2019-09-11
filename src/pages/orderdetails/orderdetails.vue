@@ -16,7 +16,7 @@
         <i class="back"></i>
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot">购物清单</div>
-      <Info :list="productList"></Info>
+      <Info :list="productList" :show='status'></Info>
       <div class="tit bg_wh ft_max pad bo_top">
         配送方式：&nbsp;&nbsp;&nbsp;&nbsp;
         <span class="col_mid ft_mix">同城配送</span>
@@ -42,7 +42,7 @@
             <i>{{Freight}}</i>
           </span>
         </li>
-        <li class="col_mid">
+        <li class="col_mid" v-if="productObject.couponAmount=''">
           <span class="ft_mid">优惠卷抵扣</span>
           <span class="ft_cmix">
             -￥
@@ -68,13 +68,13 @@
           <span class="ft_mid">创建时间：{{productObject.createdDate}}</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid" v-if="status!=1">付款时间：{{productObject.payDate}}</span>
+          <span class="ft_mid" v-if="status!=0">付款时间：{{productObject.payDate}}</span>
         </li>
         <li class="col_mid">
           <span class="ft_mid" v-if="status==5">退款时间：{{productObject.refundDate}}</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid" v-if="status!=3 || status==4">配送时间：{{productObject.deliveryDate}}</span>
+          <span class="ft_mid" v-if="status!=0 || status==4">配送时间：{{productObject.deliveryDate}}</span>
         </li>
         <li class="col_mid">
           <span class="ft_mid" v-if="status==4">收货时间：{{productObject.finishDate}}</span>
@@ -84,7 +84,7 @@
       <div>
         <div class="order_zhuang">
           <span class="one" v-if="status==0">取消订单</span>
-          <span class="two" v-if="status==0">去支付</span>
+          <span class="two" v-if="status==0" @click="gotoPay">去支付</span>
           <span class="one" v-if="status==1||status==3">申请退换</span>
           <span class="two" v-if="status==2" @click="shou_huo">确认收货</span>
           <span class="two" v-if="status==4" @click="goto">去评价</span>
@@ -130,9 +130,9 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= localStorage.getItem('uid');
+    this.uid = localStorage.getItem("uid");
     // this.uid = "1";
-     this.orderid=this.$route.query.orderid;
+    this.orderid = this.$route.query.orderid;
     // this.orderid = "xd2019083009500001";
     console.log(this.orderid);
     let parmas = {
@@ -157,41 +157,75 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-     goto() {
-      this.$router.push({path:"/addpingjia",query:{orderid:this.orderid}});
+    goto() {
+      this.$router.push({
+        path: "/addpingjia",
+        query: { orderid: this.orderid }
+      });
     },
     shou_huo(e) {
-       let parmas={cmd:'finishOrder',uid:this.uid,orderid:this.orderid};
-          this.poatRequest(parmas).then(res=>{
-              if(res.data.result==0){
-              console.log('成功');
-                    Dialog.confirm({
-        title: "确认收货成功",
-        message: "赶快去评论一下~"
-      })
-        .then(() => {
-            this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
-        })
-        .catch(() => {
-          // on cancel
-        });
-              }
+      let parmas = { cmd: "finishOrder", uid: this.uid, orderid: this.orderid };
+      this.poatRequest(parmas).then(res => {
+        if (res.data.result == 0) {
+          console.log("成功");
+          Dialog.confirm({
+            title: "确认收货成功",
+            message: "赶快去评论一下~"
           })
-        
-    
-    },
-     copy() {
-        const input = document.createElement("input");
-        document.body.appendChild(input);
-        input.setAttribute("value", this.orderid);
-        input.select();
-        // input.setSelectionRange(0, 9999);
-        if (document.execCommand("copy")) {
-          document.execCommand("copy");
-          this.$toast("复制成功");
+            .then(() => {
+              this.$router.push({
+                path: "/addpingjia",
+                query: { orderid: e.orderid }
+              });
+            })
+            .catch(() => {
+              // on cancel
+            });
         }
-        document.body.removeChild(input);
+      });
     },
+    copy() {
+      const input = document.createElement("input");
+      document.body.appendChild(input);
+      input.setAttribute("value", this.orderid);
+      input.select();
+      // input.setSelectionRange(0, 9999);
+      if (document.execCommand("copy")) {
+        document.execCommand("copy");
+        this.$toast("复制成功");
+      }
+      document.body.removeChild(input);
+    },
+    gotoPay() {
+      let orderId = this.orderid;
+      let parmas = { cmd: "payByWx", orderid: orderId };
+      this.http(parmas).then(res => {
+        let data = res.data.body;
+        console.log(data);
+        this.onBridgeReady(data);
+      });
+    },
+     onBridgeReady(data) {
+      WeixinJSBridge.invoke(
+        "getBrandWCPayRequest",
+        {
+          appId: data.appId, //公众号名称，由商户传入
+          timeStamp: data.timeStamp, //时间戳，自1970年以来的秒数
+          nonceStr: data.nonceStr, //随机串
+          package: data.prepay,
+          signType: data.signType, //微信签名方式：
+          paySign: data.paySign //微信签名
+        },
+        function(res) {
+          if (res.err_msg == "get_brand_wcpay_request:ok") {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          }else{
+            this.$toast('支付失败!')
+          }
+        }
+      );
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

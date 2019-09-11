@@ -17,9 +17,9 @@
             </p>
           </div>
         </router-link>
+        <div class="order_tot">共{{totalnum}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{totalprice[index]}}</div>
       </li>
     </ul>
-    <div class="order_tot">共{{totalnum}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{totalprice}}</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@
 //import 《组件名称》 from '《组件路径》';
 import { Dialog } from "vant";
 export default {
-  props: ["list"],
+  props: ["list", "totalprice"],
 
   data() {
     return {
@@ -36,27 +36,25 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-       totalnum() {
-      let num=0
-      this.list.forEach(item=>{
-            num+= parseInt(item.productCount) ;
-      })
-      return num;
-    },
-    totalprice(){
-      let num=0;
-       this.list.forEach(item=>{
-           num+= parseInt(item.productPrice*100)*item.productCount/100;
-      })
+    totalnum() {
+      let num = 0;
+      this.list.forEach(item => {
+        num += parseInt(item.productCount);
+      });
       return num;
     }
+    // totalprice(){
+    //   let num=0;
+    //    this.list.forEach(item=>{
+    //        num+= parseInt(item.productPrice*100)*item.productCount/100;
+    //   })
+    //   return num;
+    // }
   },
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
- 
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）

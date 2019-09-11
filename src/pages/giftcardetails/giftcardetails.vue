@@ -106,7 +106,7 @@ export default {
       });
     },
     goto() {
-      this.$router.push("/editaddress");
+      this.$router.push("/myaddress");
     },
     GoTo() {
       console.log(this.cardid);

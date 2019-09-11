@@ -127,3 +127,6 @@
 .slide-left-leave-active {
   opacity: 0;
 }
+[v-cloak]{
+  display:none
+}

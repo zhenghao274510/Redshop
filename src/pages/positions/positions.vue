@@ -8,6 +8,7 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 import aMap from './amap'
+// import aMap from './baidumap'
 export default {
   data() {
     return {

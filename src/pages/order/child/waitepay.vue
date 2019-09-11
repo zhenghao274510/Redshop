@@ -9,11 +9,11 @@
           </span>
           <em>待付款</em>
         </div>
-        <Info :list="item.orderItem"></Info>
+        <Info :list="item.orderItem" :totalprice="total"></Info>
       </div>
       <div class="order_zhuang">
         <span class="one" @click="delOrder">取消订单</span>
-        <span class="two">去支付</span>
+        <span class="two" @click="LookDetails(item)">去支付</span>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false" />
@@ -26,18 +26,13 @@ import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
   props: ["list"],
-  //   props:{
-  //   list:{
-  //      type:Array,
-  //      default:[]
-  //   }
-  // },
   data() {
     return {
       show: false,
       dataList: [],
       arry: this.list,
-      uid:''
+      uid:'',
+      total:[]
     };
   },
   //监听属性 类似于data概念
@@ -55,12 +50,13 @@ export default {
     this.arry = [];
      this.uid=localStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'1' };
-    this.postRequest(params).then(res => {
+    this.http(params).then(res => {
       console.log(res);
       if (res.data.result == 0) {
         this.arry = res.data.dataList;
-        
-
+        this.arry.forEach(item => {
+          this.total.push(item.orderAmount);
+        });
       }
     });
   },

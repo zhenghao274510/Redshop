@@ -60,11 +60,12 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    if( sessionStorage.getItem('home')){
-       this.num=sessionStorage.getItem('home');
-    }else{
-      this.num=0;
-    }
+    this.num=this.$store.state.tarba;
+    // if( sessionStorage.getItem('home')){
+    //    this.num=sessionStorage.getItem('home');
+    // }else{
+    //   this.num=0;
+    // }
     
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -75,7 +76,8 @@ export default {
     changeta(ind) {
       this.num=ind;
       this.$router.replace({path:this.icon[ind].url});
-   sessionStorage.setItem('home',ind);
+      this.$store.commit('ChangeTabar',ind);
+  //  sessionStorage.setItem('home',ind);
     }
   },
   //生命周期 - 创建之前

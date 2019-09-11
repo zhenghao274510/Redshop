@@ -84,8 +84,6 @@ export default {
     this.uid= localStorage.getItem('uid');
     // this.uid = "1";
     console.log(this.orderid);
-    //  this.orderid = "xd2019083009500001";
-    console.log(this.orderid);
     let parmas = {
       cmd: "orderDetail",
       orderid: this.orderid,
@@ -101,7 +99,7 @@ export default {
   methods: {
     getmsg() {
       if (this.content == "") {
-        this.content = "1111";
+        this.content = "";
       }
       let upimgs;
       if (this.imgs == 0) {

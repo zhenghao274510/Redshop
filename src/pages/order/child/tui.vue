@@ -8,7 +8,7 @@
         </span>
         <em>退款中</em>
       </div>
-      <Info :list="item.orderItem"></Info>
+      <Info :list="item.orderItem" :totalprice="total"></Info>
 
       <van-overlay :show="show" @click="show = false" />
     </div>
@@ -31,7 +31,8 @@ export default {
       show: false,
       dataList: [],
       arry: this.list,
-      uid:''
+      uid:'',
+      total:[]
     };
   },
   //监听属性 类似于data概念
@@ -49,14 +50,16 @@ export default {
     this.arry = [];
      this.uid=localStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10" };
-    this.postRequest(params).then(res => {
+    this.http(params).then(res => {
       if (res.data.result == 0) {
         this.dataList = res.data.dataList;
-
         this.dataList.forEach(item => {
           let e = parseInt(item.status);
           if (e == 4) {
             this.arry.push(item);
+             this.arry.forEach(item => {
+          this.total.push(item.orderAmount);
+        });
           }
         });
         console.log(this.arry);

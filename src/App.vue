@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import isLoad from '@/components/public/isLoading'
+// import isLoad from '@/components/public/isLoading'
 import Top from "@/components/public/heade";
-import Hid from "@/components/public/hidden";
+// import Hid from "@/components/public/hidden";
 import set from "../static/font/rem";
 import tar from "./components/public/nav";
 export default {
@@ -48,8 +48,6 @@ export default {
   components: {
     tar,
     Top,
-    Hid,
-    isLoad
   },
   methods: {
   },

@@ -22,13 +22,13 @@
         <div class="mi_order">
           <div class="mi_order_tit">
             <span>我的订单</span>
-            <div class="all_order" @click="GoToOrder(0)">
+            <div class="all_order" @click="lookorderall">
               查询全部订单
               <i></i>
             </div>
           </div>
           <div class="mi_order_list">
-            <div v-for="(item,index) in ordericon" :key="index" @click="GoToOrder(index+1)">
+            <div v-for="(item,index) in ordericon" :key="index" @click="GoToOrder(index,item)">
               <span :class="item.class"></span>
               <p>{{item.tit}}</p>
             </div>
@@ -128,16 +128,14 @@ export default {
         query: { img: this.useInfo.icon }
       });
     },
-    GoToOrder(ind) {
-      if (this.ordericon[ind - 1]) {
-       let url = this.ordericon[ind - 1].url;
-          this.$router.push({ path: url });
-      } else {
-          this.$router.push("/order/all");
-      }
-      sessionStorage.setItem("key", ind);
-
-    
+    GoToOrder(ind,item) {
+      let num=ind+1;
+      this.$store.commit('ChangeOrdertabar',num);
+      this.$router.push(item.url);
+    },
+    lookorderall(){
+      this.$store.commit('ChangeOrdertabar',0);
+      this.$router.push('/order/all');
     }
   },
   //生命周期 - 创建之前

@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="eaditbox">
     <ul>
       <li>
         <span>收货人:</span>
@@ -82,7 +82,7 @@ export default {
       } else {
         this.isdefault = 0;
       }
-      let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+      let Reg = /^1([36758]\d|5[0-35-9]|7[3678])\d{8}$/;
       let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
       if (Reg.test(this.phone) && regname.test(this.name)) {
         let parmas = {
@@ -121,6 +121,9 @@ export default {
       setTimeout(()=>{
          
         this.$router.push('/positions');
+        localStorage.removeItem('name');
+        localStorage.removeItem('phone');
+        localStorage.removeItem('phone');
       })
     }
   },
@@ -141,8 +144,9 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.box {
+.eaditbox {
   margin-top: 0.5rem;
+  background: #FFF;
   ul {
     padding: 0 0.15rem;
     li {

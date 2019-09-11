@@ -119,6 +119,7 @@ export default {
         width: 100%;
         li {
           padding: 0.15rem;
+          margin-bottom: .1rem;
           box-shadow: 0 0 0.04rem 0 rgba(34, 34, 34, 0.2);
           &:nth-child(1) {
             width: 100%;

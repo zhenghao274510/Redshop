@@ -3,7 +3,7 @@
     <ul class="order_nav">
       <li v-for="(item,index) in navinfo" :key="index" @click="changeta(index)">
         <router-link to>
-          <span :class="{'active':num==index}">{{item.tit}}</span>
+          <span :class="{'active':store==index}">{{item.tit}}</span>
         </router-link>
       </li>
     </ul>
@@ -19,7 +19,6 @@
 export default {
   data() {
     return {
-      num: 0,
       navinfo: [
         { tit: "全部", url:'/order/all'},
         { tit: "待付款",url:'/order/waitepay'},
@@ -27,13 +26,15 @@ export default {
         { tit: "配送中" ,url:'/order/peing'},
         { tit: "待评价" ,url:'/order/waiteping'},
         { tit: "退款售后",url:'/order/tui'}
-      ],
-      dataList:[],
-      dataObject:{}
+      ]
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    store(){
+      return this.$store.state.ordertabar;
+    }
+  },
   //监控data中的数据变化
   watch: {
   },
@@ -42,10 +43,6 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    if(sessionStorage.getItem('key')){
-           this.num=sessionStorage.getItem('key');
-    }
-    
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
@@ -55,7 +52,8 @@ export default {
   //方法集合
   methods: {
     changeta(ind) {
-      this.num = ind;
+      // this.num = ind;
+      this.$store.commit('ChangeOrdertabar',ind)
       this.$router.replace(this.navinfo[ind].url);
     }
   },

@@ -62,6 +62,7 @@ export default {
     font-size: 0.14rem;
     border: 0.01rem solid #999999;
     border-radius: 0.05rem;
+    box-sizing: border-box;
   }
   .btn {
     background-color: #72bb29;

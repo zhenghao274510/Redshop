@@ -3,14 +3,10 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
-    isLoad:false,
-
-  
-    //  用户信息
-    use: {
-      uid: ''
-    },
-    
+    //   导航 选中
+   tarba:0,
+   ordertabar:0,
+   Classtarta:0,
 
     useAddres: {},
     SearchList:[]
@@ -30,6 +26,15 @@ const store = new Vuex.Store({
     SearStar(state,val){
       state.SearchList=val;
     },
+    ChangeTabar(state,val){
+      state.tarba=val;
+    },
+    ChangeOrdertabar(state,val){
+      state.ordertabar=val;
+    },
+    ChangeClassTatar(state,val){
+      state.Classtarta=val;
+    }
 
   },
   getters() {

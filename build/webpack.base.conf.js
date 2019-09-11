@@ -28,13 +28,9 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
     },
-    //  添加的
-    // externals:{
-    //   'axios':'axios',      
-    // 'AMap': 'AMap',
-    // 'AMapUI': 'AMapUI'
-    // }
+   
   },
+   //  添加的
   module: {
     rules: [
       {
