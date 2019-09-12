@@ -7,6 +7,7 @@ const store = new Vuex.Store({
    tarba:0,
    ordertabar:0,
    Classtarta:0,
+   uid:'',
 
     useAddres: {},
     SearchList:[]
@@ -34,6 +35,10 @@ const store = new Vuex.Store({
     },
     ChangeClassTatar(state,val){
       state.Classtarta=val;
+    },
+    //   用户uid
+    ChangeUId(state,val){
+      state.uid=val;
     }
 
   },

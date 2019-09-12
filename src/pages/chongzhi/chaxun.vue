@@ -25,7 +25,7 @@ export default {
     };
   },
   created(){
-     this.uid=localStorage.getItem('uid');
+     this.uid=this.$store.state.uid;
   },
   methods: {
     getmsg() {

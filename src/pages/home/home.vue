@@ -67,7 +67,7 @@
   position="bottom"
   :style="{ height: '70%' }"
 > 
-<add-card :list='popupitem.skuList' :obj="itemobj"></add-card>
+<add-card :list='popupitem' :obj="itemobj" @closec="FUNc"></add-card>
 
 </van-popup>
   </div>
@@ -100,7 +100,7 @@ export default {
       uid: "",
       chose: false,
       itemshow:false,
-      popupitem:{},
+      popupitem:[],
       itemobj:{}
     };
   },
@@ -127,10 +127,9 @@ export default {
         theRequest[strs[i].split("=")[0]] =strs[i].split("=")[1] ;
       }
     }
-    this.uid = theRequest.uid;
+    // this.uid = theRequest.uid;
     this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
-    // localStorage.setItem("uid", theRequest.uid);
-    localStorage.setItem("uid", this.uid);
+    this.$store.commit('ChangeUId',this.uid);
     // this.uid = "1";
     // 是否首次登录
     let firstLogin = { cmd: "userInfo", uid: this.uid };
@@ -175,6 +174,9 @@ export default {
   mounted() {},
   //方法集合
   methods: {
+    FUNc(){
+     this.itemshow=false;
+    },
     onRefresh() {
       setTimeout(() => {
         // this.$toast("刷新成功");
@@ -231,9 +233,23 @@ export default {
     },
     Addcar(e) {
       console.log(e);
-      this.itemshow=true;
-      // this.popupitem=e;
-      // this.itemobj={productImages:[e.logo]}
+      this.itemobj.productImages=[];
+      this.itemobj.productid=e.productid;
+      this.itemobj.productImages[0]=e.logo;
+      this.popupitem=e.skuList;
+       this.itemshow=true;
+
+      
+      // let parmas={cmd:'productDetail',productid:e.productid,uid:this.uid};
+      // this.http(parmas).then(res=>{
+      //   console.log(res)
+      //   this.itemobj=res.data.dataObject;
+      //   this.itemobj.productid=e.productid;
+      //   this.popupitem=res.data.skuList;
+      //     this.itemshow=true;
+      // })
+
+     
     }
   },
   //生命周期 - 创建之前

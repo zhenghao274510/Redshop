@@ -10,25 +10,25 @@
       </div>
       <ul class="kf_list">
         <li>
-          <a href="tel://1799272607"></a>
+          <a :href="'tel://'+phone"></a>
           <span class="one"></span>
-          <p>1799272607</p>
+          <p>{{phone}}</p>
           <i>拨打</i>
         </li>
         <li>
           <span class="two"></span>
-          <p>1799272607</p>
-          <i @click="copy">复制</i>
+          <p>{{wx1}}</p>
+          <i @click="copy(0)">复制</i>
         </li>
         <li>
           <span class="two"></span>
-          <p>1799272607</p>
-          <i @click="copy">复制</i>
+          <p>{{wx2}}</p>
+          <i @click="copy(1)">复制</i>
         </li>
         <li>
           <span class="three"></span>
-          <p>1799272607</p>
-          <i @click="copy">复制</i>
+          <p>{{qq}}</p>
+          <i @click="copy(2)">复制</i>
         </li>
       </ul>
     </div>
@@ -40,7 +40,11 @@
 export default {
   data() {
     return {
-      QQ:'1799272607'
+      qq:'',
+      phone:'',
+      wx1:'',
+      wx2:''
+
     };
   },
   //监听属性 类似于data概念
@@ -54,6 +58,10 @@ export default {
     let parmas={cmd:'aboutUs'};
     this.postRequest(parmas).then(res=>{
      console.log(res);
+     this.qq=res.data.dataObject.qq;
+     this.phone=res.data.dataObject.phone;
+     this.wx1=res.data.dataObject.wx1;
+     this.wx2=res.data.dataObject.wx2;
       
     })
   },
@@ -61,10 +69,24 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    copy() {
+    copy(num) {
+     
+      let value;
+      switch(num){
+        case 0:
+        value=this.wx1;
+        break;
+         case 1:
+        value=this.wx2;
+        break;
+         case 2:
+        value=this.qq;
+        break;
+      }
+       console.log(value)
         const input = document.createElement("input");
         document.body.appendChild(input);
-        input.setAttribute("value", this.QQ);
+        input.setAttribute("value",value);
         input.select();
         // input.setSelectionRange(0, 9999);
         if (document.execCommand("copy")) {
@@ -73,11 +95,11 @@ export default {
         }
         document.body.removeChild(input);
     },
-    tell(){
-        const input = document.createElement("a");
-        document.body.appendChild(input);
-        input.setAttribute("ref", 'tel://'+this.QQ);
-    }
+    // tell(){
+    //     const input = document.createElement("a");
+    //     document.body.appendChild(input);
+    //     input.setAttribute("ref", 'tel://'+this.qq);
+    // }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

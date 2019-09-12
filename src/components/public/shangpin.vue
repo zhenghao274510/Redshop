@@ -1,4 +1,6 @@
 <template>
+<div>
+
   <ul class="shop_o">
     <li class="shop_de" v-for="(item,index) in list" :key="index">
       <div class="shop_img" @click.prevent="goto(index,item)">
@@ -11,22 +13,36 @@
             ￥
             <i>{{item.price}}</i>
           </span>
-          <i class="shop_car" @click.prevent="addcar(index)"></i>
+          <i class="shop_car" @click.prevent="addcar(item)"></i>
         </div>
       </div>
     </li>
   </ul>
+       <van-popup
+  v-model="itemshow"
+  round
+  position="bottom"
+  :style="{ height: '70%' }"
+> 
+<add-card :list='popupitem' :obj="itemobj" @closec="FUNc"></add-card>
+
+</van-popup>
+</div>
 </template>
 
 <script>
 //import 《组件名称》 from '《组件路径》';
 import {pathway} from '@/mixins/img'
+import addCard from '@/pages/shopdetails/addshop'
 export default {
   props:['list'],
   data() {
     return {
     imgurl:pathway.imgurl,
-      id:''
+      id:'',
+      itemshow:false,
+      itemobj:{},
+      popupitem:[]
     };
   },
   //监听属性 类似于data概念
@@ -35,24 +51,31 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    addCard
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
+     FUNc(){
+     this.itemshow=false;
+    },
     goto(ind,e) {
        console.log(e);
       // this.$store.commit('ChooseShop',e);
       this.$router.push({path:'/shopdetails',query:{productid:e.productid}});
     },
-    addcar(ind) {
-      // let productId=this.list[ind].productid;
-      // let parmas={cmd:"addCart",uid:"",productId:'',skuId:'',count:'1'};
-      //  this.postRequest(parmas).then(res=>{
-      //   //  console.log(res)
-      // })
+    addcar(e) {
+      console.log(e);
+       console.log(e);
+      this.itemobj.productImages=[];
+      this.itemobj.productid=e.productid;
+      this.itemobj.productImages[0]=e.logo;
+      this.popupitem=e.skuList;
+       this.itemshow=true;
     }
   },
   //生命周期 - 创建之前

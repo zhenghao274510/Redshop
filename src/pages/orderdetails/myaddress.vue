@@ -54,7 +54,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid = localStorage.getItem("uid");
+    this.uid=this.$store.state.uid;
     // this.uid = "1";
     let parmas = {
       cmd: "getAddressList",

@@ -33,7 +33,7 @@
 <script>
 //import 《组件名称》 from '《组件路径》';
 export default {
-  props: ["list","obj"],
+  props: ["list", "obj"],
   data() {
     return {
       value: [],
@@ -51,11 +51,11 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid = localStorage.getItem("uid");
+    this.uid = this.$store.state.uid;
     // this.uid="1";
     this.skuId = this.list[0].skuId;
     for (let i in this.list) {
-      this.value.push(1);
+      this.value[i] = 1;
     }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -72,23 +72,24 @@ export default {
 
     //  添加购物车
     GetInCar() {
-
-        this.productid = this.obj.productid;
-        let parmas = {
-          cmd: "addCart",
-          productid: this.productid,
-          uid: this.uid,
-          skuId: this.skuId,
-          count: this.value[this.num]
-        };
-        this.postRequest(parmas).then(res => {
-          console.log(res);
-          if (res.data.result == 0) {
-            this.$toast(res.data.resultNote);
-            this.$emit("closec", 2);
+      this.productid = this.obj.productid;
+      let parmas = {
+        cmd: "addCart",
+        productid: this.productid,
+        uid: this.uid,
+        skuId: this.skuId,
+        count: this.value[this.num]
+      };
+      this.postRequest(parmas).then(res => {
+        console.log(res);
+        if (res.data.result == 0) {
+          this.$toast(res.data.resultNote);
+          this.$emit("closec", 2);
+          for (let i in this.list) {
+            this.value[i] = 1;
           }
-        });
-     
+        }
+      });
     }
   },
   //生命周期 - 创建之前

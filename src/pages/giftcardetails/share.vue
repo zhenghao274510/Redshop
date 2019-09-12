@@ -5,8 +5,8 @@
         和天下酒业
         <i>礼品卡</i>
       </h3>
-      <p class="use_card">卡号：201902011</p>
-      <p class="use_card">密码：123456789</p>
+      <p class="use_card">卡号：{{cardnum}}</p>
+      <p class="use_card">密码：{{pwd}}</p>
       <div>
         <img src alt />
         <p class="share_ma">扫描二维码关注公众号</p>
@@ -24,7 +24,10 @@
 
 export default {
   data() {
-    return {};
+    return {
+      cardnum:'',
+      pwd:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -33,7 +36,12 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    let obj=JSON.parse(this.$route.query.card);
+    console.log(obj);
+      this.cardnum=obj.cardnum;
+      this.pwd=obj.pwd;
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

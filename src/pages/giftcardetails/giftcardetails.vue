@@ -3,7 +3,7 @@
     <div class="cont">
       <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="receiver.name!=''" @click="goto">
+        <div class="info col_mix no_use" v-if="receiver!=''" @click="goto">
           <p class="ft_mid">收货人：{{receiver.name}}&nbsp; &nbsp; &nbsp;{{receiver.phone}}</p>
           <p class="ft_mix">收货地址：{{receiver.address}}{{receiver.detail}}</p>
         </div>
@@ -66,9 +66,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= localStorage.getItem('uid');
-    // this.uid = "1";
-
+    this.uid=this.$store.state.uid;
     this.cardnum = JSON.parse(this.$route.query.gift).cardnum;
     this.pwd = JSON.parse(this.$route.query.gift).pwd;
     this.cardid = JSON.parse(this.$route.query.gift).cardid;

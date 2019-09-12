@@ -123,6 +123,39 @@ export default {
           })
       })
     },
+    pay(data = {}, method = 'post') {
+    
+      return new Promise((resolve, reject) => {
+        axios({
+            url: encodeURI("http://121.40.142.78/wineshop/api/service?json=" + JSON.stringify(data)),
+            method: method,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+
+          })
+          .then(res => {
+            //成功
+            Toast.clear();
+            if (res.data.result == '0') {
+              resolve(res)
+            } else {
+              if (res.data.resultNote == '扫描失败，二维码数据有误') {
+                resolve(res)
+              } else {
+                Toast(res.data.resultNote);
+              }
+            }
+
+          })
+          .catch(res => {
+            //失败
+            // reject(res)
+            Toast('请求超时！')
+          
+          })
+      })
+    },
     
     //
    

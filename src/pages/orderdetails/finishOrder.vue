@@ -184,10 +184,10 @@
         <van-cell-group style="font-size:.15rem;">
           <van-cell style="text-align:center;">充值卡支付</van-cell>
           <van-cell>
-            <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" />
+            <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="cardnun" />
           </van-cell>
           <van-cell>
-            <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" />
+            <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" id="pwd" />
           </van-cell>
         </van-cell-group>
         <van-cell @click="paybycard">
@@ -237,8 +237,10 @@ export default {
       cardnum: "",
       pwd: "",
       showcardnum: false,
-      newCard:'',
-      newPsw:''
+      newCard: "",
+      newPsw: "",
+      orderId: "",
+      timer: null
     };
   },
   //监听属性 类似于data概念
@@ -287,7 +289,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid = localStorage.getItem("uid");
+    this.uid=this.$store.state.uid;
+    // this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
     if (typeof this.$route.query.shop == "string") {
       this.productList.push(JSON.parse(this.$route.query.shop));
       this.productId = this.productList[0].productid;
@@ -340,23 +343,80 @@ export default {
   mounted() {},
   //方法集合
   methods: {
+    //  充值卡   存为礼品卡
     paybycard() {
-      let parmas = {
-        cmd: "payByRechargeCard",
-        orderid: this.orderid,
-        cardnun: this.cardnun,
-        pwd: this.pwd
-      };
+      //   支付方式
+      if (this.radioPay == 1) {
+        this.payType = 1;
+      } else {
+        //   充值卡支付
+        this.payType = 0;
+      }
+      //   购买方式
+      if (!this.goHome) {
+        //  配送到家
+        this.buyType = 0;
+      } else {
+        this.buyType = 1;
+      }
+      let parmas = {};
+      if (this.productId != "") {
+        parmas = {
+          cmd: "productBuy",
+          uid: this.uid,
+          productId: this.productId,
+          skuId: this.skuId,
+          freight: this.freight,
+          count: this.count,
+          remark: this.remark,
+          amount: '0.01',
+          couponId: this.couponId,
+          addressId: this.addressId,
+          payType: this.payType,
+          buyType: this.buyType
+        };
+      } else {
+        parmas = {
+          cmd: "addCartOrder",
+          uid: this.uid,
+          cartid: this.cartid,
+          skuId: this.skuId,
+          freight: this.freight,
+          count: this.count,
+          remark: this.remark,
+          amount: '0.01',
+          couponId: this.couponId,
+          addressId: this.addressId,
+          payType: this.payType,
+          buyType: this.buyType
+        };
+      }
+
       this.http(parmas).then(res => {
         console.log(res);
-        this.showcardnum=false;
+        this.orderId = res.data.orderId;
+        let cardnun = document.getElementById("cardnun").value.trim();
+        let pwd = document.getElementById("pwd").value.trim();
+        let parmas1 = {
+          cmd: "payByRechargeCard",
+          orderid: this.orderId,
+          cardnun: cardnun,
+          pwd: pwd
+        };
+        this.http(parmas1).then(res => {
+          if (res.data.result == 0) {
+            this.$toast(res.data.resultNote);
+            this.showcardnum = false;
+          }
+          console.log(res);
+        });
       });
     },
     payCard() {
       if (this.radioPay == 2) {
         this.showcardnum = true;
         this.paystyle = false;
-      } else if(this.radioPay==1) {
+      } else if (this.radioPay == 1) {
         // this.showcardnum = false;
         this.paystyle = false;
       }
@@ -417,16 +477,18 @@ export default {
       if (this.radioPay == 1) {
         this.payType = 1;
       } else {
+        //   充值卡支付
         this.payType = 0;
       }
       //   购买方式
       if (!this.goHome) {
+        //  配送到家
         this.buyType = 0;
       } else {
         this.buyType = 1;
       }
 
-      if (this.addressList.length == 0) {
+      if (this.addressList.length == 0 && !this.goHome) {
         this.$toast("请添加收货地址");
       } else {
         console.log(1);
@@ -440,21 +502,22 @@ export default {
             freight: this.freight,
             count: this.count,
             remark: this.remark,
-            amount: this.MinTotalPrice,
+            amount: '0.01',
             couponId: this.couponId,
             addressId: this.addressId,
             payType: this.payType,
             buyType: this.buyType
           };
           this.http(parmas).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.data.result == 0) {
-              let orderId = res.data.orderId;
-              let parmas = { cmd: "payByWx", orderid: orderId };
+              this.orderId = res.data.orderId;
+              let parmas = { cmd: "payByWx", orderid: this.orderId };
               this.http(parmas).then(res => {
                 let data = res.data.body;
-                console.log(data);
+                // console.log(data);
                 this.onBridgeReady(data);
+                // this.Buysuccess();
               });
             }
           });
@@ -464,55 +527,65 @@ export default {
           this.buyType == 0
         ) {
           console.log(3);
-          let cartid = this.cartid.join(",");
-
+          // let cartid = this.cartid.join(",");
+          // this.MinTotalPrice = "0.01";
           let parmas = {
             cmd: "addCartOrder",
             uid: this.uid,
-            cartid: cartid,
+            cartid: this.cartid,
             freight: this.freight,
             remark: this.remark,
-            amount: this.MinTotalPrice,
+            amount: '0.01',
             couponId: this.couponId,
             addressId: this.addressId,
             payType: this.payType,
             buyType: this.buyType
           };
           this.http(parmas).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.data.result == 0) {
-              let orderId = res.data.orderId;
-              let parmas = { cmd: "payByWx", orderid: orderId };
+              this.orderId = res.data.orderId;
+              let parmas = { cmd: "payByWx", orderid: this.orderId };
               this.http(parmas).then(res => {
                 let data = res.data.body;
-                console.log(data);
+                // console.log(data);
                 this.onBridgeReady(data);
+                // this.Buysuccess();
               });
             }
           });
         } else if (this.buyType == 1) {
           //  存为礼品卡
-          this.MinTotalPrice='0.01';
+          this.MinTotalPrice = "0.01";
           console.log("礼品卡");
           let parmas = {
-            cmd: "createRechargeCard",
+            cmd: "productBuy",
             uid: this.uid,
-            amount:'0.01'
+            productId: this.productId,
+            skuId: this.skuId,
+            freight: this.freight,
+            count: this.count,
+            remark: this.remark,
+            amount: '0.01',
+            couponId: this.couponId,
+            addressId: this.addressId,
+            payType: this.payType,
+            buyType: this.buyType
           };
-          
-          this.http(parmas).then(res=>{
-             console.log(res);
-             this.newCard=res.data.dataObject.cardnum;
-             this.newPsw=res.data.dataObject.pwd;
-            let orderId =res.data.dataObject.orderid;
-                let parmas = { cmd: "payByWx", orderid: orderId };
+          this.http(parmas).then(res => {
+            // console.log('111',res);
+            console.log('jihuo')
+             let orderId = res.data.orderId;
+              console.log(orderId);                  
+              let parmas = { cmd: "payByWx", orderid:orderId };
+             
               this.http(parmas).then(res => {
                 let data = res.data.body;
-                console.log(data);
+                // console.log(data);
                 this.onBridgeReady(data);
               });
-             
-          })
+            // });
+          });
         }
       }
     },
@@ -532,15 +605,11 @@ export default {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-              if(!this.goHome){
-             this.$router.replace('/success');
-              }else{
-                this.$router.replace('/success');
-              }
+           alert('支付成功');
           }
         }
       );
-    }
+    },
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -551,7 +620,9 @@ export default {
   //生命周期 - 更新之后
   updated() {},
   //生命周期 - 销毁之前
-  beforeDestroy() {},
+  beforeDestroy() {
+    // clearInterval(this.timer);
+  },
   //生命周期 - 销毁完成
   destroyed() {},
   //如果页面有keep-alive缓存功能，这个函数会触发
@@ -741,5 +812,6 @@ export default {
   width: 100%;
   height: 0.35rem;
   padding-left: 0.15rem;
+  box-sizing: border-box;
 }
 </style>

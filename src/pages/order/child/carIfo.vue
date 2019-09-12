@@ -43,13 +43,6 @@ export default {
       });
       return num;
     }
-    // totalprice(){
-    //   let num=0;
-    //    this.list.forEach(item=>{
-    //        num+= parseInt(item.productPrice*100)*item.productCount/100;
-    //   })
-    //   return num;
-    // }
   },
   //监控data中的数据变化
   watch: {},

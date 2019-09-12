@@ -4,52 +4,36 @@
       <div class="li_search" @click="SearchCard">
         <span>查询</span>
       </div>
-        <div class="li_card">
-    <ul>
-      <li v-for="(item,index) in dataList" :key="index">
-        <router-link to >
-          <div class="gif_card_tit"  >
-            <div class="gif_name">和天下酒业礼品卡</div>
-            <div class="gif_name_icon">
-              <i @click.prevent="Goto" style="z-index:99;"></i>
-              <span @click.prevent="GetMsg(index)" style="z-index:99;"></span>
-            </div>
-          </div>
-          <div class="gif_card_hao"  @click.prevent="GoToGif(item)">
-            <div>
-              卡号:
-              <span>{{item.cardnum}}</span>
-            </div>
-            <div>
-              密码:
-              <span>{{item.pwd}}</span>
-            </div>
-          </div>
-          <div class="gif_card_adder"  @click.prevent="GoToGif(item)">
-            <p class="tel">0595-23195678</p>
-            <p class="addres">安溪县城厢镇新兴路149号(特产城移动公司后)</p>
-          </div>
-        </router-link>
-      </li>
-    </ul>
-   
-  </div>
-    </div>
-
-    <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
-      <div class="Share_msg_info">
-        <div class="bo_bot clearfix">
-          <p>短信分享</p>
-          <i @click="close"></i>
-        </div>
-        <div class="Use_tel">
-          <input type="text" placeholder="请输入手机号" v-model="phone" />
-        </div>
-        <div @click.prevent="GotoTell">
-          <span>确定</span>
-        </div>
+      <div class="li_card">
+        <ul>
+          <li v-for="(item,index) in dataList" :key="index">
+            <router-link to>
+              <div class="gif_card_tit">
+                <div class="gif_name">和天下酒业礼品卡</div>
+                <div class="gif_name_icon">
+                  <i @click.prevent="Goto" style="z-index:99;"></i>
+                  <span @click.prevent="GetMsg(index)" style="z-index:99;"></span>
+                </div>
+              </div>
+              <div class="gif_card_hao" @click.prevent="GoToGif(item)">
+                <div>
+                  卡号:
+                  <span>{{item.cardnum}}</span>
+                </div>
+                <div>
+                  密码:
+                  <span>{{item.pwd}}</span>
+                </div>
+              </div>
+              <div class="gif_card_adder" @click.prevent="GoToGif(item)">
+                <p class="tel">0595-23195678</p>
+                <p class="addres">安溪县城厢镇新兴路149号(特产城移动公司后)</p>
+              </div>
+            </router-link>
+          </li>
+        </ul>
       </div>
-    </van-popup>
+    </div>
   </div>
 </template>
 
@@ -59,11 +43,11 @@ export default {
   data() {
     return {
       MsgShare: false,
-      phone: "",
+
       uid: "",
       dataObject: {},
-      dataList:[],
-      num:0
+      dataList: [],
+      num: 0
     };
   },
   //监听属性 类似于data概念
@@ -71,63 +55,67 @@ export default {
   //监控data中的数据变化
   watch: {},
   //import引入的组件需要注入到对象中才能使用
-  components: {
-  },
+  components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid= localStorage.getItem('uid');
+    this.uid = this.$store.state.uid;
     // this.uid = "1";
     let parmas = {
       cmd: "giftCardList",
       uid: this.uid,
       nowPage: "1",
       pageCount: "10",
-      cardid:''
+      cardid: ""
     };
     this.postRequest(parmas).then(res => {
       console.log(res);
-      this.dataList=res.data.dataList;
+      this.dataList = res.data.dataList;
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    close(){
-   this.MsgShare=false;
+    close() {
+      this.MsgShare = false;
     },
     GetMsg(ind) {
-      this.num=ind;
-      this.MsgShare=true;
-     
+      this.num = ind;
     },
     SearchCard() {
-     this.$router.push('/chaxun');
-     
+      this.$router.push("/chaxun");
     },
-    Goto(){
-      this.$router.push('/share');
+    Goto() {
+      this.$router.push("/share");
     },
-    GotoTell(){
-        this.cardid=this.dataList[this.num].cardid;
-         let parmas={cmd:'sharingSMS',type:'1',cardid:this.cardid,phone:this.phone,uid:this.uid};
+    GotoTell() {
+      this.cardid = this.dataList[this.num].cardid;
+      let parmas = {
+        cmd: "sharingSMS",
+        type: "1",
+        cardid: this.cardid,
+        phone: this.phone,
+        uid: this.uid
+      };
       let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
       let isRegExp = Reg.test(this.phone);
       if (isRegExp) {
-              this.http(parmas).then(res=>{
-                  console.log(res);
-                  this.$toast(res.data.resultNote);
-                  this.MsgShare=false;
-              })
-      }else{
-        this.$toast('请输入正确的手机号码!')
+        this.http(parmas).then(res => {
+          console.log(res);
+          this.$toast(res.data.resultNote);
+          this.MsgShare = false;
+        });
+      } else {
+        this.$toast("请输入正确的手机号码!");
       }
     },
-    GoToGif(e){
-     console.log(e);
-     this.$router.push({path:'/giftcardetails',query:{gift:JSON.stringify(e)}});
+    GoToGif(e) {
+      console.log(e);
+      this.$router.push({
+        path: "/giftcardetails",
+        query: { gift: JSON.stringify(e) }
+      });
     }
-
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -146,15 +134,14 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-.giftcard_top{
-   margin-top: 0.5rem;
+.giftcard_top {
+  margin-top: 0.5rem;
 }
 .li_pin_card {
-
   .li_search {
     overflow: hidden;
     padding: 0.15rem;
-   
+
     span {
       float: right;
       width: 0.43rem;
@@ -225,7 +212,7 @@ export default {
       height: 1.44rem;
       border-radius: 0.1rem;
       background-color: #72bb29;
-
+      margin-bottom: .1rem;
       a {
         display: flex;
         height: 100%;

@@ -44,7 +44,7 @@
             <em></em>
           </div>
         </div>
-        <div class="shop_info_use" v-if="iscomput">
+        <div class="shop_info_use" >
           <div class="use_tit">
             <div>用户评价</div>
             <div @click="LookP">
@@ -99,20 +99,20 @@
       <div class="no_con"></div>
     </van-pull-refresh>
     <!-- 优惠券 -->
-    <van-popup v-model="see_card" round position="bottom" :style="{ height: '70%' }">
+    <van-popup v-model="see_card" round position="bottom" :style="{ height: '80%' }">
       <Youcard @closec="FUC" :list="YuhuiCar"></Youcard>
     </van-popup>
     <!-- 加入 购物车 -->
-    <van-popup v-model="add_car" round position="bottom" :style="{ height: '70%' }">
+    <van-popup v-model="add_car" round position="bottom" :style="{ height: '80%' }">
       <Addshop @closec="FUC" :list="skuList" :obj="dataObject"></Addshop>
     </van-popup>
     <!-- 规格 -->
 
-    <van-popup v-model="see_gu" round position="bottom" :style="{ height: '70%' }">
+    <van-popup v-model="see_gu" round position="bottom" :style="{ height: '80%' }">
       <Canshu @closec="FUC" :list="productParam"></Canshu>
     </van-popup>
     <!-- 立即购买 -->
-    <van-popup v-model="addbuy" round position="bottom" :style="{ height: '70%' }">
+    <van-popup v-model="addbuy" round position="bottom" :style="{ height: '80%' }">
       <add-buy @closec="FUC" :list="skuList" :obj="dataObject"></add-buy>
     </van-popup>
 
@@ -202,7 +202,7 @@ export default {
   created() {
     // 商品id
     this.productid = this.$route.query.productid;
-    this.uid = localStorage.getItem("uid");
+  this.uid=this.$store.state.uid;
 
     let parmas1 = {
       cmd: "productDetail",
@@ -211,7 +211,7 @@ export default {
     };
     this.postRequest(parmas1).then(res => {
       if (res.data.result == 0) {
-        // console.log(res);
+        console.log(res);
         this.dataObject = res.data.dataObject;
         this.dataObject.productid = this.productid;
         this.length = res.data.dataObject.productImages.length;

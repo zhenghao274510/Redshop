@@ -50,7 +50,7 @@ export default {
   mounted() {
     // this.uid="1"
     this.arry = [];
-     this.uid=localStorage.getItem('uid');
+     this.uid=this.$store.state.uid;
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'3'};
     this.http(params).then(res => {
       if (res.data.result == 0) {

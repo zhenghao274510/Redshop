@@ -1,13 +1,13 @@
 <template>
   <div class="li_card">
     <ul>
-      <li v-for="(item,index) in arry" :key="index">
-        <router-link to="">
+      <li v-for="(item,index) in list" :key="index">
+        <router-link to>
           <div class="gif_card_tit">
             <div class="gif_name">和天下酒业礼品卡</div>
             <div class="gif_name_icon">
-              <i @click.prevent="test(0)"></i>
-              <span @click.prevent="test(1)"></span>
+              <i @click.prevent="Goto(item)"></i>
+              <span @click.prevent="Getmsg(index)"></span>
             </div>
           </div>
           <div class="gif_card_hao">
@@ -27,6 +27,20 @@
         </router-link>
       </li>
     </ul>
+     <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
+      <div class="Share_msg_info">
+        <div class="bo_bot clearfix">
+          <p>短信分享</p>
+          <i @click="close"></i>
+        </div>
+        <div class="Use_tel">
+          <input type="text" placeholder="请输入手机号" v-model="phone" />
+        </div>
+        <div @click.prevent="GotoTell">
+          <span>确定</span>
+        </div>
+      </div>
+    </van-popup>
    
   </div>
 </template>
@@ -38,8 +52,11 @@ export default {
   props: ["list"],
   data() {
     return {
-      arry:this.list
       //   短信分享
+      MsgShare:false,
+      phone: "",
+      uid:'',
+      num:0
     };
   },
   //监听属性 类似于data概念
@@ -49,19 +66,40 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.uid=this.$store.state.uid;
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    test(ind) {
-      if (ind == 0) {
-        this.$router.push("/share");
-      } else if (ind == 1) {
-          this.$emit('ShowMsg');
+    Goto(e) { 
+      console.log(e);
+        this.$router.push({path:'/share',query:{card:JSON.stringify(e)}});
+    },
+      close(){
+   this.MsgShare=false;
+    },
+    Getmsg(ind) {
+      this.MsgShare=true;
+       this.num=ind;
+    },
+      GotoTell(){
+        let cardid=this.list[this.num].cardid;
+        console.log(cardid)
+         let parmas={cmd:'sharingSMS',type:'0',cardid:cardid,phone:this.phone,uid:this.uid};
+      let Reg = /^1([35678]\d|5[0-35-9]|7[3678])\d{8}$/;
+      let isRegExp = Reg.test(this.phone);
+      if (isRegExp) {
+              this.http(parmas).then(res=>{
+                  console.log(res);
+                  this.$toast(res.data.resultNote);
+                  this.MsgShare=false;
+              })
+      }else{
+        this.$toast('请输入正确的手机号码!')
       }
-      console.log(1);
-    }
+      }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -153,6 +191,54 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.Share_msg_info {
+  display: flex;
+  width: 100%;
+  height: 2.6rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 0.15rem;
+  align-items: center;
+  div {
+    width: 100%;
+    padding: 0 0.15rem;
+    position: relative;
+    font-size: 0.18rem;
+    p {
+      text-align: center;
+      line-height: 0.45rem;
+    }
+    input {
+      width: 100%;
+      height: 0.45rem;
+      border-radius: 0.05rem;
+      border: 0.01rem solid #e5e5e5;
+      padding-left: 0.15rem;
+      box-sizing: border-box;
+    }
+    i {
+      position: absolute;
+      top: 0.09rem;
+      right: 0.15rem;
+      display: block;
+      width: 0.22rem;
+      height: 0.22rem;
+      background: url("/static/icon/tankuang-quxiao.png") no-repeat;
+      background-size: 100% 100%;
+      z-index: 99;
+    }
+    span {
+      display: block;
+      height: 0.45rem;
+      background: #72bb29;
+      border-radius: 0.05rem;
+      color: #fff;
+      text-align: center;
+      line-height: 0.45rem;
+      z-index: 99;
     }
   }
 }

@@ -33,7 +33,7 @@ export default {
     return {
       show: false,
       dataList: [],
-      arry: [],
+      arry:this.list,
       uid:'',
       total:[]
     };
@@ -54,7 +54,7 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-     this.uid=localStorage.getItem('uid');
+     this.uid=this.$store.state.uid;
     let params = {
       cmd: "myOrder",
       uid: this.uid,

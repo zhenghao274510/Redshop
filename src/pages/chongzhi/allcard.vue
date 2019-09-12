@@ -27,12 +27,13 @@ methods: {},
      liPin
  },
  created(){
-  this.uid=localStorage.getItem('uid');
+  this.uid=this.$store.state.uid;
   // this.uid="1";
   //   已购买
    let parmas1={cmd:'rechargeCardList',uid:this.uid,type:'0',nowPage:'1',pageCount:'10'};
    this.postRequest(parmas1).then(res=>{
     this.canlist=res.data.dataList;
+    console.log(res)
    })
    // 已失效
    let parmas2={cmd:'rechargeCardList',uid:this.uid,type:'1',nowPage:'1',pageCount:'10'};

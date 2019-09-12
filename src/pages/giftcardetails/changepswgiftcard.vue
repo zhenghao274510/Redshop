@@ -38,7 +38,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   this.uid= localStorage.getItem('uid');
+   this.uid=this.$store.state.uid;
     this.cardid = this.$route.query.cardid;
     this.pwd = this.$route.query.pwd;
   },

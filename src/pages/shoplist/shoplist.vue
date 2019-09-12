@@ -10,7 +10,6 @@
             name="search"
             v-model="keywords"
             ref="input"
-            v-focus
           />
         </div>
         <span class="btn" @click.prevent="star">搜索</span>
@@ -62,13 +61,13 @@ export default {
       });
     }
   },
-  directives: {
-    focus: {
-      inserted(el) {
-        el.focus();
-      }
-    }
-  },
+  // directives: {
+  //   focus: {
+  //     inserted(el) {
+  //       el.focus();
+  //     }
+  //   }
+  // },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
