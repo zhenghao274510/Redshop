@@ -72,6 +72,9 @@ export default {
 
     //  添加购物车
     GetInCar() {
+      if(this.num==0){
+        this.skuId=this.list[0].skuId;
+      }
       this.productid = this.obj.productid;
       let parmas = {
         cmd: "addCart",

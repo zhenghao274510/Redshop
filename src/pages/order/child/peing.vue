@@ -30,8 +30,8 @@ export default {
       show: false,
       dataList: [],
       arry: this.list,
-      uid:'',
-      total:[]
+      uid: "",
+      total: []
     };
   },
   //监听属性 类似于data概念
@@ -43,51 +43,59 @@ export default {
     Info
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     // this.uid="1"
     this.arry = [];
-     this.uid=this.$store.state.uid;
-    let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'3'};
+    this.uid = this.$store.state.uid;
+    let params = {
+      cmd: "myOrder",
+      uid: this.uid,
+      nowPage: "1",
+      pageCount: "10",
+      status: "3"
+    };
     this.http(params).then(res => {
       if (res.data.result == 0) {
         this.arry = res.data.dataList;
+        if (this.arry) {
           this.arry.forEach(item => {
-          this.total.push(item.orderAmount);
-        });
-        
-       
+            this.total = item.orderAmount;
+          });
+        }
       }
     });
   },
   //方法集合
   methods: {
     shou_huo(e) {
-       let parmas={cmd:'finishOrder',uid:this.uid,orderid:e.orderid};
-          this.postRequest(parmas).then(res=>{
-              if(res.data.result==0){
-              console.log('成功');
-                    Dialog.confirm({
-        title: "确认收货成功",
-        message: "赶快去评论一下~"
-      })
-        .then(() => {
-            this.$router.push({path:"/addpingjia",query:{orderid:e.orderid}});
-        })
-        .catch(() => {
-          // on cancel
-        });
-              }
+      let parmas = { cmd: "finishOrder", uid: this.uid, orderid: e.orderid };
+      this.postRequest(parmas).then(res => {
+        if (res.data.result == 0) {
+          console.log("成功");
+          Dialog.confirm({
+            title: "确认收货成功",
+            message: "赶快去评论一下~"
           })
-        
-    
+            .then(() => {
+              this.$router.push({
+                path: "/addpingjia",
+                query: { orderid: e.orderid }
+              });
+            })
+            .catch(() => {
+              // on cancel
+            });
+        }
+      });
     },
     LookDetails(e) {
       console.log(e);
-     this.$router.push({path:'/orderdetails',query:{orderid:e.orderid}});
+      this.$router.push({
+        path: "/orderdetails",
+        query: { orderid: e.orderid }
+      });
       // this.$router.push('/orderdetails');
     }
   },

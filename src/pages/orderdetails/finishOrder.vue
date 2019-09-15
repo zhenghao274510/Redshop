@@ -290,6 +290,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.uid=this.$store.state.uid;
+    this.cartid=[];
     // this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
     if (typeof this.$route.query.shop == "string") {
       this.productList.push(JSON.parse(this.$route.query.shop));
@@ -300,6 +301,7 @@ export default {
       this.productList = JSON.parse(localStorage.getItem("shop"));
       this.productList.forEach(item => {
         this.cartid.push(item.cartId);
+        console.log(this.cartid,'cartid')
       });
     }
     console.log(this.productList, this.productId, this.skuId, this.count);
@@ -343,7 +345,7 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    //  充值卡   存为礼品卡
+    //  充值卡支付
     paybycard() {
       //   支付方式
       if (this.radioPay == 1) {
@@ -360,7 +362,7 @@ export default {
         this.buyType = 1;
       }
       let parmas = {};
-      if (this.productId != "") {
+      if (this.productId!="") {
         parmas = {
           cmd: "productBuy",
           uid: this.uid,
@@ -391,7 +393,7 @@ export default {
           buyType: this.buyType
         };
       }
-
+      console.log(parmas);
       this.http(parmas).then(res => {
         console.log(res);
         this.orderId = res.data.orderId;
@@ -472,6 +474,7 @@ export default {
       SS < 10 ? (SS = "0" + SS) : SS;
       return Y + "-" + M + "-" + D + "  " + HH + ":" + MM + ":" + SS;
     },
+    // 提交订单
     SubOrder() {
       //   支付方式
       if (this.radioPay == 1) {
@@ -491,10 +494,10 @@ export default {
       if (this.addressList.length == 0 && !this.goHome) {
         this.$toast("请添加收货地址");
       } else {
-        console.log(1);
-        //  单产品  微信支付
-        if (this.productId != "" && this.payType == 1 && this.buyType == 0) {
-          let parmas = {
+        // console.log(1);
+        let parmas={};
+        if(this.productId!= ""){
+             parmas = {
             cmd: "productBuy",
             uid: this.uid,
             productId: this.productId,
@@ -508,28 +511,8 @@ export default {
             payType: this.payType,
             buyType: this.buyType
           };
-          this.http(parmas).then(res => {
-            // console.log(res);
-            if (res.data.result == 0) {
-              this.orderId = res.data.orderId;
-              let parmas = { cmd: "payByWx", orderid: this.orderId };
-              this.http(parmas).then(res => {
-                let data = res.data.body;
-                // console.log(data);
-                this.onBridgeReady(data);
-                // this.Buysuccess();
-              });
-            }
-          });
-        } else if (
-          this.cartid.length != 0 &&
-          this.payType == 1 &&
-          this.buyType == 0
-        ) {
-          console.log(3);
-          // let cartid = this.cartid.join(",");
-          // this.MinTotalPrice = "0.01";
-          let parmas = {
+        }else{
+          parmas = {
             cmd: "addCartOrder",
             uid: this.uid,
             cartid: this.cartid,
@@ -541,6 +524,7 @@ export default {
             payType: this.payType,
             buyType: this.buyType
           };
+        }
           this.http(parmas).then(res => {
             // console.log(res);
             if (res.data.result == 0) {
@@ -553,44 +537,13 @@ export default {
                 // this.Buysuccess();
               });
             }
-          });
-        } else if (this.buyType == 1) {
-          //  存为礼品卡
-          this.MinTotalPrice = "0.01";
-          console.log("礼品卡");
-          let parmas = {
-            cmd: "productBuy",
-            uid: this.uid,
-            productId: this.productId,
-            skuId: this.skuId,
-            freight: this.freight,
-            count: this.count,
-            remark: this.remark,
-            amount: '0.01',
-            couponId: this.couponId,
-            addressId: this.addressId,
-            payType: this.payType,
-            buyType: this.buyType
-          };
-          this.http(parmas).then(res => {
-            // console.log('111',res);
-            console.log('jihuo')
-             let orderId = res.data.orderId;
-              console.log(orderId);                  
-              let parmas = { cmd: "payByWx", orderid:orderId };
-             
-              this.http(parmas).then(res => {
-                let data = res.data.body;
-                // console.log(data);
-                this.onBridgeReady(data);
-              });
-            // });
-          });
-        }
+       
+        })
+      
       }
     },
-
     onBridgeReady(data) {
+       const that=this;
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
         {
@@ -601,11 +554,13 @@ export default {
           signType: data.signType, //微信签名方式：
           paySign: data.paySign //微信签名
         },
+       
         function(res) {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-           alert('支付成功');
+          //  alert('支付成功');
+           that.$router.replace('/success')
           }
         }
       );

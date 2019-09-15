@@ -3,8 +3,10 @@
     <div class="d_flex suce">
       <van-icon name="checked" color="#09BB07" size="1rem" style="margin-top:.5rem" />
       <p class="pay_succ">支付成功</p>
-      <div class="pat_card">
+      <div class="pat_card" v-if="cardnum!=''">
         <p>已为您生成礼品卡</p>
+        <p>卡号：{{cardnum}}</p>
+        <p>卡号：{{pwd}}</p>
         <p>可去礼品卡包里查看</p>
       </div>
     </div>
@@ -12,10 +14,10 @@
            <div class="btn bg_m" v-if="Suc">
                查看
            </div>
-           <div class="btn bg_m" v-else>
+           <div class="btn bg_m" v-else @click="GoTO(0)">
                    查看订单
            </div>
-           <div class="btn back_h bg_c">
+           <div class="btn back_h bg_c" @click="GoTo(1)">
               返回首页
            </div>
     </div>
@@ -27,7 +29,10 @@
 export default {
   props:["Suc"],
   data() {
-    return {};
+    return {
+      cardnum:'',
+      pwd:''
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -37,11 +42,29 @@ export default {
   components: {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+        let info=JSON.parse(this.$route.query.info);
+        if(info){
+          this.cardnum=info.cardnum;
+          this.pwd=info.pwd;
+        }else{
+          return false;
+        }
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
+  methods: {
+    GoTo(e){
+      if(e==0){
+        this.$store.commit('ChangeOrdertabar',2);
+        this.$router.replace('/order/waitesong');
+      }else{
+        this.$store.commit('ChangeTabar',0);
+        this.$router.replace('/home');
+      }
+    }
+  },
   //生命周期 - 创建之前
   beforeCreate() {},
   //生命周期 - 挂载之前

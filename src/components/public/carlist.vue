@@ -172,7 +172,7 @@ export default {
         cartid: this.carId,
         count: count
       };
-      this.postRequest(parmas).then(res => {
+      this.pay(parmas).then(res => {
         if (res.data.result == 0) {
           this.SubTotal()
         }

@@ -80,9 +80,7 @@
           </div>
           <div class="shop_img"></div>
         </div>
-      </div>
-      <!--  -->
-      <!-- <iframe :src="dataObject.url" frameborder="0"  scrolling="no"></iframe> -->
+      </div> 
       <iframe
         marginwidth="0"
         :src="dataObject.url"
@@ -92,7 +90,6 @@
         id="urlIframe"
         frameborder="0"
         scrolling="no"
-        height="100%"
         seamless
       ></iframe>
       <!-- 呈高度 -->
@@ -125,7 +122,7 @@
         </div>
         <div class="shou_c" @click="GetInShou">
           <div>
-            <img src="/static/icon/wodeshoucang.png" v-if="isshoucang" />
+            <img src="/static/icon/wodeshoucang.png" v-if="addshou==1" />
             <img src="/static/icon/shangpinxiangqing-shoucang.png" v-else />
           </div>
           <p>收藏</p>
@@ -154,7 +151,7 @@ export default {
       current: 0,
       value: 5,
       show: false,
-      addshou: 0,
+      addshou: '',
       add_car: false,
       see_gu: false,
       see_card: false,
@@ -250,7 +247,23 @@ export default {
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+   
+    function changeMobsfIframe() {
+      const mobsf = document.getElementById('urlIframe')
+      const deviceWidth = document.body.clientWidth
+      const deviceHeight = document.body.clientHeight
+      mobsf.style.width = Number(deviceWidth) + 'px' // 数字是页面布局宽度差值
+      mobsf.style.height = Number(deviceHeight)+ 'px' // 数字是页面布局高度差
+    }
+ 
+    changeMobsfIframe();
+ 
+    window.onresize = function() {
+      changeMobsfIframe()
+
+    }
+  },
   //方法集合
   methods: {
     Onchange(index) {
@@ -615,4 +628,5 @@ em {
 .shopendmore {
   width: 100%;
 }
+
 </style>

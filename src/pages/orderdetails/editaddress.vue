@@ -23,12 +23,16 @@
         <input type="text" placeholder v-model="detail" />
       </li>
     </ul>
-    <div class="ft_mid col_mix mo_r" @click="istrue=!istrue">
-      <div>
-        <van-icon name="circle" size=".18rem" v-if="istrue" />
-        <van-icon name="checked" size=".18rem" color="#72BB29" v-else />
+    <div class="ft_mid col_mix mo_r" >
+      <div class="reserve" @click="istrue=!istrue">
+        <div>
+          <van-icon name="circle" size=".18rem" v-if="istrue" />
+          <van-icon name="checked" size=".18rem" color="#72BB29" v-else />
+        </div>
+        <span>设置为默认地址</span>
       </div>
-      <span>设置为默认地址</span>
+
+      <span class="usemore" @click="Gotoadd">选择常用地址</span>
     </div>
     <div class="pad">
       <van-button type="primary" size="large" color="#72BB29" @click="save">保存</van-button>
@@ -62,14 +66,16 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=this.$store.state.uid;
-    if(sessionStorage.getItem('use')){
-      this.name=JSON.parse(sessionStorage.getItem('use')).name;
-      this.phone=JSON.parse(sessionStorage.getItem('use')).phone;
+    this.uid = this.$store.state.uid;
+    if (sessionStorage.getItem("use")) {
+      this.name = JSON.parse(sessionStorage.getItem("use")).name;
+      this.phone = JSON.parse(sessionStorage.getItem("use")).phone;
     }
-    if(sessionStorage.getItem('useaddress')){
-      this.address=JSON.parse(sessionStorage.getItem('useaddress')).province+JSON.parse(sessionStorage.getItem('useaddress')).city;
-      this.detail=JSON.parse(sessionStorage.getItem('useaddress')).address;
+    if (sessionStorage.getItem("useaddress")) {
+      this.address =
+        JSON.parse(sessionStorage.getItem("useaddress")).province +
+        JSON.parse(sessionStorage.getItem("useaddress")).city;
+      this.detail = JSON.parse(sessionStorage.getItem("useaddress")).address;
     }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -98,33 +104,35 @@ export default {
         this.postRequest(parmas).then(res => {
           console.log(res);
           this.$toast(res.data.resultNote);
-           if(res.data.result==0){
-             this.name="";
-             this.phone="";
-             this.address='';
-             this.detail='';
-             this.$router.back(-1);
-             sessionStorage.removeItem("use");
-           }
+          if (res.data.result == 0) {
+            this.name = "";
+            this.phone = "";
+            this.address = "";
+            this.detail = "";
+            this.$router.back(-1);
+            sessionStorage.removeItem("use");
+          }
         });
-      }else{
-        this.$toast('信息有误请重新填写!');
+      } else {
+        this.$toast("信息有误请重新填写!");
       }
     },
-    getCurrentPosition(){
-      if(this.name!='' ||this.phone!=''){
-        let use={};
-        use.name=this.name;
-         use.phone=this.phone;
-         sessionStorage.setItem("use",JSON.stringify(use));
+    getCurrentPosition() {
+      if (this.name != "" || this.phone != "") {
+        let use = {};
+        use.name = this.name;
+        use.phone = this.phone;
+        sessionStorage.setItem("use", JSON.stringify(use));
       }
-      setTimeout(()=>{
-         
-        this.$router.push('/positions');
-        localStorage.removeItem('name');
-        localStorage.removeItem('phone');
-        localStorage.removeItem('phone');
-      })
+      setTimeout(() => {
+        this.$router.push("/positions");
+        localStorage.removeItem("name");
+        localStorage.removeItem("phone");
+        localStorage.removeItem("phone");
+      });
+    },
+    Gotoadd(){
+      this.$router.replace('/myaddress');
     }
   },
   //生命周期 - 创建之前
@@ -145,8 +153,9 @@ export default {
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
 .eaditbox {
+  height: 100%;
   margin-top: 0.5rem;
-  background: #FFF;
+  background: #fff;
   ul {
     padding: 0 0.15rem;
     li {
@@ -193,20 +202,35 @@ export default {
   .mo_r {
     display: flex;
     align-items: center;
-    line-height: 0.45rem;
-    padding-left: 0.15rem;
-    div {
-      width: 0.18rem;
-      height: 0.18rem;
-      position: relative;
-      i {
-        position: absolute;
-        top: 0;
+    padding:0  0.15rem;
+    display: flex;
+    height: .35rem;
+    align-items: center;
+    justify-content: space-between;
+    .reserve {
+      overflow: hidden;
+      display: flex;
+      div {
+        width: 0.18rem;
+        height: 0.18rem;
+        position: relative;
+        i {
+          position: absolute;
+          top: 0;
+        }
       }
     }
     span {
       color: #999999;
       text-indent: 0.1rem;
+    }
+    .usemore {
+      border: 0.01rem solid #ccc;
+      font-size: 0.13rem;
+      padding: 0.01rem;
+      display: inline-block;
+      border-radius: .05rem;
+      
     }
   }
 }

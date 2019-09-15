@@ -17,8 +17,8 @@
             </p>
           </div>
         </router-link>
-        <div class="order_tot">共{{totalnum}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{totalprice[index]}}</div>
       </li>
+        <div class="order_tot">共{{totalnum}}件商品&nbsp;&nbsp;&nbsp;&nbsp; 合计￥{{totalprice}}</div>
     </ul>
   </div>
 </template>

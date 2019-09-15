@@ -101,10 +101,11 @@ export default {
         };
         this.http(parmas).then(res => {
           this.amount = "";
-          console.log(res);
+          
           this.newcardnum = res.data.dataObject.cardnum;
           this.newpwd = res.data.dataObject.pwd;
           let orderId = res.data.dataObject.orderid;
+          console.log(this.newcardnum,this.newpwd);
           let parmas = { cmd: "payByWx", orderid: orderId };
           this.http(parmas).then(res => {
             if (res.data.result == 0) {
@@ -117,6 +118,8 @@ export default {
       }
     },
     onBridgeReady(data) {
+      const that=this;
+      // console.log(this.newcardnum);
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
         {
@@ -131,6 +134,12 @@ export default {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            // if(this.newcardnum!=''){
+              let obj={cardnum:that.newcardnum,pwd:that.newpwd}
+             that.$router.replace({path:'/success',query:{info:JSON.stringify(obj)}});
+            // }else{
+            //   this.$router.replace('/success');
+            // }
             
           }else{
 
@@ -150,7 +159,8 @@ export default {
 <style scoped lang = "less">
 .box {
   padding: 0 0.15rem;
-  background-color: white;
+  height: 100%;
+  background: #FFF;
 }
 h4 {
   line-height: 0.45rem;

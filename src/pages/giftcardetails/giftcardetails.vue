@@ -66,7 +66,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=this.$store.state.uid;
+    this.uid = this.$store.state.uid;
     this.cardnum = JSON.parse(this.$route.query.gift).cardnum;
     this.pwd = JSON.parse(this.$route.query.gift).pwd;
     this.cardid = JSON.parse(this.$route.query.gift).cardid;
@@ -80,7 +80,11 @@ export default {
       console.log(res);
       this.productList = res.data.dataObject.orderItem;
       this.dataObject = res.data.dataObject;
-      this.receiver = res.data.dataObject.receiver;
+      if (res.data.dataObject.receiver) {
+        this.receiver = res.data.dataObject.receiver;
+      } else {
+        this.receiver = "";
+      }
     });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -89,22 +93,26 @@ export default {
   methods: {
     getmsg() {
       // let address=this.receiver.address
-      let parmas = {
-        cmd: "giftCardDelivery",
-        uid: this.uid,
-        giftcardId: this.cardid,
-        remark: this.remark,
-        consignee: this.receiver.name,
-        address:this.receiver.address,
-        phone: this.receiver.phone
-      };
-      console.log(parmas)
-      this.postRequest(parmas).then(res => {
-        console.log(res);
-      });
+      if (this.receiver == "") {
+        this.$toast("请选择地址!");
+      } else {
+        let parmas = {
+          cmd: "giftCardDelivery",
+          uid: this.uid,
+          giftcardId: this.cardid,
+          remark: this.remark,
+          consignee: this.receiver.name,
+          address: this.receiver.address,
+          phone: this.receiver.phone
+        };
+        console.log(parmas);
+        this.postRequest(parmas).then(res => {
+          console.log(res);
+        });
+      }
     },
     goto() {
-      this.$router.push("/myaddress");
+      this.$router.push("/editaddress");
     },
     GoTo() {
       console.log(this.cardid);

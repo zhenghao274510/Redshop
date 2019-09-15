@@ -212,7 +212,7 @@ export default {
       height: 1.44rem;
       border-radius: 0.1rem;
       background-color: #72bb29;
-      margin-bottom: .1rem;
+      margin-bottom: .15rem;
       a {
         display: flex;
         height: 100%;

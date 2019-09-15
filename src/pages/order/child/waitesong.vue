@@ -35,7 +35,7 @@ export default {
       dataList: [],
       arry:this.list,
       uid:'',
-      total:[]
+      total:''
     };
   },
   //监听属性 类似于data概念
@@ -67,7 +67,7 @@ export default {
         console.log(res);
         this.arry = res.data.dataList;
          this.arry.forEach(item => {
-          this.total.push(item.orderAmount);
+          this.total=item.orderAmount;
         });
         // console.log(this.dataList,typeof this.list);
       }

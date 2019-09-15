@@ -2,7 +2,7 @@
   <div class="tit">
     <div class="adres_cont">
       <div v-for="(item,index) in dataList" :key="index" class="address_info">
-        <div class="de_zhi pad bg_wh">
+        <div class="de_zhi pad bg_wh"  @click="edaitAddress(item)">
           <span class="pos"></span>
           <div class="info col_mix no_use">
             <p class="ft_mid">收货人：{{item.name}}&nbsp; &nbsp; &nbsp;{{item.phone}}</p>
@@ -97,15 +97,9 @@ export default {
         if (res.data.result == 0) {
           this.$toast(res.data.resultNote);
           this.GetEdaitAddress(e);
+          this.$router.back(-1);
         }
       });
-     
-
-      // if (e.isDefault == 0) {
-      //   e.isDefault = 1;
-      // } else {
-      //   e.isDefault = 0;
-      // }
     },
      GetEdaitAddress(data){
        this.dataList.forEach(item=>{
