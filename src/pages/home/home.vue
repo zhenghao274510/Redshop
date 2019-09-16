@@ -51,9 +51,9 @@
           <p class="col_mix ft_max_mid" style="text-align:center;">{{dataObject.amount}}元优惠券</p>
         </div>
         <div class="getJ ft_mid" @click="GetJuan">点击领取</div>
-        <van-icon name="clear" color="#999999" size=".22rem" class="pos" @click="First=false" />
+        <van-icon name="clear" color="#999999" size=".22rem" class="pos" @click="isGet=false" />
       </div>
-      <div class="first_con" v-else style="padding:0 .39rem;">
+      <div class="first_con" v-else style="padding:0 .39rem;" >
         <div class="first_info">
           <p class="col_max ft_lg">恭喜您领取成功</p>
           <p class="ft_mid col_mid" style="margin-top:.1rem;">有效期至{{dataObject.endtime}}</p>
@@ -61,15 +61,9 @@
         <div class="getJ ft_mid" @click="First=false">确定</div>
       </div>
     </van-popup>
-     <van-popup
-  v-model="itemshow"
-  round
-  position="bottom"
-  :style="{ height: '70%' }"
-> 
-<add-card :list='popupitem' :obj="itemobj" @closec="FUNc"></add-card>
-
-</van-popup>
+    <van-popup v-model="itemshow" round position="bottom" :style="{ height: '70%' }">
+      <add-card :list="popupitem" :obj="itemobj" @closec="FUNc"></add-card>
+    </van-popup>
   </div>
 </template>
 
@@ -79,7 +73,7 @@ import { pathway } from "@/mixins/img";
 import Top from "@/components/public/heade";
 import Zq from "@/components/homec/hodong";
 import Tit from "@/components/homec/title";
-import addCard from '@/pages/shopdetails/addshop'
+import addCard from "@/pages/shopdetails/addshop";
 
 export default {
   data() {
@@ -99,9 +93,9 @@ export default {
       firstpath: {},
       uid: "",
       chose: false,
-      itemshow:false,
-      popupitem:[],
-      itemobj:{}
+      itemshow: false,
+      popupitem: [],
+      itemobj: {}
     };
   },
   //监听属性 类似于data概念
@@ -116,66 +110,55 @@ export default {
     addCard
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-    //  获取路径信息
-    let url = location.search;
-    var theRequest = new Object();
-    if (url.indexOf("?") != -1) {
-      var str = url.substr(1);
-      var strs = str.split("&");
-      for (var i = 0; i < strs.length; i++) {
-        theRequest[strs[i].split("=")[0]] =strs[i].split("=")[1] ;
-      }
-    }
-    // this.uid = theRequest.uid;
-    this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
-    this.$store.commit('ChangeUId',this.uid);
-    // this.uid = "1";
-    // 是否首次登录
-    let firstLogin = { cmd: "userInfo", uid: this.uid };
-    this.postRequest(firstLogin).then(res => {
-      // console.log(res.data.dataObject);
-      let useinfo = res.data.dataObject;
-      localStorage.setItem("useinfo", JSON.stringify(useinfo));
-      //   存在新人优惠券
-      if (useinfo.newCoupon == 0 && useinfo.isNew == 0) {
-        this.First = true;
-        //  优惠卷
-        let parmas2 = { cmd: "newCoupon" };
-        this.postRequest(parmas2).then(res => {
-          console.log(res);
-          if (res.data.result == 0) {
-            this.dataObject = res.data.dataObject;
-          }
-        });
-      } else {
-        this.First = false;
-      }
-    });
+  created(){
+      this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
 
-    //  主页 部分
-    let params1 = { cmd: "firstPage" };
-    this.postRequest(params1).then(res => {
-      // console.log(res);
-      this.firstpath = res.data.dataObject;
-    });
+      sessionStorage.setItem('uid',this.uid)
+      // this.uid=sessionStorage.getItem('uid');
+          // 是否首次登录
+      let firstLogin = { cmd: "userInfo", uid: this.uid };
+      this.postRequest(firstLogin).then(res => {
+        let useinfo = res.data.dataObject;
+        localStorage.setItem("useinfo", JSON.stringify(useinfo));
+        //   存在新人优惠券
+        if (useinfo.newCoupon == 0 && useinfo.isNew == 0) {
+          this.First = true;
+          //  优惠卷
+          let parmas2 = { cmd: "newCoupon" };
+          this.postRequest(parmas2).then(res => {
+            console.log(res);
+            if (res.data.result == 0) {
+              this.dataObject = res.data.dataObject;
+            }
+          });
+        } else {
+          this.First = false;
+        }
+      });
 
-    // 为你推荐
-    let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
-    this.postRequest(parmas3).then(res => {
-      if (res.data.result == 0) {
-        this.ProductList = res.data.dataList;
-        this.ProductObject = res.data;
-      }
-      // console.log(res);
-    });
+      //  主页 部分
+      let params1 = { cmd: "firstPage" };
+      this.postRequest(params1).then(res => {
+        // console.log(res);
+        this.firstpath = res.data.dataObject;
+      });
+
+      // 为你推荐
+      let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
+      this.postRequest(parmas3).then(res => {
+        if (res.data.result == 0) {
+          this.ProductList = res.data.dataList;
+          this.ProductObject = res.data;
+        }
+        // console.log(res);
+      });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    FUNc(){
-     this.itemshow=false;
+    FUNc() {
+      this.itemshow = false;
     },
     onRefresh() {
       setTimeout(() => {
@@ -233,13 +216,12 @@ export default {
     },
     Addcar(e) {
       console.log(e);
-      this.itemobj.productImages=[];
-      this.itemobj.productid=e.productid;
-      this.itemobj.productImages[0]=e.logo;
-      this.popupitem=e.skuList;
-       this.itemshow=true;
+      this.itemobj.productImages = [];
+      this.itemobj.productid = e.productid;
+      this.itemobj.productImages[0] = e.logo;
+      this.popupitem = e.skuList;
+      this.itemshow = true;
 
-      
       // let parmas={cmd:'productDetail',productid:e.productid,uid:this.uid};
       // this.http(parmas).then(res=>{
       //   console.log(res)
@@ -248,8 +230,6 @@ export default {
       //   this.popupitem=res.data.skuList;
       //     this.itemshow=true;
       // })
-
-     
     }
   },
   //生命周期 - 创建之前

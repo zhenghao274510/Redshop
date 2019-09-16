@@ -27,7 +27,7 @@ methods: {},
      liPin
  },
  created(){
-  this.uid=this.$store.state.uid;
+   this.uid=sessionStorage.getItem('uid');
   // this.uid="1";
   //   已购买
    let parmas1={cmd:'rechargeCardList',uid:this.uid,type:'0',nowPage:'1',pageCount:'10'};

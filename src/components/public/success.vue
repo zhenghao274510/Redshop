@@ -14,7 +14,7 @@
            <div class="btn bg_m" v-if="Suc">
                查看
            </div>
-           <div class="btn bg_m" v-else @click="GoTO(0)">
+           <div class="btn bg_m" v-else @click="GoTo(0)">
                    查看订单
            </div>
            <div class="btn back_h bg_c" @click="GoTo(1)">

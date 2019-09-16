@@ -2,9 +2,9 @@
   <div class="shop_de">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <div class="banner">
-        <van-swipe :autoplay="3000" @change="Onchange">
-          <van-swipe-item v-for="(item,index) in dataObject.productImages" :key="index">
-            <img :src="item" alt />
+        <van-swipe :autoplay="3000" @change="Onchange" style="height:2.5rem" >
+          <van-swipe-item v-for="(item,index) in dataObject.productImages" :key="index" style="height:2.5rem" >
+            <img :src="item" alt style="height:2.5rem"  />
           </van-swipe-item>
           <div class="custom_indicator" slot="indicator">{{current+1}}/{{ length }}</div>
         </van-swipe>
@@ -151,7 +151,7 @@ export default {
       current: 0,
       value: 5,
       show: false,
-      addshou: '',
+      addshou: 0,
       add_car: false,
       see_gu: false,
       see_card: false,
@@ -177,13 +177,6 @@ export default {
       }else{
         return true;
       }
-    },
-    isshoucang(){
-      if(this.addshou==0){
-        return false;
-      }else{
-        return true;
-      }
     }
   },
   //监控data中的数据变化
@@ -199,7 +192,7 @@ export default {
   created() {
     // 商品id
     this.productid = this.$route.query.productid;
-  this.uid=this.$store.state.uid;
+  this.uid=sessionStorage.getItem('uid');
 
     let parmas1 = {
       cmd: "productDetail",
@@ -303,7 +296,11 @@ export default {
         console.log(res);
         if (res.data.result == 0) {
           this.$toast(res.data.resultNote);
-          this.addshou = !this.addshou;
+          if(this.addshou==1){
+            this.addshou=0;
+          }else{
+             this.addshou=1;
+          }
         }
       });
     },

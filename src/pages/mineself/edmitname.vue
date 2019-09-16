@@ -41,12 +41,13 @@ export default {
   //方法集合
   methods: {
     changename() {
-      this.uid=this.$store.state.uid;
+      this.uid=sessionStorage.getItem('uid');
       // this.uid="1";
       let params = { cmd: "updateUserName", uid: this.uid, name: this.name };
       this.http(params).then(res => {
         console.log(res);
         this.$toast(res.data.resultNote);
+        this.$router.back(-1);
       });
     }
   },

@@ -19,13 +19,13 @@
         </div>
         <div class="ev_star">
           <span>商品评星</span>
-          <van-rate v-model="value" readonly />
+          <van-rate v-model="value" />
         </div>
         <div class="ev_int">
           <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）" v-model="content"></textarea>
           <div class="add_con">
             <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
-              <img :src="imgurl+item" alt />
+              <img :src="imgurl+item"   alt />
             </div>
             <div class="add_img" @click="show=true" v-if="imgs.length!=3">
               <input type="file" class="upfile" @change="Upfiles" />
@@ -81,7 +81,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.orderid = this.$route.query.orderid;
-   this.uid=this.$store.state.uid;
+   this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
     console.log(this.orderid);
     let parmas = {
@@ -288,7 +288,6 @@ export default {
   }
   .add_con {
     width: 100%;
-
     display: flex;
     padding-left: 0.15rem;
     .add_img {
@@ -302,6 +301,10 @@ export default {
       align-items: center;
       justify-content: space-around;
       position: relative;
+      img{
+        width: .56rem;
+        height: .56rem;
+      }
       p {
         color: #999999;
         font-size: 0.11rem;

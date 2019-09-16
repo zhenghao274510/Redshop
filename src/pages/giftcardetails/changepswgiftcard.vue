@@ -38,7 +38,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   this.uid=this.$store.state.uid;
+   this.uid=sessionStorage.getItem('uid');
     this.cardid = this.$route.query.cardid;
     this.pwd = this.$route.query.pwd;
   },
@@ -97,14 +97,16 @@ export default {
     li {
       height: 0.44rem;
       line-height: 0.44rem;
-      border-bottom: 0.01rem solid #e5e5e5;
+      
       font-size: 0.16rem;
       padding: 0.05rem 0;
+      margin-bottom: .1rem;
 
       input {
         flex: 1;
         width: 100%;
         height: 0.33rem;
+        border-bottom: 0.01rem solid #e5e5e5;
       }
     }
     .changsub {

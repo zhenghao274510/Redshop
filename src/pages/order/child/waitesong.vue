@@ -54,7 +54,7 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-     this.uid=this.$store.state.uid;
+     this.uid=sessionStorage.getItem('uid');
     let params = {
       cmd: "myOrder",
       uid: this.uid,

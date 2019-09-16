@@ -59,7 +59,7 @@ export default {
       });
       return new Promise((resolve, reject) => {
         axios({
-            url: encodeURI("http://121.40.142.78/wineshop/api/service?json=" + JSON.stringify(data)),
+            url: encodeURI("https://m.anxihtx.com/wineshop/api/service?json=" + JSON.stringify(data)),
             method: method,
             headers: {
               'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ export default {
       });
       return new Promise((resolve, reject) => {
         axios({
-            url: encodeURI("http://121.40.142.78/wineshop/api/service?json=" + JSON.stringify(data)),
+            url: encodeURI("https://m.anxihtx.com/wineshop/api/service?json=" + JSON.stringify(data)),
             method: method,
             headers: {
               'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ export default {
     
       return new Promise((resolve, reject) => {
         axios({
-            url: encodeURI("http://121.40.142.78/wineshop/api/service?json=" + JSON.stringify(data)),
+            url: encodeURI("https://m.anxihtx.com/wineshop/api/service?json=" + JSON.stringify(data)),
             method: method,
             headers: {
               'Content-Type': 'application/json'

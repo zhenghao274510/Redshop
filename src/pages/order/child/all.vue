@@ -52,12 +52,13 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-   this.uid=this.$store.state.uid;
+   this.uid=sessionStorage.getItem('uid');
     let params = {
       cmd: "myOrder",
       uid: this.uid,
       nowPage: "1",
-      pageCount: "10"
+      pageCount: "10",
+      status:'0'
     };
     this.http(params).then(res => {
       console.log(res);

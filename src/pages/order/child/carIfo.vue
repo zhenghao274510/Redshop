@@ -56,7 +56,7 @@ export default {
   methods: {
     Shentui() {
       Dialog.confirm({
-        title: "申请退卡",
+        title: "申请退换",
         message: "申请退换请联系客服~"
       })
         .then(() => {

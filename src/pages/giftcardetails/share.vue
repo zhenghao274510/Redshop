@@ -41,6 +41,7 @@ export default {
     console.log(obj);
       this.cardnum=obj.cardnum;
       this.pwd=obj.pwd;
+      console.log( this.cardnum,this.pwd)
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

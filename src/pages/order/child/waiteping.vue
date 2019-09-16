@@ -25,12 +25,6 @@ import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
   props: ["list"],
-  //  props:{
-  //   list:{
-  //      type:Array,
-  //      default:[]
-  //   }
-  // },
   data() {
     return {
       show: false,
@@ -53,7 +47,7 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-    this.uid=this.$store.state.uid;
+     this.uid=sessionStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'4' };
     this.http(params).then(res => {
       console.log(res);
@@ -62,14 +56,6 @@ export default {
          this.arry.forEach(item => {
           this.total=item.orderAmount;
         });
-
-        // this.dataList.forEach(item => {
-        //   let e = item.status;
-        //   let p=item.isComment;
-        //   if (e == 3&&p==0) {
-        //     this.arry.push(item);
-        //   }
-        // });
         console.log(this.arry);
       }
     });

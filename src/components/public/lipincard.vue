@@ -4,7 +4,7 @@
       <li v-for="(item,index) in list" :key="index">
         <router-link to>
           <div class="gif_card_tit">
-            <div class="gif_name">和天下酒业礼品卡</div>
+            <div class="gif_name">和天下酒业充值卡</div>
             <div class="gif_name_icon">
               <i @click.prevent="Goto(item)"></i>
               <span @click.prevent="Getmsg(index)"></span>
@@ -34,7 +34,7 @@
           <i @click="close"></i>
         </div>
         <div class="Use_tel">
-          <input type="text" placeholder="请输入手机号" v-model="phone" />
+          <input type="text" placeholder="请输入手机号" v-model="phone" id="phone" />
         </div>
         <div @click.prevent="GotoTell">
           <span>确定</span>
@@ -67,7 +67,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=this.$store.state.uid;
+    this.uid=sessionStorage.getItem('uid');
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -87,6 +87,7 @@ export default {
       GotoTell(){
         let cardid=this.list[this.num].cardid;
         console.log(cardid)
+        this.phone=document.getElementById('phone').value.trim();
          let parmas={cmd:'sharingSMS',type:'0',cardid:cardid,phone:this.phone,uid:this.uid};
       let Reg = /^1([35678]\d|5[0-35-9]|7[3678])\d{8}$/;
       let isRegExp = Reg.test(this.phone);

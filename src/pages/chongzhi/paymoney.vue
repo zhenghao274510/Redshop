@@ -150,7 +150,7 @@ export default {
   },
   moutend() {},
   created() {
-    this.uid=this.$store.state.uid;
+    this.uid=sessionStorage.getItem('uid');
     // this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
   }
 };

@@ -9,7 +9,7 @@
 }
 
 .van-tab--active .van-ellipsis {
-  color: #72bb29;
+  color: #72bb29 !important;
 }
 
 .van-tab {

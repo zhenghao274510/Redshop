@@ -54,7 +54,7 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     //  用户头像
-    this.uid=this.$store.state.uid;
+   this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
     let params = { cmd: "userInfo", uid: this.uid };
     this.postRequest(params).then(res => {

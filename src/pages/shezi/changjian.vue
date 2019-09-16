@@ -1,12 +1,24 @@
 <template>
   <div class>
     <ul class="sz_cont">
-      <li>
+      <li v-for="(item,index) in dataList" :key="index">
+        <a :href="item.url">
+          <span>{{item.title}}</span>
+          <em></em>
+        </a>
+      </li>
+        <!-- <li>
         <a href="">
           <span>服务条款</span>
           <em></em>
         </a>
       </li>
+        <li>
+        <a href="">
+          <span>服务条款</span>
+          <em></em>
+        </a>
+      </li> -->
      
     </ul>
   </div>
@@ -16,7 +28,9 @@
 //import 《组件名称》 from '《组件路径》';
 export default {
   data() {
-    return {};
+    return {
+      dataList:[]
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -26,7 +40,13 @@ export default {
   components: {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    let parmas={cmd:'faqList'};
+    this.postRequest(parmas).then(res=>{
+      console.log(res);
+      this.dataList=res.data.dataList;
+    })
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合

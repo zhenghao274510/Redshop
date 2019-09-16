@@ -2,7 +2,7 @@
   <div class="order_de bg_c">
     <div class="order_de_info">
       <div class="tit bg_wh ft_mid pad mg_bot" v-if="!goHome">等待买家付款</div>
-      <div class="de_zhi pad bg_wh" @click="goto" v-if="!goHome">
+      <div class="de_zhi pad bg_wh" @click="goto">
         <span class="pos"></span>
         <div class="info col_mix no_use" v-if="defaultAddress.isDefault==1">
           <p class="ft_mid">收货人：{{defaultAddress.name}}&nbsp; &nbsp; &nbsp;{{defaultAddress.phone}}</p>
@@ -41,7 +41,7 @@
       </div>
       <div class="tit bg_wh ft_mid pad bo_bot bo_top">
         买家留言
-        <input class="pad_l" type="text" placeholder="给买家留言（选填）" />
+        <input class="pad_l" type="text" placeholder="给买家留言（选填）" v-model="remark" />
       </div>
       <div class="tit bg_wh ft_mid pad mg_top bo_bot clearfix">
         <div class="fr">
@@ -138,7 +138,7 @@
         class="hidden"
       >
         <van-radio-group v-model="radioYouhui">
-          <van-cell title="优惠"></van-cell>
+          <van-cell title="优惠" style="text-align: center;"></van-cell>
           <van-cell-group>
             <van-cell
               clickable
@@ -153,14 +153,14 @@
           </van-cell-group>
         </van-radio-group>
 
-        <van-cell @click="show_juan=false">
+        <van-cell @click="usecard">
           <span class="btn bg_g col_wh ft_mid">确定</span>
         </van-cell>
       </van-popup>
       <!-- 充值卡 支付  账号 密码 -->
       <van-popup v-model="paystyle" round position="bottom" :style="{ height:'50%'}" class="hidden">
         <van-radio-group v-model="radioPay">
-          <van-cell title="请选择支付方式"></van-cell>
+          <van-cell title="请选择支付方式" style="text-align: center;"></van-cell>
           <van-cell-group>
             <van-cell title="微信支付" clickable>
               <van-radio slot="right-icon" name="1" checked-color="#72BB29" />
@@ -181,13 +181,13 @@
         :style="{ height:'50%'}"
         class="hidden"
       >
-        <van-cell-group style="font-size:.15rem;">
+        <van-cell-group style="font-size:.15rem;" class="chongzhi">
           <van-cell style="text-align:center;">充值卡支付</van-cell>
           <van-cell>
-            <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="cardnun" />
+           账号： <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="cardnun" />
           </van-cell>
           <van-cell>
-            <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" id="pwd" />
+           密码： <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" id="pwd" />
           </van-cell>
         </van-cell-group>
         <van-cell @click="paybycard">
@@ -208,6 +208,7 @@ export default {
   data() {
     return {
       payMothed: ["微信支付", "充值卡支付"],
+      remark:'',
       paystyle: false,
       radioYouhui: 1,
       radioPay: 1,
@@ -289,9 +290,9 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=this.$store.state.uid;
+    this.uid=sessionStorage.getItem('uid');
     this.cartid=[];
-    // this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
+   
     if (typeof this.$route.query.shop == "string") {
       this.productList.push(JSON.parse(this.$route.query.shop));
       this.productId = this.productList[0].productid;
@@ -445,7 +446,7 @@ export default {
       }
     },
     goto() {
-      this.$router.push("/myaddress");
+      this.$router.push("/editaddress");
     },
     onClick(event) {
       this.choseCard = "";
@@ -457,6 +458,14 @@ export default {
       } else {
         this.choseCard = this.CanuseCard[this.radioYouhui - 1].couponAmount;
         this.couponId = this.CanuseCard[this.radioYouhui - 1].couponId;
+      }
+    },
+    usecard(){
+      this.show_juan=false;
+      if(this.radioYouhui==1){
+        this.onClick();
+        this.MinTotalPrice();
+
       }
     },
     formtime() {
@@ -560,7 +569,18 @@ export default {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
           //  alert('支付成功');
-           that.$router.replace('/success')
+          if(that.buyType ==1){
+            that.$router.replace('/giftcard');
+          }else{
+            that.$router.replace('/order/all');
+          }
+          
+          }else{
+            setTimeout(()=>{
+              that.$router.replace('/home');
+              that.$store.commit('ChangeTabar',0);
+            })
+            that.$toast('支付失败!');
           }
         }
       );
@@ -585,6 +605,9 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
+/deep/.van-cell__value--alone{
+  text-align: center;
+}
 .de_zhi {
   display: flex;
   justify-content: space-between;
@@ -624,7 +647,7 @@ export default {
   .hidden {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .btn {
     height: 0.44rem;
@@ -764,9 +787,13 @@ export default {
 }
 .inp {
   border: 0.01rem solid #e5e5e5;
-  width: 100%;
+  // width: 100%;
   height: 0.35rem;
   padding-left: 0.15rem;
   box-sizing: border-box;
+}
+.chongzhi{
+  display: flex;
+  flex-direction: column;
 }
 </style>

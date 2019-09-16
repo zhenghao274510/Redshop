@@ -3,7 +3,7 @@
       <ul class="ch_zi_con">
         <li><router-link to="/paymoney"><div class="one"></div><p>充值</p></router-link></li>
         <li><router-link to="/allcard"><div class="two"></div><p>购卡记录</p></router-link></li>
-        <li><router-link to="/chaxun"><div class="three"></div><p>充值卡查询</p></router-link></li>
+        <li><a to @click="gotochuan"><div class="three"></div><p>充值卡查询</p></a></li>
       </ul>
   </div>
 </template>
@@ -33,7 +33,9 @@ export default {
   },
   //方法集合
   methods: {
-
+    gotochuan(){
+      this.$router.push({path:'/chaxun',query:{direct:1}});
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},

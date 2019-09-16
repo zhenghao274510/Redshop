@@ -6,7 +6,12 @@ export default new Router({
   mode: "hash",
   routes: [{
       path: '/',
-     redirect:'/home'
+     redirect:'/author'
+    },
+     // 过度
+     {
+      path: '/author',
+      component: resolve => require(['./../pages/author.vue'], resolve)
     },
     // 首页
     {
@@ -33,7 +38,6 @@ export default new Router({
       component: resolve => require(['./../pages/shopcar/shopcar.vue'], resolve),
       meta: {
         showtabar: true,
-        requireAuth: true,
       }
     },
     //  我的
@@ -85,7 +89,6 @@ export default new Router({
       // 抽奖
       {
         path: '/audio',
-        name:"发奖啦",
         component: resolve => require(['./../pages/audio.vue'], resolve)
       },
       // 扫一扫
@@ -224,7 +227,7 @@ export default new Router({
     // 設置
     {
       path: '/shezi',
-      name:"設置",
+      name:"设置",
       component: resolve => require(['./../pages/shezi/shezi.vue'], resolve)
     },
     // 常见问题

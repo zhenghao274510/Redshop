@@ -48,7 +48,7 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.arry = [];
-     this.uid=this.$store.state.uid;
+      this.uid=sessionStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10" };
     this.http(params).then(res => {
       if (res.data.result == 0) {

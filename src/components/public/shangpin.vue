@@ -38,7 +38,6 @@ export default {
   props:['list'],
   data() {
     return {
-    imgurl:pathway.imgurl,
       id:'',
       itemshow:false,
       itemobj:{},

@@ -34,7 +34,7 @@ export default {
   methods: {
     sub_yj() {
       // this.uid = this.$store.Use.uid;
-      this.uid=localStorage.getItem('uid');
+     this.uid=sessionStorage.getItem('uid');
       // this.uid = "1";
       if (this.content != "") {
         let parmas = {

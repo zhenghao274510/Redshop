@@ -1,5 +1,5 @@
 const configurl={
-    imgurl:'http://121.40.142.78'
+    imgurl:'https://m.anxihtx.com'
 }
 export const pathway={
     imgurl:configurl.imgurl

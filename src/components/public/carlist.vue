@@ -90,7 +90,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-     this.uid=localStorage.getItem('uid');
+    this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
     let parmas = {
       cmd: "getCartList",
@@ -139,7 +139,7 @@ export default {
           break;
         case "right":
           Dialog.confirm({
-            message: "确定删除吗？删除后无法无法恢复"
+            message: "确定删除吗？删除后无法恢复"
           }).then(() => {
             console.log(name.name);
             let arry = [];
@@ -154,6 +154,10 @@ export default {
               if (res.data.result == 0) {
                 this.productList.splice(name.name, 1);
                 this.$toast(res.data.resultNote);
+                this.SubTotal();
+                if(this.length>0){
+                  this.length -= 1;
+                }
               }
             });
           });
@@ -174,7 +178,7 @@ export default {
       };
       this.pay(parmas).then(res => {
         if (res.data.result == 0) {
-          this.SubTotal()
+          this.SubTotal();
         }
         console.log(res);
       });
@@ -192,14 +196,18 @@ export default {
     choseall() {
       this.check = [];
       this.length = 0;
-      this.allchecked = !this.allchecked;
-      for (let i = 0; i < this.productList.length; i++) {
-        this.check.push(this.allchecked);
-        if (!this.allchecked) {
-          this.length += 1;
+      if (!this.productList) {
+        this.$toast("购物车还是空的!");
+      } else {
+        this.allchecked = !this.allchecked;
+        for (let i = 0; i < this.productList.length; i++) {
+          this.check.push(this.allchecked);
+          if (!this.allchecked) {
+            this.length += 1;
+          }
         }
+        this.SubTotal();
       }
-      this.SubTotal();
     },
     gotopay() {
       console.log(this.check);

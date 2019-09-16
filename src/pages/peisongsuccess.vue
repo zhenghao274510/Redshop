@@ -3,7 +3,7 @@
     <img src="/static/icon/lipinka-peisongchenggong.png" alt />
     <h3>配送成功</h3>
     <p>您已成功确认配送</p>
-    <input type="button" value="查看订单" class="search" />
+    <input type="button" value="查看订单" class="search"  />
     <input type="button" value="返回首页" />
   </div>
 </template>

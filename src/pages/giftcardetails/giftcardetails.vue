@@ -66,7 +66,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid = this.$store.state.uid;
+    this.uid=sessionStorage.getItem('uid');
     this.cardnum = JSON.parse(this.$route.query.gift).cardnum;
     this.pwd = JSON.parse(this.$route.query.gift).pwd;
     this.cardid = JSON.parse(this.$route.query.gift).cardid;

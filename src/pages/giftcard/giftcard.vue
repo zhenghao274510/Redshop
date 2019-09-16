@@ -11,7 +11,7 @@
               <div class="gif_card_tit">
                 <div class="gif_name">和天下酒业礼品卡</div>
                 <div class="gif_name_icon">
-                  <i @click.prevent="Goto" style="z-index:99;"></i>
+                  <i @click.prevent="Goto(item)" style="z-index:99;"></i>
                   <span @click.prevent="GetMsg(index)" style="z-index:99;"></span>
                 </div>
               </div>
@@ -33,7 +33,22 @@
           </li>
         </ul>
       </div>
+
     </div>
+     <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
+      <div class="Share_msg_info">
+        <div class="bo_bot clearfix">
+          <p>短信分享</p>
+          <i @click="close"></i>
+        </div>
+        <div class="Use_tel">
+          <input type="text" placeholder="请输入手机号" v-model="phone" id="phone" style="box-sizing:border-box;" />
+        </div>
+        <div @click.prevent="GotoTell">
+          <span>确定</span>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -47,7 +62,8 @@ export default {
       uid: "",
       dataObject: {},
       dataList: [],
-      num: 0
+      num: 0,
+      phone:''
     };
   },
   //监听属性 类似于data概念
@@ -58,7 +74,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid = this.$store.state.uid;
+    this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
     let parmas = {
       cmd: "giftCardList",
@@ -81,15 +97,23 @@ export default {
     },
     GetMsg(ind) {
       this.num = ind;
+       this.MsgShare=true;
     },
     SearchCard() {
-      this.$router.push("/chaxun");
+      this.$router.push({path:"/chaxun",query:{direct:0}});
     },
-    Goto() {
-      this.$router.push("/share");
+    Goto(e) {
+      console.log(e);
+       this.$router.push({
+        path: "/share",
+        query: { card: JSON.stringify(e) }
+      });
     },
     GotoTell() {
+     
+      console.log(1);
       this.cardid = this.dataList[this.num].cardid;
+      this.phone=document.getElementById('phone').value.trim();
       let parmas = {
         cmd: "sharingSMS",
         type: "1",

@@ -29,15 +29,11 @@ import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
   key: 'b27181d87b9be1fef09e09ea842b0a53',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','AMap.Geolocation', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType',
     'AMap.PolyEditor', 'AMap.CircleEditor'
   ],
   v: '1.4.4'
 })
-
-
-
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -45,6 +41,16 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })
+// router.beforeEach((to, from, next) => {
+//   // if (store.state.uid=='') { // 验证是否有uid 
+//     //  获取路径信息
+   
+
+
+
+// });

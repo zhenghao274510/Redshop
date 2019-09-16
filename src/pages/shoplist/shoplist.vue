@@ -15,7 +15,7 @@
         <span class="btn" @click.prevent="star">搜索</span>
       </div>
 
-      <Shop-L :list="$store.state.SearchList" v-if="$store.state.SearchList.length!=0"></Shop-L>
+      <Shop-L :list="searchList" v-if="searchList.length!=0"></Shop-L>
       <Shop-L :list="ProductList" v-else></Shop-L>
     </van-pull-refresh>
   </div>
@@ -31,7 +31,8 @@ export default {
       ProductObject: {},
       ProductList: [],
       childCategoryId: "",
-      keywords: ""
+      keywords: "",
+      searchList:[]
     };
   },
   //监听属性 类似于data概念
@@ -90,7 +91,8 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         console.log(res);
-        this.$emit("SearStar", res.data.dataList);
+          this.searchList=res.data.dataList;
+        // this.$emit("SearStar", res.data.dataList);
       });
     }
   },

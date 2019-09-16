@@ -48,7 +48,7 @@ export default {
   mounted() {
     // this.uid="1"
     this.arry = [];
-    this.uid = this.$store.state.uid;
+     this.uid=sessionStorage.getItem('uid');
     let params = {
       cmd: "myOrder",
       uid: this.uid,
