@@ -8,11 +8,17 @@ export default new Router({
       path: '/',
      redirect:'/author'
     },
-     // 过度
+    // 生成购物卡成功
+     
      {
-      path: '/author',
-      component: resolve => require(['./../pages/author.vue'], resolve)
+      path: '/paycardsuccess',
+      component: resolve => require(['./../components/public/paycardsuccess.vue'], resolve)
     },
+      // 过度
+      {
+        path: '/author',
+        component: resolve => require(['./../pages/author.vue'], resolve)
+      },
     // 首页
     {
       path: '/home',
@@ -94,7 +100,7 @@ export default new Router({
       // 扫一扫
       {
         path: '/ScanCod',
-        name:"酒商城",
+        name:"扫一扫",
         component: resolve => require(['./../pages/ScanCod.vue'], resolve)
       },
      // 修改昵称

@@ -20,7 +20,7 @@
             :finished="finished"
             finished-text="没有更多了"
             @load="onLoad"
-            :offset="10"
+            :offset="50"
           >
             <li v-for="(item,index) in ProductList" :key="index">
               <div class="listcon">
@@ -53,10 +53,10 @@
         <div class="getJ ft_mid" @click="GetJuan">点击领取</div>
         <van-icon name="clear" color="#999999" size=".22rem" class="pos" @click="isGet=false" />
       </div>
-      <div class="first_con" v-else style="padding:0 .39rem;" >
+      <div class="first_con" v-else style="padding:0 .39rem;">
         <div class="first_info">
           <p class="col_max ft_lg">恭喜您领取成功</p>
-          <p class="ft_mid col_mid" style="margin-top:.1rem;">有效期至{{dataObject.endtime}}</p>
+          <p class="ft_mid col_mid" style="margin-top:.1rem;">有效期至{{endtime}}</p>
         </div>
         <div class="getJ ft_mid" @click="First=false">确定</div>
       </div>
@@ -95,7 +95,8 @@ export default {
       chose: false,
       itemshow: false,
       popupitem: [],
-      itemobj: {}
+      itemobj: {},
+      endtime: ""
     };
   },
   //监听属性 类似于data概念
@@ -110,16 +111,22 @@ export default {
     addCard
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created(){
-      this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
+  created() {
+    // this.uid = "c356d604ed844a1da210a7cc9e95c862";
 
-      sessionStorage.setItem('uid',this.uid)
-      // this.uid=sessionStorage.getItem('uid');
-          // 是否首次登录
-      let firstLogin = { cmd: "userInfo", uid: this.uid };
-      this.postRequest(firstLogin).then(res => {
+    // sessionStorage.setItem('uid',this.uid)
+    this.uid = sessionStorage.getItem("uid");
+    // 是否首次登录
+
+
+    if (localStorage.getItem("first")) {
+      return false;
+    } else {
+      let parmas = { cmd: "userInfo", uid: this.uid };
+      this.postRequest(parmas).then(res => {
+        console.log(res);
         let useinfo = res.data.dataObject;
-        localStorage.setItem("useinfo", JSON.stringify(useinfo));
+        localStorage.setItem("first");
         //   存在新人优惠券
         if (useinfo.newCoupon == 0 && useinfo.isNew == 0) {
           this.First = true;
@@ -135,23 +142,24 @@ export default {
           this.First = false;
         }
       });
+    }
 
-      //  主页 部分
-      let params1 = { cmd: "firstPage" };
-      this.postRequest(params1).then(res => {
-        // console.log(res);
-        this.firstpath = res.data.dataObject;
-      });
+    //  主页 部分
+    let params1 = { cmd: "firstPage" };
+    this.postRequest(params1).then(res => {
+      // console.log(res);
+      this.firstpath = res.data.dataObject;
+    });
 
-      // 为你推荐
-      let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
-      this.postRequest(parmas3).then(res => {
-        if (res.data.result == 0) {
-          this.ProductList = res.data.dataList;
-          this.ProductObject = res.data;
-        }
-        // console.log(res);
-      });
+    // 为你推荐
+    let parmas3 = { cmd: "toRecommend", nowPage: "1", pageCount: "10" };
+    this.postRequest(parmas3).then(res => {
+      if (res.data.result == 0) {
+        this.ProductList = res.data.dataList;
+        this.ProductObject = res.data;
+      }
+      // console.log(res);
+    });
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

@@ -3,7 +3,7 @@
     <div class="share_info">
       <h3>
         和天下酒业
-        <i>礼品卡</i>
+        <i>{{title}}</i>
       </h3>
       <p class="use_card">卡号：{{cardnum}}</p>
       <p class="use_card">密码：{{pwd}}</p>
@@ -26,7 +26,8 @@ export default {
   data() {
     return {
       cardnum:'',
-      pwd:''
+      pwd:'',
+      title:''
     };
   },
   //监听属性 类似于data概念
@@ -41,6 +42,7 @@ export default {
     console.log(obj);
       this.cardnum=obj.cardnum;
       this.pwd=obj.pwd;
+      this.title=obj.title;
       console.log( this.cardnum,this.pwd)
   },
   //生命周期 - 挂载完成（可以访问DOM元素）

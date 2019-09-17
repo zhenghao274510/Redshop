@@ -19,15 +19,15 @@
         </div>
         <div class="ev_star">
           <span>商品评星</span>
-          <van-rate v-model="value" />
+          <van-rate v-model="value[index]" />
         </div>
         <div class="ev_int">
-          <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）" v-model="content"></textarea>
+          <textarea name="ev_main" id="ev_main" placeholder="留下您的评价吧（选填）" v-model="content[index]"></textarea>
           <div class="add_con">
-            <div class="add_img" v-for="(item,index) in imgs" :key="index" @click="delimg(index)">
+            <div class="add_img" v-for="(item,ind) in imgs" :key="ind" @click="delimg(ind)">
               <img :src="imgurl+item"   alt />
             </div>
-            <div class="add_img" @click="show=true" v-if="imgs.length!=3">
+            <div class="add_img" v-if="imgs.length!=3" @click="up(index)">
               <input type="file" class="upfile" @change="Upfiles" />
               <span></span>
               <p>上传照片</p>
@@ -59,13 +59,13 @@ export default {
     return {
       imgurl: pathway.imgurl,
       show: false,
-      value: 5,
+      value: [],
       imgs: [],
       num: 0,
       dataList: [],
       imgBase64: [],
-      productId: "",
-      content: "",
+      productId:[],
+      content: [],
       orderid: "",
       uid: ""
     };
@@ -83,57 +83,77 @@ export default {
     this.orderid = this.$route.query.orderid;
    this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
-    console.log(this.orderid);
+    // console.log(this.orderid);
     let parmas = {
       cmd: "orderDetail",
       orderid: this.orderid,
       uid: this.uid
     };
     this.postRequest(parmas).then(res => {
+      console.log(res)
       this.dataList = res.data.dataObject.orderItem;
+        for(var i=0;i<this.dataList.length;i++){
+        this.value[i]=5;
+        this.content[i]="";
+    }
+      
     });
+ 
+   
+        console.log(this.value,this.content)
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
     getmsg() {
-      if (this.content == "") {
-        this.content = "";
-      }
-      let upimgs;
-      if (this.imgs == 0) {
-        upimgs = "";
-      } else {
-        this.imgs.forEach(item => {
-          upimgs += item + ",";
-        });
-      }
+      // if (this.content == "") {
+      //   this.content = "";
+      // }
+      // let upimgs;
+      // if (this.imgs == 0) {
+      //   upimgs = "";
+      // } else {
+      //   this.imgs.forEach(item => {
+      //     upimgs += item + ",";
+      //   });
+      // }
 
-      console.log(upimgs);
-      let comment = [
-        {
-          productId: this.productId,
-          commentScore: this.value,
-          content: this.content,
-          images: upimgs
+      // console.log(upimgs);
+      // if(this.content==""){
+      //   // this.content='东西很Nice，老板很不错,服务周到!以后常来..'
+      // }
+      var comment=[];
+      console.log(this.dataList.length);
+       for(var i=0;i<this.dataList.length;i++ ){
+           comment[i]={
+          productId: this.dataList[i].productId,
+          commentScore: this.value[i].toString(),
+          content: this.content[i],
+          images: this.imgs.join(',')
         }
-      ];
+        }
+        
       let parmas = {
         cmd: "addOrderComment",
         uid: this.uid,
         orderid: this.orderid,
         comment: comment
       };
+      console.log(parmas)
       this.http(parmas).then(res => {
         console.log(res);
-        this.$toast("评论成功!");
-        this.content="";
+        this.$toast(res.data.resultNote);
+        this.content='';
       setTimeout(()=>{
         this.$router.back(-1);
       },1000)
       });
     },
+    up(ind){
+         this.num=ind;
+    },
+
     Upfiles() {
       var _this = this;
       var event = event || window.event;
@@ -148,7 +168,7 @@ export default {
           console.log(res);
           if (res.data.result == 0) {
             // this.$toast("上传成功!");
-            this.imgs.push(res.data.filepath);
+            _this.imgs.push(res.data.filepath);
           }
         });
       }
@@ -193,6 +213,11 @@ export default {
   width: 0.56rem;
   height: 0.56rem;
   opacity: 0;
+}
+.add_ping{
+  height: 100%;
+  overflow-y: auto;
+ background-color: #fff;
 }
 .add_inf {
   margin-top: 0.5rem;

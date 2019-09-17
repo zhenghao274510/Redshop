@@ -51,6 +51,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    this.num=0;
     this.uid=sessionStorage.getItem('uid');
     // this.uid="1";
     this.skuId = this.list[0].skuId;

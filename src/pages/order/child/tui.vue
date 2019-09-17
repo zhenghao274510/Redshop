@@ -10,7 +10,7 @@
       </div>
       <Info :list="item.orderItem" :totalprice="total"></Info>
 
-      <van-overlay :show="show" @click="show = false" />
+      <!-- <van-overlay :show="show" @click="show = false" /> -->
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 //import 《组件名称》 from '《组件路径》';
 import Info from "./carIfo";
 export default {
-  props: ["list"],
+  // props: ["list"],
   //  props:{
   //     list:{
   //        type:Array,
@@ -30,7 +30,7 @@ export default {
     return {
       show: false,
       dataList: [],
-      arry: this.list,
+      arry: [],
       uid:'',
       total:[]
     };

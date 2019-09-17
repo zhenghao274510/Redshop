@@ -201,7 +201,7 @@ export default {
     };
     this.postRequest(parmas1).then(res => {
       if (res.data.result == 0) {
-        console.log(res);
+        // console.log(res);
         this.dataObject = res.data.dataObject;
         this.dataObject.productid = this.productid;
         this.length = res.data.dataObject.productImages.length;

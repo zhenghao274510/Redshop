@@ -75,6 +75,7 @@ export default {
   methods: {
     Goto(e) { 
       console.log(e);
+      e.title="充值卡";
         this.$router.push({path:'/share',query:{card:JSON.stringify(e)}});
     },
       close(){

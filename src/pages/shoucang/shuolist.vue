@@ -13,10 +13,7 @@
               <span class="price">
                 ￥
                 <i>{{item.productPrice}}</i>
-              </span>
-              <span class="price" style="color:#333333">
-                  x 1
-              </span>
+              </span>        
             </div>
           </div>
         </div>

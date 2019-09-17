@@ -3,7 +3,7 @@
     <!-- 大图 -->
     <div class="banner">
       <a :href="list.url">
-        <img :src="list.image1" />
+        <img :src="list.image1" style="height:5.54rem" />
       </a>
     </div>
     <!-- 活动专区 -->

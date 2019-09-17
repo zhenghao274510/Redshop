@@ -1,6 +1,6 @@
 .van-dialog__confirm,
 .van-dialog__confirm:active {
-  color: #72bb29;
+  color: #72bb29 !important;
 }
 .van-pull-refresh{height:calc(100%-50px);}
 /* .van-pull-refresh__track{height: 100%;} */

@@ -156,6 +156,29 @@ export default {
           })
       })
     },
+    post: (url,data = {}, method = 'get')=> {
+      // Toast.loading({
+      //   message: '上传中...'
+      // });
+       return new Promise((resolve, reject) => {
+         axios({
+             url: 'https://m.anxihtx.com/wineshop/'+url+'?url='+data,
+             method: method,
+            //  data: data,
+             headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+             }
+           })
+           .then(res => {
+             //成功
+             resolve(res)
+           })
+           .catch(res => {
+             //失败
+             reject(res)
+           })
+       })
+     },
     
     //
    

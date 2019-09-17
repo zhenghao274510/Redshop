@@ -104,6 +104,7 @@ export default {
     },
     Goto(e) {
       console.log(e);
+      e.title="礼品卡";
        this.$router.push({
         path: "/share",
         query: { card: JSON.stringify(e) }

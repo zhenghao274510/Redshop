@@ -25,12 +25,12 @@
 import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
-  props: ["list"],
+  // props: ["list"],
   data() {
     return {
       show: false,
       dataList: [],
-      arry: this.list,
+      arry: [],
       uid:'',
       total:''
     };

@@ -24,11 +24,10 @@
 import Info from "./carIfo";
 import { Dialog } from "vant";
 export default {
-  props: ["list"],
   data() {
     return {
       show: false,
-      arry:this.list,
+      arry:[],
       uid:'',
       total:''
     };
@@ -99,6 +98,7 @@ export default {
   
     background-color: #ffffff;
     border-radius: 0.1rem;
+    margin-bottom: .1rem;
     .order_tit {
       padding: 0 0.15rem;
       height: 0.44rem;

@@ -206,7 +206,7 @@ export default {
       }
     
       //根据地图中心点查附近地点，此方法在下方
-      this.centerSearch();
+      that.centerSearch();
       //监听地图移动事件，并在移动结束后获取地图中心点并更新地点列表
       var moveendFun = e => {
         // 获取地图中心点

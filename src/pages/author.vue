@@ -23,7 +23,7 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
  created() {
-   let href=window.location.href.split('?')[0];
+   
     let url = location.search;
     var theRequest = new Object();
     if (url.indexOf("?") != -1) {
@@ -42,6 +42,7 @@ export default {
      this.$router.replace( "/home");
     } else if (theRequest.type ==1) {
       // type=1 二维码
+      let href=window.location.href.split('&')[0];
       this.$router.replace({path:'/ScanCod',query:{url:href}});
     } else if (theRequest.type ==2) {
       // type=2 视频
@@ -55,8 +56,7 @@ export default {
     } else if (theRequest.type ==5) {
       // type=5 客服热线
       this.$router.replace( "/service" );
-    } else {
-    }
+    } 
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {

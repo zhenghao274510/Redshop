@@ -85,7 +85,7 @@
         <div class="order_zhuang">
           <span class="one" v-if="status==0">取消订单</span>
           <span class="two" v-if="status==0" @click="gotoPay">去支付</span>
-          <span class="one" v-if="status==1||status==3">申请退换</span>
+          <span class="one" v-if="status==1||status==3" @click="opcatiy">申请退换</span>
           <span class="two" v-if="status==2" @click="shou_huo">确认收货</span>
           <span class="two" v-if="status==4" @click="goto">去评价</span>
         </div>
@@ -100,7 +100,7 @@
 import deZhi from "./adderss";
 import Info from "./orderInfo";
 import btn from "./../order/child/btn";
-
+import { Dialog } from "vant";
 export default {
   data() {
     return {
@@ -225,7 +225,17 @@ export default {
           }
         }
       );
-    }
+    },
+      opcatiy() {
+      Dialog.confirm({
+        title: "申请退款",
+        message: "请联系客服"
+      })
+        .then(() => {})
+        .catch(() => {
+          // on cancel
+        });
+    },
   },
   //生命周期 - 创建之前
   beforeCreate() {},

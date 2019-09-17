@@ -184,10 +184,12 @@
         <van-cell-group style="font-size:.15rem;" class="chongzhi">
           <van-cell style="text-align:center;">充值卡支付</van-cell>
           <van-cell>
-           账号： <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="cardnun" />
+            账号：
+            <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="cardnun" />
           </van-cell>
           <van-cell>
-           密码： <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" id="pwd" />
+            密码：
+            <input type="text" placeholder="请输入充值卡密码" class="inp" v-model="pwd" id="pwd" />
           </van-cell>
         </van-cell-group>
         <van-cell @click="paybycard">
@@ -199,8 +201,9 @@
 </template>
 
 <script>
-import wx from "weixin-js-sdk";
+// import wx from "weixin-js-sdk";
 //import 《组件名称》 from '《组件路径》';
+import { Dialog } from "vant";
 import deZhi from "./adderss";
 import Info from "./orderInfo";
 import btn from "./../order/child/btn";
@@ -208,7 +211,7 @@ export default {
   data() {
     return {
       payMothed: ["微信支付", "充值卡支付"],
-      remark:'',
+      remark: "",
       paystyle: false,
       radioYouhui: 1,
       radioPay: 1,
@@ -247,10 +250,12 @@ export default {
   //监听属性 类似于data概念
   computed: {
     shoptotal() {
-      let num = 0;
+      let num =Number(this.freight);
+
       this.productList.forEach(item => {
         num += (item.skuPrice * 100 * item.count) / 100;
       });
+
       return num;
     },
     totalcount() {
@@ -264,7 +269,7 @@ export default {
       if (this.goHome) {
         return this.shoptotal + parseInt(this.freight);
       } else {
-        if (this.CanuseCard != "") {
+        if (this.CanuseCard !="") {
           if (
             this.choseCard != "" &&
             this.CanuseCard[this.radioYouhui - 1].couponPrice < this.shoptotal
@@ -290,9 +295,9 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=sessionStorage.getItem('uid');
-    this.cartid=[];
-   
+    this.uid = sessionStorage.getItem("uid");
+    this.cartid = [];
+
     if (typeof this.$route.query.shop == "string") {
       this.productList.push(JSON.parse(this.$route.query.shop));
       this.productId = this.productList[0].productid;
@@ -302,7 +307,7 @@ export default {
       this.productList = JSON.parse(localStorage.getItem("shop"));
       this.productList.forEach(item => {
         this.cartid.push(item.cartId);
-        console.log(this.cartid,'cartid')
+        console.log(this.cartid, "cartid");
       });
     }
     console.log(this.productList, this.productId, this.skuId, this.count);
@@ -363,7 +368,7 @@ export default {
         this.buyType = 1;
       }
       let parmas = {};
-      if (this.productId!="") {
+      if (this.productId != "") {
         parmas = {
           cmd: "productBuy",
           uid: this.uid,
@@ -372,7 +377,7 @@ export default {
           freight: this.freight,
           count: this.count,
           remark: this.remark,
-          amount: '0.01',
+          amount: "0.01",
           couponId: this.couponId,
           addressId: this.addressId,
           payType: this.payType,
@@ -387,7 +392,7 @@ export default {
           freight: this.freight,
           count: this.count,
           remark: this.remark,
-          amount: '0.01',
+          amount: "0.01",
           couponId: this.couponId,
           addressId: this.addressId,
           payType: this.payType,
@@ -460,12 +465,11 @@ export default {
         this.couponId = this.CanuseCard[this.radioYouhui - 1].couponId;
       }
     },
-    usecard(){
-      this.show_juan=false;
-      if(this.radioYouhui==1){
+    usecard() {
+      this.show_juan = false;
+      if (this.radioYouhui == 1) {
         this.onClick();
         this.MinTotalPrice();
-
       }
     },
     formtime() {
@@ -500,13 +504,20 @@ export default {
         this.buyType = 1;
       }
 
-      if (this.addressList.length == 0 && !this.goHome) {
-        this.$toast("请添加收货地址");
+      if (this.addressList.length==0) {
+        Dialog.confirm({
+          // title: "",
+          message: "你还没有添加地址，去添加地址吧!"
+        })
+          .then(() => {})
+          .catch(() => {
+            // on cancel
+          });
       } else {
         // console.log(1);
-        let parmas={};
-        if(this.productId!= ""){
-             parmas = {
+        let parmas = {};
+        if (this.productId != "") {
+          parmas = {
             cmd: "productBuy",
             uid: this.uid,
             productId: this.productId,
@@ -514,45 +525,43 @@ export default {
             freight: this.freight,
             count: this.count,
             remark: this.remark,
-            amount: '0.01',
+            amount: "0.01",
             couponId: this.couponId,
             addressId: this.addressId,
             payType: this.payType,
             buyType: this.buyType
           };
-        }else{
+        } else {
           parmas = {
             cmd: "addCartOrder",
             uid: this.uid,
             cartid: this.cartid,
             freight: this.freight,
             remark: this.remark,
-            amount: '0.01',
+            amount: "0.01",
             couponId: this.couponId,
             addressId: this.addressId,
             payType: this.payType,
             buyType: this.buyType
           };
         }
-          this.http(parmas).then(res => {
-            // console.log(res);
-            if (res.data.result == 0) {
-              this.orderId = res.data.orderId;
-              let parmas = { cmd: "payByWx", orderid: this.orderId };
-              this.http(parmas).then(res => {
-                let data = res.data.body;
-                // console.log(data);
-                this.onBridgeReady(data);
-                // this.Buysuccess();
-              });
-            }
-       
-        })
-      
+        this.http(parmas).then(res => {
+          // console.log(res);
+          if (res.data.result == 0) {
+            this.orderId = res.data.orderId;
+            let parmas = { cmd: "payByWx", orderid: this.orderId };
+            this.http(parmas).then(res => {
+              let data = res.data.body;
+              // console.log(data);
+              this.onBridgeReady(data);
+              // this.Buysuccess();
+            });
+          }
+        });
       }
     },
     onBridgeReady(data) {
-       const that=this;
+      const that = this;
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
         {
@@ -563,28 +572,33 @@ export default {
           signType: data.signType, //微信签名方式：
           paySign: data.paySign //微信签名
         },
-       
+
         function(res) {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-          //  alert('支付成功');
-          if(that.buyType ==1){
-            that.$router.replace('/giftcard');
-          }else{
-            that.$router.replace('/order/all');
-          }
-          
-          }else{
-            setTimeout(()=>{
-              that.$router.replace('/home');
-              that.$store.commit('ChangeTabar',0);
-            })
-            that.$toast('支付失败!');
+            //  alert('支付成功');
+            if (that.buyType== 1) {
+              that.$router.replace("/giftcard");
+            } else {
+              that.$router.replace("/success");
+            }
+          } else {
+            if (that.buyType == 0 && that.payType == 0) {
+              that.$toast("你取消了交易!订单将在30分钟后自动去取消!");
+              that.$store.commit('ChangeOrdertabar',1);
+              that.$router.replace("/order/waitepay");
+            } else {
+              setTimeout(() => {
+                that.$router.replace("/order/waitepay");
+                // that.$store.commit("ChangeTabar", 0);
+              }, 1000);
+              
+            }
           }
         }
       );
-    },
+    }
   },
   //生命周期 - 创建之前
   beforeCreate() {},
@@ -605,7 +619,7 @@ export default {
 };
 </script>
 <style scoped lang='less' rel='stylesheet/stylus'>
-/deep/.van-cell__value--alone{
+/deep/.van-cell__value--alone {
   text-align: center;
 }
 .de_zhi {
@@ -792,7 +806,7 @@ export default {
   padding-left: 0.15rem;
   box-sizing: border-box;
 }
-.chongzhi{
+.chongzhi {
   display: flex;
   flex-direction: column;
 }
