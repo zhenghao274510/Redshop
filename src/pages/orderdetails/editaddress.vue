@@ -23,10 +23,10 @@
         <input type="text" placeholder v-model="detail" />
       </li>
     </ul>
-    <div class="ft_mid col_mix mo_r" >
-      <div class="reserve" @click="istrue=!istrue">
+    <div class="ft_mid col_mix mo_r">
+      <div class="reserve" @click="changecard">
         <div>
-          <van-icon name="circle" size=".18rem" v-if="istrue" />
+          <van-icon name="circle" size=".18rem" v-if="isdefault==0" />
           <van-icon name="checked" size=".18rem" color="#72BB29" v-else />
         </div>
         <span>设置为默认地址</span>
@@ -54,8 +54,7 @@ export default {
       phone: "",
       address: "",
       detail: "",
-      isdefault: "",
-      istrue: false
+      isdefault: 0
     };
   },
   //监听属性 类似于data概念
@@ -66,7 +65,7 @@ export default {
   components: {},
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.uid=sessionStorage.getItem('uid');
+    this.uid = sessionStorage.getItem("uid");
     if (sessionStorage.getItem("use")) {
       this.name = JSON.parse(sessionStorage.getItem("use")).name;
       this.phone = JSON.parse(sessionStorage.getItem("use")).phone;
@@ -77,22 +76,45 @@ export default {
         JSON.parse(sessionStorage.getItem("useaddress")).city;
       this.detail = JSON.parse(sessionStorage.getItem("useaddress")).address;
     }
+    let info = JSON.parse(this.$route.query.info);
+    if (info) {
+      this.name = info.name;
+      this.phone = info.phone;
+      this.address = info.address;
+      this.detail = info.detail;
+      this.isdefault = info.isdefault;
+      this.addressId = info.addressId;
+    }
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
   methods: {
-    save() {
-      if (this.istrue) {
-        this.isdefault = 1;
-      } else {
+    changecard() {
+      if (this.isdefault == 1) {
         this.isdefault = 0;
+      } else {
+        this.isdefault = 1;
       }
-      let Reg = /^1([36758]\d|5[0-35-9]|7[3678])\d{8}$/;
-      let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
-      if (Reg.test(this.phone) && regname.test(this.name)) {
+    },
+    save() {
+      // if (this.istrue) {
+      //   this.isdefault = 1;
+      // } else {
+      //   this.isdefault = 0;
+      // }
+
+      console.log(this.name, this.phone);
+      // let Reg = /^1([36758]\d|5[0-35-9]|7[3678])\d{8}$/;
+      // let regname = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
+      if (
+        this.phone != "" &&
+        this.name != "" &&
+        this.address != "" &&
+        this.detail != ""
+      ) {
         let parmas = {
-          cmd: "addAddress",
+          cmd: "updateAddress",
           uid: this.uid,
           addressId: this.addressId,
           name: this.name,
@@ -101,7 +123,7 @@ export default {
           detail: this.detail,
           isdefault: this.isdefault
         };
-        this.postRequest(parmas).then(res => {
+        this.http(parmas).then(res => {
           console.log(res);
           this.$toast(res.data.resultNote);
           if (res.data.result == 0) {
@@ -114,7 +136,7 @@ export default {
           }
         });
       } else {
-        this.$toast("信息有误请重新填写!");
+        this.$toast("信息不能为空!");
       }
     },
     getCurrentPosition() {
@@ -131,8 +153,8 @@ export default {
         localStorage.removeItem("phone");
       });
     },
-    Gotoadd(){
-      this.$router.replace('/myaddress');
+    Gotoadd() {
+      this.$router.replace("/myaddress");
     }
   },
   //生命周期 - 创建之前
@@ -202,9 +224,9 @@ export default {
   .mo_r {
     display: flex;
     align-items: center;
-    padding:0  0.15rem;
+    padding: 0 0.15rem;
     display: flex;
-    height: .35rem;
+    height: 0.35rem;
     align-items: center;
     justify-content: space-between;
     .reserve {
@@ -229,8 +251,7 @@ export default {
       font-size: 0.13rem;
       padding: 0.01rem;
       display: inline-block;
-      border-radius: .05rem;
-      
+      border-radius: 0.05rem;
     }
   }
 }

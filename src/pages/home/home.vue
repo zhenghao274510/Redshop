@@ -112,21 +112,17 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // this.uid = "c356d604ed844a1da210a7cc9e95c862";
-
+    // this.uid = "63f77fa8a61443aa80e7c99c7f20de51";
     // sessionStorage.setItem('uid',this.uid)
     this.uid = sessionStorage.getItem("uid");
     // 是否首次登录
-
-
-    if (localStorage.getItem("first")) {
-      return false;
-    } else {
+    console.log(this.uid);
+    if (localStorage.getItem("first") != 1) {
       let parmas = { cmd: "userInfo", uid: this.uid };
       this.postRequest(parmas).then(res => {
         console.log(res);
         let useinfo = res.data.dataObject;
-        localStorage.setItem("first");
+        localStorage.setItem("first", 1);
         //   存在新人优惠券
         if (useinfo.newCoupon == 0 && useinfo.isNew == 0) {
           this.First = true;
@@ -147,7 +143,7 @@ export default {
     //  主页 部分
     let params1 = { cmd: "firstPage" };
     this.postRequest(params1).then(res => {
-      // console.log(res);
+      console.log(res);
       this.firstpath = res.data.dataObject;
     });
 
@@ -205,6 +201,7 @@ export default {
       };
       this.postRequest(parmas).then(res => {
         if (res.data.result == 0) {
+          this.endtime = res.data.endtime;
           this.$toast(res.data.resultNote);
           this.isGet = false;
         }
@@ -229,15 +226,6 @@ export default {
       this.itemobj.productImages[0] = e.logo;
       this.popupitem = e.skuList;
       this.itemshow = true;
-
-      // let parmas={cmd:'productDetail',productid:e.productid,uid:this.uid};
-      // this.http(parmas).then(res=>{
-      //   console.log(res)
-      //   this.itemobj=res.data.dataObject;
-      //   this.itemobj.productid=e.productid;
-      //   this.popupitem=res.data.skuList;
-      //     this.itemshow=true;
-      // })
     }
   },
   //生命周期 - 创建之前

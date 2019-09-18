@@ -68,7 +68,7 @@
           <span class="ft_mid">创建时间：{{productObject.createdDate}}</span>
         </li>
         <li class="col_mid">
-          <span class="ft_mid" v-if="status!=0">付款时间：{{productObject.payDate}}</span>
+          <span class="ft_mid" v-if="status!=0||status!=5">付款时间：{{productObject.payDate}}</span>
         </li>
         <li class="col_mid">
           <span class="ft_mid" v-if="status==5">退款时间：{{productObject.refundDate}}</span>

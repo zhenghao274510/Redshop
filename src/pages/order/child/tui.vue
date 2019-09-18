@@ -51,7 +51,7 @@ export default {
       this.uid=sessionStorage.getItem('uid');
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10" };
     this.http(params).then(res => {
-      if (res.data.result == 0) {
+      if (res.data.result == 0 && res.data.dataList) {
         this.dataList = res.data.dataList;
         this.dataList.forEach(item => {
           let e = parseInt(item.status);

@@ -29,7 +29,7 @@
       <van-cell-group style="font-size:.15rem;">
         <van-cell style="text-align:center;">请输入充值卡号</van-cell>
         <van-cell>
-          <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id='inp' />
+          <input type="text" placeholder="请输入充值卡号" class="inp" v-model="cardnum" id="inp" />
         </van-cell>
         <van-cell>
           <div class="buy_or">
@@ -42,7 +42,7 @@
 </template>
  
 <script>
-import vm from 'vue'
+import wx from "weixin-js-sdk";
 export default {
   data() {
     return {
@@ -62,30 +62,33 @@ export default {
       this.num = ind;
       this.amount = e;
     },
+    // 充值
     gotopay() {
-      
-      this.cardnum=document.getElementById('inp').value.trim();
- console.log(this.cardnum);
-      
+      this.cardnum = document.getElementById("inp").value.trim();
+      console.log(this.cardnum);
+         this.amount = "0.01";
       if (this.amount < 0) {
         this.$toast("请输入正确数字!");
       } else if (this.cardnum == "") {
         this.$toast("请输入充值卡号!");
       } else {
-        this.amount = "0.01";
+       
         let parmas = {
           cmd: "rechargeCard",
           uid: this.uid,
           amount: this.amount,
           cardnum: this.cardnum
         };
+        console.log(parmas)
         this.http(parmas).then(res => {
-          // this.amount = "";        
-          console.log(res);
+          // this.amount = "";
           let orderId = res.data.orderid;
-          let parmas = { cmd: "payByWx", orderid: orderId };
-          this.http(parmas).then(res => {
+          console.log(orderId);
+          let parmas1 = { cmd: "payByWx", orderid: orderId };
+          this.http(parmas1).then(res => {
+            console.log(1)
             if (res.data.result == 0) {
+              console.log(res)
               let data = res.data.body;
               this.onBridgeReady(data);
             }
@@ -104,14 +107,14 @@ export default {
           amount: this.amount
         };
         this.http(parmas).then(res => {
-          this.amount = "";
-          
+          // this.amount = "";
+
           this.newcardnum = res.data.dataObject.cardnum;
           this.newpwd = res.data.dataObject.pwd;
           let orderId = res.data.dataObject.orderid;
-          console.log(this.newcardnum,this.newpwd);
-          let parmas = { cmd: "payByWx", orderid: orderId };
-          this.http(parmas).then(res => {
+          console.log(this.newcardnum, this.newpwd);
+          let parmas1 = { cmd: "payByWx", orderid: orderId };
+          this.http(parmas1).then(res => {
             if (res.data.result == 0) {
               let data = res.data.body;
 
@@ -122,7 +125,7 @@ export default {
       }
     },
     onBridgeReady(data) {
-      const that=this;
+      const that = this;
       // console.log(this.newcardnum);
       WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
@@ -138,16 +141,18 @@ export default {
           if (res.err_msg == "get_brand_wcpay_request:ok") {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-            that.showpaycard=false;
-            if(that.newcardnum!=''){
-              let obj={cardnum:that.newcardnum,pwd:that.newpwd}
-             that.$router.push({path:'/paycardsuccess',query:{info:JSON.stringify(obj)}});
-            }else{
-              this.$router.push('/giftcard');
+            that.showpaycard = false;
+            if (that.newcardnum != "") {
+              let obj = { cardnum: that.newcardnum, pwd: that.newpwd };
+              that.$router.push({
+                path: "/paycardsuccess",
+                query: { info: JSON.stringify(obj) }
+              });
+            } else {
+              this.$router.push("/giftcard");
             }
-            
-          }else{
-              that.$toast('支付失败!');
+          } else {
+            that.$toast("支付失败!");
           }
         }
       );
@@ -155,7 +160,7 @@ export default {
   },
   moutend() {},
   created() {
-    this.uid=sessionStorage.getItem('uid');
+    this.uid = sessionStorage.getItem("uid");
     // this.uid = "aa4a76a2253b406297bfe5e9ae1782c4";
   }
 };
@@ -165,7 +170,7 @@ export default {
 .box {
   padding: 0 0.15rem;
   height: 100%;
-  background: #FFF;
+  background: #fff;
 }
 h4 {
   line-height: 0.45rem;
@@ -209,6 +214,7 @@ p {
     height: 0.2rem;
     border-bottom: 0.01rem solid #333333;
     width: 1rem;
+   
   }
 }
 .btn {
@@ -238,5 +244,6 @@ p {
   width: 100%;
   height: 0.35rem;
   padding-left: 0.15rem;
+   box-sizing: border-box;
 }
 </style>

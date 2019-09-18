@@ -44,7 +44,8 @@
             <em></em>
           </div>
         </div>
-        <div class="shop_info_use" >
+      <!-- 用户评价部分 -->
+        <div class="shop_info_use" v-if="CommentListlength==0">
           <div class="use_tit">
             <div>用户评价</div>
             <div @click="LookP">
@@ -165,7 +166,8 @@ export default {
       productCommentList: {},
       YuhuiCar: [],
       CurrentCard: {},
-      uid: ""
+      uid: "",
+      CommentListlength:0
       //
     };
   },
@@ -224,6 +226,7 @@ export default {
         console.log(res);
         if(res.data.dataList){
           this.productCommentList = res.data.dataList[0];
+          this.CommentListlength=res.data.dataList;
         }
       }
     });

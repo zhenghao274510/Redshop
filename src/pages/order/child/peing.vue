@@ -57,7 +57,7 @@ export default {
       status: "3"
     };
     this.http(params).then(res => {
-      if (res.data.result == 0) {
+      if (res.data.result == 0 && res.data.dataList) {
         this.arry = res.data.dataList;
         if (this.arry) {
           this.arry.forEach(item => {
@@ -72,7 +72,7 @@ export default {
     shou_huo(e) {
       let parmas = { cmd: "finishOrder", uid: this.uid, orderid: e.orderid };
       this.postRequest(parmas).then(res => {
-        if (res.data.result == 0) {
+        if (res.data.result == 0 ) {
           console.log("成功");
           Dialog.confirm({
             title: "确认收货成功",

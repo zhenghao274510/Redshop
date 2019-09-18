@@ -250,7 +250,7 @@ export default {
   //监听属性 类似于data概念
   computed: {
     shoptotal() {
-      let num =Number(this.freight);
+      let num = 0;
 
       this.productList.forEach(item => {
         num += (item.skuPrice * 100 * item.count) / 100;
@@ -269,14 +269,15 @@ export default {
       if (this.goHome) {
         return this.shoptotal + parseInt(this.freight);
       } else {
-        if (this.CanuseCard !="") {
+        if (this.CanuseCard != "") {
           if (
             this.choseCard != "" &&
             this.CanuseCard[this.radioYouhui - 1].couponPrice < this.shoptotal
           ) {
             return (
               this.shoptotal -
-              this.CanuseCard[this.radioYouhui - 1].couponAmount
+              this.CanuseCard[this.radioYouhui - 1].couponAmount +
+              parseInt(this.freight)
             );
           } else {
             return parseInt(this.shoptotal) + parseInt(this.freight);
@@ -334,8 +335,9 @@ export default {
     };
     this.postRequest(parmas3).then(res => {
       console.log(res);
-      this.addressList = res.data.dataList;
-      if (this.addressList != 0) {
+
+      if (res.data.dataList) {
+        this.addressList = res.data.dataList;
         this.addressList.forEach(item => {
           if (item.isDefault == 1) {
             this.defaultAddress = item;
@@ -415,6 +417,9 @@ export default {
           if (res.data.result == 0) {
             this.$toast(res.data.resultNote);
             this.showcardnum = false;
+            setTimeout(() => {
+              this.$router.replace("/giftcard");
+            }, 2000);
           }
           console.log(res);
         });
@@ -469,24 +474,9 @@ export default {
       this.show_juan = false;
       if (this.radioYouhui == 1) {
         this.onClick();
-        this.MinTotalPrice();
       }
     },
-    formtime() {
-      let val = new Date();
-      let Y = val.getFullYear();
-      let M = val.getMonth() + 1;
-      let D = val.getDate();
-      let HH = val.getHours();
-      let MM = val.getMinutes();
-      let SS = val.getSeconds();
-      M < 10 ? (M = "0" + M) : M;
-      D < 10 ? (D = "0" + D) : D;
-      HH < 10 ? (HH = "0" + HH) : HH;
-      MM < 10 ? (MM = "0" + MM) : MM;
-      SS < 10 ? (SS = "0" + SS) : SS;
-      return Y + "-" + M + "-" + D + "  " + HH + ":" + MM + ":" + SS;
-    },
+
     // 提交订单
     SubOrder() {
       //   支付方式
@@ -504,8 +494,8 @@ export default {
         this.buyType = 1;
       }
 
-      if (this.addressList.length==0) {
-        Dialog.confirm({
+      if (this.defaultAddress.isDefault == 0) {
+        Dialog.alert({
           // title: "",
           message: "你还没有添加地址，去添加地址吧!"
         })
@@ -546,7 +536,7 @@ export default {
           };
         }
         this.http(parmas).then(res => {
-          // console.log(res);
+          console.log(res);
           if (res.data.result == 0) {
             this.orderId = res.data.orderId;
             let parmas = { cmd: "payByWx", orderid: this.orderId };
@@ -578,22 +568,23 @@ export default {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
             //  alert('支付成功');
-            if (that.buyType== 1) {
+            //  存为礼品卡
+            if (that.payType == 1) {
               that.$router.replace("/giftcard");
-            } else {
+            } else{
               that.$router.replace("/success");
             }
           } else {
-            if (that.buyType == 0 && that.payType == 0) {
+            if (that.payType == 0) {
               that.$toast("你取消了交易!订单将在30分钟后自动去取消!");
-              that.$store.commit('ChangeOrdertabar',1);
+              that.$store.commit("ChangeOrdertabar", 1);
               that.$router.replace("/order/waitepay");
             } else {
+              that.$toast("你取消了交易!");
+               that.$store.commit("ChangeOrdertabar", 0);
               setTimeout(() => {
-                that.$router.replace("/order/waitepay");
-                // that.$store.commit("ChangeTabar", 0);
+                that.$router.replace("/order/all");
               }, 1000);
-              
             }
           }
         }
@@ -627,6 +618,14 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 0.79rem;
+  .info {
+    flex: 1;
+    text-align: left;
+    // p {
+    //   flex: 1;
+    //   text-align: left;
+    // }
+  }
   .pos {
     width: 0.2rem;
     height: 0.2rem;
@@ -796,9 +795,7 @@ export default {
     }
   }
 }
-.no_use {
-  flex: 1;
-}
+
 .inp {
   border: 0.01rem solid #e5e5e5;
   // width: 100%;

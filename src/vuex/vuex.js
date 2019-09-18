@@ -8,6 +8,8 @@ const store = new Vuex.Store({
    ordertabar:0,
    Classtarta:0,
    uid:'',
+   //  返回键
+   back:true,
 
     useAddres: {},
     SearchList:[]
@@ -39,6 +41,9 @@ const store = new Vuex.Store({
     //   用户uid
     ChangeUId(state,val){
       state.uid=val;
+    },
+    onback(state,val){
+      state.back=val;
     }
 
   },

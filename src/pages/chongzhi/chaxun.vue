@@ -29,7 +29,7 @@ export default {
       direct: "",
       dataList:[],
       show:false,
-      carid:''
+      cardid:''
     };
   },
   created() {
@@ -69,13 +69,13 @@ export default {
             console.log(res);
             this.dataObject = res.data.dataObject;
             this.dataList=res.data.dataObject.orderItem;
-            this.carid=res.data.dataObject.carid;
+            this.cardid=res.data.dataObject.cardid;
           }
         });
       }
     },
     gotodetials(){
-      let obj={cardnum:this.cardnum,pwd:this.pwd,carid:this.carid};
+      let obj={cardnum:this.cardnum,pwd:this.pwd,cardid:this.cardid};
       this.$router.push({path:'/giftcardetails',query:{gift:JSON.stringify(obj)}})
     }
   },

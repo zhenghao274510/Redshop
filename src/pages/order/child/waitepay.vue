@@ -52,7 +52,7 @@ export default {
     let params = { cmd: "myOrder", uid: this.uid, nowPage: "1", pageCount: "10",status:'1' };
     this.http(params).then(res => {
       console.log(res);
-      if (res.data.result == 0) {
+      if (res.data.result == 0 && res.data.dataList) {
         this.arry = res.data.dataList;
         this.arry.forEach(item => {
           this.total=item.orderAmount;

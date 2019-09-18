@@ -112,6 +112,7 @@ export default {
   created() {
    this.uid=sessionStorage.getItem('uid');
     // this.uid = "1";
+    console.log(this.uid)
     let params = { cmd: "userInfo", uid: this.uid };
     this.postRequest(params).then(res => {
        console.log(res)
@@ -264,6 +265,7 @@ export default {
           height: 0.88rem;
           justify-content: space-between;
           align-items: center;
+          cursor: pointer;
           div {
             display: flex;
             flex-direction: column;

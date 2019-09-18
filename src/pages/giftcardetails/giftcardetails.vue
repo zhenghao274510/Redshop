@@ -3,9 +3,9 @@
     <div class="cont">
       <div class="de_zhi pad bg_wh">
         <span class="pos"></span>
-        <div class="info col_mix no_use" v-if="receiver!=''" @click="goto">
-          <p class="ft_mid">收货人：{{receiver.name}}&nbsp; &nbsp; &nbsp;{{receiver.phone}}</p>
-          <p class="ft_mix">收货地址：{{receiver.address}}{{receiver.detail}}</p>
+        <div class="info col_mix no_use" v-if="defaultAddress.isDefault==1" @click="goto">
+          <p class="ft_mid">收货人：{{defaultAddress.name}}&nbsp; &nbsp; &nbsp;{{defaultAddress.phone}}</p>
+          <p class="ft_mix">收货地址：{{defaultAddress.address}}{{defaultAddress.detail}}</p>
         </div>
         <div class="col_mix ft_mid no_use" v-else @click="goto">请选择你的收货地址地址</div>
         <i class="back"></i>
@@ -52,7 +52,9 @@ export default {
       giftcardId: "",
       cardid: "",
       //  收货人信息
-      receiver: {}
+      receiver: {},
+      defaultAddress:{},
+      addressId:''
     };
   },
   //监听属性 类似于data概念
@@ -66,10 +68,12 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
+    
     this.uid=sessionStorage.getItem('uid');
     this.cardnum = JSON.parse(this.$route.query.gift).cardnum;
     this.pwd = JSON.parse(this.$route.query.gift).pwd;
     this.cardid = JSON.parse(this.$route.query.gift).cardid;
+    console.log(this.cardid)
     let parmas = {
       cmd: "findGiftCard",
       uid: this.uid,
@@ -80,10 +84,32 @@ export default {
       console.log(res);
       this.productList = res.data.dataObject.orderItem;
       this.dataObject = res.data.dataObject;
-      if (res.data.dataObject.receiver) {
-        this.receiver = res.data.dataObject.receiver;
-      } else {
-        this.receiver = "";
+      // if (res.data.dataObject.receiver) {
+      //   this.receiver = res.data.dataObject.receiver;
+      // } else {
+      //   this.receiver = "";
+      // }
+    });
+     // 我的收货地址
+    let parmas3 = {
+      cmd: "getAddressList",
+      uid: this.uid,
+      nowPage: "1",
+      pageCount: "10"
+    };
+    this.postRequest(parmas3).then(res => {
+      console.log(res);
+  
+      if (res.data.dataList) {
+        this.addressList = res.data.dataList;
+        this.addressList.forEach(item => {
+          if (item.isDefault == 1) {
+            this.defaultAddress = item;
+          } else {
+            this.defaultAddress = this.addressList[0];
+          }
+          this.addressId = this.defaultAddress.addressId;
+        });
       }
     });
   },
@@ -93,21 +119,26 @@ export default {
   methods: {
     getmsg() {
       // let address=this.receiver.address
-      if (this.receiver == "") {
+      if (this.addressId == "") {
         this.$toast("请选择地址!");
       } else {
+        let address=this.defaultAddress.address+this.defaultAddress.detail;
         let parmas = {
           cmd: "giftCardDelivery",
           uid: this.uid,
           giftcardId: this.cardid,
           remark: this.remark,
-          consignee: this.receiver.name,
-          address: this.receiver.address,
-          phone: this.receiver.phone
+          consignee: this.defaultAddress.name,
+          address: this.defaultAddress.address,
+          phone: this.defaultAddress.phone
         };
         console.log(parmas);
         this.postRequest(parmas).then(res => {
           console.log(res);
+          if(res.data.result==0){
+            this.$toast(res.data.resultNote);
+            this.$router.replace('/peisongsuccess');
+          }
         });
       }
     },
@@ -116,9 +147,11 @@ export default {
     },
     GoTo() {
       console.log(this.cardid);
+      let obj={cardid:this.cardid, pwd:this.pwd,type:'1'}
       this.$router.push({
         path: "/changepswgiftcard",
-        query: { cardid: this.cardid, pwd: this.pwd, uid: this.uid }
+        
+        query: {info:JSON.stringify(obj)}
       });
     }
   },

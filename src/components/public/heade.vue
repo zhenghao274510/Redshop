@@ -1,7 +1,7 @@
 <template>
   <div class="top">
     <div>
-      <span class="back" @click="back" v-if="!$route.meta.showtabar"></span>
+      <span class="back" @click="back" v-if="!$route.meta.showtabar && $store.state.back"></span>
       <p>{{title}}</p>
     </div>
   </div>

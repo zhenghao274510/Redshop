@@ -153,10 +153,13 @@ export default new Router({
       path: '/chaxun',
       name:"查询",
       component: resolve => require(['./../pages/chongzhi/chaxun.vue'], resolve),
-      meta:{
-        requireAuth: true
-      }
     }, 
+      // 充值卡详情
+      {
+        path: '/chongzhicarddetials',
+        name:"充值卡详情",
+        component: resolve => require(['./../pages/chongzhi/chongzhicarddetials.vue'], resolve),
+      }, 
        // 配送成功
        {
         path: '/peisongsuccess',
@@ -266,6 +269,11 @@ export default new Router({
       name:"定位",
       component: resolve => require(['./../pages/positions/positions.vue'], resolve)
     },
+    // {
+    //   path: '/amap',
+    //   name:"定位",
+    //   component: resolve => require(['./../pages/positions/amap.vue'], resolve)
+    // },
     // 我的地址
     {
       path: '/myaddress',

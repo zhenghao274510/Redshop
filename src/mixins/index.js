@@ -162,7 +162,7 @@ export default {
       // });
        return new Promise((resolve, reject) => {
          axios({
-             url: 'https://m.anxihtx.com/wineshop/'+url+'?url='+data,
+             url: encodeURIComponent('https://m.anxihtx.com/wineshop/'+url+'?url='+data),
              method: method,
             //  data: data,
              headers: {
@@ -195,6 +195,8 @@ export default {
   
 
   },
+
+ 
 
  
   

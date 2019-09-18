@@ -2,7 +2,7 @@
   <div class="li_card">
     <ul>
       <li v-for="(item,index) in list" :key="index">
-        <router-link to>
+        <div class="linkcont">
           <div class="gif_card_tit">
             <div class="gif_name">和天下酒业充值卡</div>
             <div class="gif_name_icon">
@@ -10,7 +10,7 @@
               <span @click.prevent="Getmsg(index)"></span>
             </div>
           </div>
-          <div class="gif_card_hao">
+          <div class="gif_card_hao" @click="lookdetails(item)">
             <div>
               卡号:
               <span>{{item.cardnum}}</span>
@@ -20,11 +20,11 @@
               <span>{{item.pwd}}</span>
             </div>
           </div>
-          <div class="gif_card_adder">
+          <div class="gif_card_adder" @click="lookdetails(item)">
             <p class="tel">0595-23195678</p>
             <p class="addres">安溪县城厢镇新兴路149号(特产城移动公司后)</p>
           </div>
-        </router-link>
+        </div>
       </li>
     </ul>
      <van-popup position="bottom" v-model="MsgShare" :style="{ height: '40%' }">
@@ -97,10 +97,14 @@ export default {
                   console.log(res);
                   this.$toast(res.data.resultNote);
                   this.MsgShare=false;
+                  this.phone="";
               })
       }else{
         this.$toast('请输入正确的手机号码!')
       }
+      },
+      lookdetails(e){
+        this.$router.push({path:'/chongzhicarddetials',query:{info:JSON.stringify(e)}});
       }
   },
   //生命周期 - 创建之前
@@ -133,9 +137,8 @@ export default {
       background-color: #72bb29;
        margin-top: .15rem;
 
-      a {
+      .linkcont {
         display: flex;
-        // height: 100%;
         flex-direction: column;
         color: #fff;
         z-index: 2;

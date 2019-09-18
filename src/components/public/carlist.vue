@@ -115,7 +115,7 @@ export default {
     changech(ind) {
       //   事件不触发   先添加 在删除触发
       console.log(ind);
-      this.check.push(0), this.check.pop();
+      // this.check.push(0), this.check.pop();
       console.log(this.check[ind]);
       this.check[ind] = !this.check[ind];
       this.SubTotal();
@@ -153,10 +153,12 @@ export default {
               console.log(res);
               if (res.data.result == 0) {
                 this.productList.splice(name.name, 1);
+                this.check.splice(name.name, 1);
                 this.$toast(res.data.resultNote);
-                this.SubTotal();
+                  this.SubTotal();
+
                 if(this.length>0){
-                  this.length -= 1;
+                  this.length -= 1;               
                 }
               }
             });

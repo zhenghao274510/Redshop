@@ -33,6 +33,7 @@ export default {
         theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
       }
     }
+    
     this.uid=theRequest.uid;
     sessionStorage.setItem('uid',this.uid);
     // this.$store.commit("ChangeUId", theRequest.uid);   
@@ -42,19 +43,24 @@ export default {
      this.$router.replace( "/home");
     } else if (theRequest.type ==1) {
       // type=1 二维码
+      this.$store.commit('onback',false);
       let href=window.location.href.split('&')[0];
       this.$router.replace({path:'/ScanCod',query:{url:href}});
     } else if (theRequest.type ==2) {
       // type=2 视频
+      this.$store.commit('onback',false);
       this.$router.replace("/audio");
     } else if (theRequest.type ==3) {
       // type=3 充值卡
-      this.$router.replace("/allcard");
+      this.$store.commit('onback',false);
+      this.$router.replace("/chongzhi");
     } else if (theRequest.type ==4) {
       // type=4 礼品卡
+      this.$store.commit('onback',false);
       this.$router.replace("/giftcard" );
     } else if (theRequest.type ==5) {
       // type=5 客服热线
+      this.$store.commit('onback',false);
       this.$router.replace( "/service" );
     } 
   },

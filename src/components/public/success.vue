@@ -3,12 +3,12 @@
     <div class="d_flex suce">
       <van-icon name="checked" color="#09BB07" size="1rem" style="margin-top:.5rem" />
       <p class="pay_succ">支付成功</p>
-      <div class="pat_card" v-if="cardnum!=''">
+      <!-- <div class="pat_card" v-if="cardnum!=''">
         <p>已为您生成礼品卡</p>
         <p>卡号：{{cardnum}}</p>
         <p>卡号：{{pwd}}</p>
         <p>可去礼品卡包里查看</p>
-      </div>
+      </div> -->
     </div>
     <div class="pay_back">
            <div class="btn bg_m" v-if="Suc">

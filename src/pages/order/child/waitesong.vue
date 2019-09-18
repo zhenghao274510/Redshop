@@ -63,7 +63,7 @@ export default {
       status: "2"
     };
     this.http(params).then(res => {
-      if (res.data.result == 0) {
+      if (res.data.result == 0 && res.data.dataList) {
         console.log(res);
         this.arry = res.data.dataList;
          this.arry.forEach(item => {

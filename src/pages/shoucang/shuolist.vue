@@ -73,7 +73,7 @@ export default {
           break;
         case "right":
           Dialog.confirm({
-            message: "确定删除吗？删除后无法无法恢复"
+            message: "确定删除吗？删除后无法恢复"
           }).then(() => {
              this.productid=this.list[name.name].productId;
              let parmas={cmd:'collectProduct',productid:this.productid,uid:this.uid,};

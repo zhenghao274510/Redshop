@@ -122,9 +122,7 @@ export default {
         phone: this.phone,
         uid: this.uid
       };
-      let Reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
-      let isRegExp = Reg.test(this.phone);
-      if (isRegExp) {
+      if (this.phone!='') {
         this.http(parmas).then(res => {
           console.log(res);
           this.$toast(res.data.resultNote);

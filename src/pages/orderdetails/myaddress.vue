@@ -22,7 +22,7 @@
             </div>
             <div class="change_ac" @click="GoToEmid">
               <van-icon name="records" size=".18rem" color="#999999" />
-              <router-link to="/editaddress">编辑</router-link>
+              <i @click="changeaddress(item)">编辑</i>
             </div>
           </div>
         </div>
@@ -128,6 +128,10 @@ export default {
     },
     Goto() {
       this.$router.push("/editaddress");
+    },
+    changeaddress(e){
+      console.log(e);
+      this.$router.push({path:"/editaddress",query:{info:JSON.stringify(e)}})
     }
   },
   //生命周期 - 创建之前
