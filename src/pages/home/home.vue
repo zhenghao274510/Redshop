@@ -19,8 +19,9 @@
             v-model="loading"
             :finished="finished"
             finished-text="没有更多了"
+            loading-text="加载中..."
             @load="onLoad"
-            :offset="50"
+            :offset="70"
           >
             <li v-for="(item,index) in ProductList" :key="index">
               <div class="listcon">

@@ -156,13 +156,13 @@ export default {
           })
       })
     },
-    post: (url,data = {}, method = 'get')=> {
-      // Toast.loading({
+    post: (data = {}, method = 'get')=> {
+      // Toasurl,t.loading({
       //   message: '上传中...'
       // });
        return new Promise((resolve, reject) => {
          axios({
-             url: encodeURIComponent('https://m.anxihtx.com/wineshop/'+url+'?url='+data),
+             url: encodeURI('https://m.anxihtx.com/wineshop/api/?url='+JSON.stringify(data)),
              method: method,
             //  data: data,
              headers: {

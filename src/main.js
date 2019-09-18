@@ -28,7 +28,7 @@ Vue.use(Lazyload, {
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
-  key: '4b1214df95d268d968bd4d72b1bd9d5e',
+  key: 'd452113f839ea079c24f848f1d778003',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType',
     'AMap.PolyEditor', 'AMap.CircleEditor'
   ],

@@ -1,6 +1,6 @@
 <template>
  <div class="video">
-    <video :src="videosrc" id="video" controls></video>
+    <video :src="videosrc+'#t=1'" id="video" controls preload="metaadta"></video>
     <div class="roudepublic">
 
     <p>注：扫描过二维码的用户，平台会通过现场摇号的方式进行抽奖，中奖的用户线下工作人员将会以短信的形式发送给您</p>

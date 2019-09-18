@@ -86,6 +86,7 @@
   }
 }
 .mymapM {
+  margin-top: .6rem;
   .search-box {
     height: 0.48rem;
     line-height: 0.48rem;
@@ -138,8 +139,6 @@
 export default {
   data() {
     return {
-      city:'',
-      province:'',
       num: 0,
       center: [], //经度+纬度
       search_key: "", //搜索值
@@ -152,95 +151,98 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-    
       this.adMap();
     }, 1000);
-
-    
   },
   methods: {
     adMap() {
-      let self=this;
-      self.loading = true;
-      //初始化地图
+      this.loading = true;
       var map = new AMap.Map("container", {
-        zoom: 14 ,//缩放级别
+        zoom: 14, //缩放级别
         // center: this.center //设置地图中心点
         resizeEnable: true,  //地图初始化加载定位到当前城市
       });
 
-      AMap.plugin("AMap.Geolocation", function() {
-      var geolocation = new AMap.Geolocation({
-        enableHighAccuracy: true, //是否使用高精度定位，默认:true
-        timeout: 10000, //超过10秒后停止定位，默认：5s
-        buttonPosition: "RB", //定位按钮的停靠位置
-        buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-        zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
-      });
-      map.addControl(geolocation);
-      geolocation.getCurrentPosition(function(status, result) {
-        if (status == "complete") {
-          onComplete(result);
-        } else {
-          onError(result);
-        }
-      });
+
+    AMap.plugin('AMap.Geolocation', function() {
+        var geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：5s
+            buttonPosition:'RB',    //定位按钮的停靠位置
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition(function(status,result){
+            if(status=='complete'){
+                onComplete(result)
+            }else{
+                onError(result)
+            }
+        });
     });
     //解析定位结果
     function onComplete(data) {
-      // this.loading = false;
-      console.log("定位成功", data);
-      // localStorage.setItem('position',JSON.stringify(data.position));
-      self.center= [data.position.lng, data.position.lat];
-    }
-    //解析定位错误信息
-    function onError(data) {
-      console.log("失败" + data);
-    }
-
-
-      //获取初始中心点并赋值
-      // var currentCenter = map.getCenter(); //此方法是获取当前地图的中心点
-      // this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
-      // console.log(this.center);
+        console.log('成功'+data);
+          this.center = [data.position.lng, data.position.lat]; //将获取到的中心点的纬度经度赋值给data的center
+      console.log(this.center);
 
       //创建标记
       this.marker = new AMap.Marker({
-        position: new AMap.LngLat(self.center, self.center), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        position: new AMap.LngLat(data.position.lng, data.position.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
         icon: new AMap.Icon({
           size: new AMap.Size(32, 32), //图标大小
           image: "/static/icon/position.png"
         })
       });
       // 将创建的点标记添加到已有的地图实例：
-      map.add(self.marker);
+      map.add(this.marker);
+    }
+    //解析定位错误信息
+    function onError(data) {
+      console.log('定位失败'+data.message);
+      
+    }
+
+      //获取初始中心点并赋值
+      // var currentCenter = map.getCenter(); //此方法是获取当前地图的中心点
+      // this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
+      // console.log(this.center);
+
+      // //创建标记
+      // this.marker = new AMap.Marker({
+      //   position: new AMap.LngLat(currentCenter.lng, currentCenter.lat) // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+      // });
+      // // 将创建的点标记添加到已有的地图实例：
+      // map.add(this.marker);
 
       //根据地图中心点查附近地点，此方法在下方
-      self.centerSearch();
+      this.centerSearch();
       //监听地图移动事件，并在移动结束后获取地图中心点并更新地点列表
-      var moveendFun = e => {
-        // 获取地图中心点
-        let   currentCenter = map.getCenter();
-        self.center = [currentCenter.lng, currentCenter.lat];
-        self.marker.setPosition([currentCenter.lng, currentCenter.lat]); //更新标记的位置
-        //根据地图中心点查附近地点
-      };
-      //更新数据
-      var centerSearch = () => {
-        self.loading = true;
-        self.centerSearch();
-      };
+      // var moveendFun = e => {
+      //   // 获取地图中心点
+      //   currentCenter = map.getCenter();
+      //   this.center = [currentCenter.lng, currentCenter.lat];
+      //   this.marker.setPosition([currentCenter.lng, currentCenter.lat]); //更新标记的位置
+      //   //根据地图中心点查附近地点
+      // };
+      // //更新数据
+      // var centerSearch = () => {
+      //   this.loading = true;
+      //   this.centerSearch();
+      // };
 
-      // 绑定事件移动地图事件
-      map.on("click", moveendFun); //更新标记
-      map.on("click", centerSearch); //更新数据
+      // // 绑定事件移动地图事件
+      // map.on("mapmove", moveendFun); //更新标记
+      // map.on("moveend", centerSearch); //更新数据
     },
     centerSearch() {
       AMap.service(["AMap.PlaceSearch"], () => {
         //构造地点查询类
         var placeSearch = new AMap.PlaceSearch({
           type:
-            "汽车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|社区", // 兴趣点类别
+            "汽车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|地名地址信息", // 兴趣点类别
           pageSize: 30, // 单页显示结果条数
           pageIndex: 1, // 页码
           city: "全国", // 兴趣点城市
@@ -262,13 +264,11 @@ export default {
     },
     keySearch() {
       this.loading = true;
-      this.lists = [];
-      this.num = 0;
       AMap.service(["AMap.PlaceSearch"], () => {
         //构造地点查询类
         var placeSearch = new AMap.PlaceSearch({
           type:
-            "汽车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|社区", // 兴趣点类别
+            "汽车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|地名地址信息", // 兴趣点类别
           pageSize: 30, // 单页显示结果条数
           pageIndex: 1, // 页码
           city: "全国", // 兴趣点城市
@@ -279,33 +279,23 @@ export default {
         placeSearch.search(this.search_key, (status, result) => {
           if (status == "complete") {
             if (result.poiList.count === 0) {
-              console.log(result);
               this.noSearchShow = true;
             } else {
-              console.log(result);
-              this.lists = result.poiList.pois; //将查询到的地点赋值
+              this.search_list = result.poiList.pois; //将查询到的地点赋值
               this.noSearchShow = false;
               this.loading = false;
             }
           } else {
-            this.lists = [];
+            this.search_list = [];
             this.noSearchShow = true;
           }
         });
       });
     },
-    onAddressLi(e, ind) {
-      this.num = ind;
-      console.log(e, ind);  
-         e.city=self.city;
-      e.province=self.province;
-      sessionStorage.setItem('useaddress',JSON.stringify(e));
-      setTimeout(()=>{
-
-        this.$router.back(-1);
-      })    
-   
-      this.marker.setPosition([e.location.lng, e.location.lat]);
+    onAddressLi(e,ind) {
+      console.log(e);
+      this.num=ind;
+      this.marker.setPosition([e.location.lng, e.location.lat]); //更新标记的位置
     },
     onSearchLi(e) {
       console.log(e.lng + "-" + e.lat);
@@ -316,66 +306,7 @@ export default {
       setTimeout(() => {
         this.adMap();
       }, 1000);
-    },
-    //  GetCurrentCity() {
-    //   // Toast('正在努力定位中');
-    //   const self = this
-    //   AMap.plugin('AMap.Geolocation', function () {
-    //     var geolocation = new AMap.Geolocation({
-    //       // 是否使用高精度定位，默认：true
-    //       enableHighAccuracy: true,
-    //       // 设置定位超时时间，默认：无穷大
-    //       timeout: 10000,
-    //     })
-
-    //     geolocation.getCurrentPosition()
-    //     AMap.event.addListener(geolocation, 'complete', onComplete);
-    //     AMap.event.addListener(geolocation, 'error', onError);
-
-    //     function onComplete(data) {
-    //       // data是具体的定位信息
-    //       console.log('定位成功信息：', data);
-    //       // localStorage.setItem('address', JSON.stringify(data));
-    //     }
-
-    //     function onError(data) {
-    //       // 定位出错
-    //       console.log('定位失败错误：', data);
-    //       // Toast('定位失败');
-    //       // 调用ip定位
-    //       self.getLngLatLocation();
-    //     }
-    //   })
-    // },
-    // getLngLatLocation() {
-    //   AMap.plugin('AMap.CitySearch', function () {
-    //     var citySearch = new AMap.CitySearch();
-    //     citySearch.getLocalCity(function (status, result) {
-    //       if (status === 'complete' && result.info === 'OK') {
-    //         // 查询成功，result即为当前所在城市信息
-    //         console.log('通过ip获取当前城市：', result)
-    //         self.city=result.city;
-    //         self.province=result.province;
-    //         console.log(self.city,self.province)
-    //         //逆向地理编码
-    //         AMap.plugin('AMap.Geocoder', function () {
-    //           var geocoder = new AMap.Geocoder({
-    //             // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
-    //             city: result.adcode
-    //           })
-
-    //           var lnglat = result.rectangle.split(';')[0].split(',');
-    //           geocoder.getAddress(lnglat, function (status, data) {
-    //             if (status === 'complete' && data.info === 'OK') {
-    //               // result为对应的地理位置详细信息
-    //               console.log(data);
-    //             }
-    //           })
-    //         })
-    //       }
-    //     })
-    //   })
-    // }
+    }
   },
   watch: {
     search_key(newv, oldv) {

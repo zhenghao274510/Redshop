@@ -415,7 +415,7 @@ export default {
         };
         this.http(parmas1).then(res => {
           if (res.data.result == 0) {
-            this.$toast(res.data.resultNote);
+            // Toast.success('支付成功');
             this.showcardnum = false;
             setTimeout(() => {
               this.$router.replace("/giftcard");

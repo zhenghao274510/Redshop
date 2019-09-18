@@ -86,7 +86,6 @@
   }
 }
 .mymapM {
-  margin-top: 0.6rem;
   .search-box {
     height: 0.48rem;
     line-height: 0.48rem;
@@ -139,8 +138,8 @@
 export default {
   data() {
     return {
-      city: "",
-      province: "",
+      city:'',
+      province:'',
       num: 0,
       center: [], //经度+纬度
       search_key: "", //搜索值
@@ -153,73 +152,83 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+    
       this.adMap();
     }, 1000);
+
+    
   },
   methods: {
     adMap() {
-      // const this = this;
-      this.loading = true;
+      let self=this;
+      self.loading = true;
       //初始化地图
       var map = new AMap.Map("container", {
-        zoom: 14, //缩放级别
+        zoom: 14 ,//缩放级别
         // center: this.center //设置地图中心点
-        resizeEnable: true //地图初始化加载定位到当前城市
+        resizeEnable: true,  //地图初始化加载定位到当前城市
       });
 
       AMap.plugin("AMap.Geolocation", function() {
-        var geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true, //是否使用高精度定位，默认:true
-          timeout: 10000, //超过10秒后停止定位，默认：5s
-          buttonPosition: "RB", //定位按钮的停靠位置
-          buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
-        });
-        map.addControl(geolocation);
-        geolocation.getCurrentPosition(function(status, result) {
-          if (status == "complete") {
-            onComplete(result);
-          } else {
-            onError(result);
-          }
-        });
+      var geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true, //是否使用高精度定位，默认:true
+        timeout: 10000, //超过10秒后停止定位，默认：5s
+        buttonPosition: "RB", //定位按钮的停靠位置
+        buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+        zoomToAccuracy: true //定位成功后是否自动调整地图视野到定位点
       });
-      //解析定位结果
-      function onComplete(data) {
-        this.loading = false;
-        console.log("定位成功", data);
-        this.center= [data.position.lng, data.position.lat];
-      }
-      //解析定位错误信息
-      function onError(data) {
-        console.log("失败" + data);
-      }
+      map.addControl(geolocation);
+      geolocation.getCurrentPosition(function(status, result) {
+        if (status == "complete") {
+          onComplete(result);
+        } else {
+          onError(result);
+        }
+      });
+    });
+    //解析定位结果
+    function onComplete(data) {
+      // this.loading = false;
+      console.log("定位成功", data);
+      // localStorage.setItem('position',JSON.stringify(data.position));
+      self.center= [data.position.lng, data.position.lat];
+    }
+    //解析定位错误信息
+    function onError(data) {
+      console.log("失败" + data);
+    }
+
+
+      //获取初始中心点并赋值
+      // var currentCenter = map.getCenter(); //此方法是获取当前地图的中心点
+      // this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
+      // console.log(this.center);
+
+      //创建标记
       this.marker = new AMap.Marker({
-        position: new AMap.LngLat(this.center[0], this.center[1]), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        position: new AMap.LngLat(self.center, self.center), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
         icon: new AMap.Icon({
           size: new AMap.Size(32, 32), //图标大小
           image: "/static/icon/position.png"
         })
       });
       // 将创建的点标记添加到已有的地图实例：
-      map.add(this.marker);
-      this.centerSearch();
+      map.add(self.marker);
 
       //根据地图中心点查附近地点，此方法在下方
-      this.centerSearch();
+      self.centerSearch();
       //监听地图移动事件，并在移动结束后获取地图中心点并更新地点列表
       var moveendFun = e => {
         // 获取地图中心点
-        let currentCenter = map.getCenter();
-        console.log(currentCenter + "点击中心");
-        this.center = [currentCenter.lng, currentCenter.lat];
-        this.marker.setPosition([currentCenter.lng, currentCenter.lat]); //更新标记的位置
+        let   currentCenter = map.getCenter();
+        self.center = [currentCenter.lng, currentCenter.lat];
+        self.marker.setPosition([currentCenter.lng, currentCenter.lat]); //更新标记的位置
         //根据地图中心点查附近地点
       };
       //更新数据
       var centerSearch = () => {
-        this.loading = true;
-        this.centerSearch();
+        self.loading = true;
+        self.centerSearch();
       };
 
       // 绑定事件移动地图事件
@@ -287,14 +296,15 @@ export default {
     },
     onAddressLi(e, ind) {
       this.num = ind;
-      console.log(e, ind);
-      e.city = self.city;
-      e.province = self.province;
-      sessionStorage.setItem("useaddress", JSON.stringify(e));
-      setTimeout(() => {
-        this.$router.back(-1);
-      });
+      console.log(e, ind);  
+         e.city=self.city;
+      e.province=self.province;
+      sessionStorage.setItem('useaddress',JSON.stringify(e));
+      setTimeout(()=>{
 
+        this.$router.back(-1);
+      })    
+   
       this.marker.setPosition([e.location.lng, e.location.lat]);
     },
     onSearchLi(e) {
@@ -306,7 +316,8 @@ export default {
       setTimeout(() => {
         this.adMap();
       }, 1000);
-    }
+    },
+  
   },
   watch: {
     search_key(newv, oldv) {
